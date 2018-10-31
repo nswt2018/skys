@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//eDTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sky.business.pageElement.dao.BpElementDao">
+	
+	<!-- 分页 -->
+	<select id="findForPageList" parameterType="Page"
+		resultType="BpElement">
+		SELECT  
+		*
+		FROM 
+		bp_element
+		WHERE 1=1 AND UNIT_CODE = #{variables.unitCode}
+			<if test="variables.eleCode != null and variables.eleCode != ''">
+				AND ELE_CODE LIKE "%"#{variables.eleCode}"%"
+			</if>
+			<if test="variables.eleCName != null and variables.eleCName != ''">
+				AND ELE_CNAME LIKE "%"#{variables.eleCName}"%"
+			</if>	
+			<if test="variables.eleEName != null and variables.eleEName != ''">
+				AND ELE_ENAME LIKE "%"#{variables.eleEName}"%"
+			</if>	
+			<if test="orderBy != null and orderBy != ''">
+				 order by ${orderBy}
+			</if>	
+	</select>
+	
+	<select id="findAllColumns" parameterType="hashmap" resultType="BpColumns">
+		select * from BP_COLUMNS where TAG_KEY = #{tagKey} and ele_code = #{eleCode}
+	</select>
+	
+	<select id="findColumnsGroupbyName" parameterType="String" resultType="BpColumns">
+		select * from BP_COLUMNS where ele_code = #{eleCode} group by tag_name
+	</select>
+	
+	<select id="findColumnsByName" parameterType="hashmap" resultType="BpColumns">
+		select * from BP_COLUMNS where ele_code = #{eleCode} and tag_name = #{tagName}
+	</select>
+	
+	<select id="findElementById" parameterType="String" resultType="BpElement">
+		select * from BP_ELEMENT where ele_code = #{eleCode}
+	</select>
+	
+</mapper>
