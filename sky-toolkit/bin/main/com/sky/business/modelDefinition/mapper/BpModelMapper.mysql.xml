@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sky.business.modelDefinition.dao.BpModelDao">
+
+	<!-- 分页 -->
+	<select id="findForPageList" parameterType="Page"
+		resultType="BpModel">
+		SELECT  
+		*
+		FROM 
+		bp_model
+		WHERE 1=1
+			<if test="variables.modCode != null and variables.modCode != ''">
+				AND MOD_CODE LIKE "%"#{variables.modCode}"%"
+			</if>	
+			<if test="variables.modName != null and variables.modName != ''">
+				AND MOD_NAME LIKE "%"#{variables.modName}"%"
+			</if>
+			<if test="orderBy != null and orderBy != ''">
+				 order by ${orderBy}
+			</if>	
+	</select>
+	
+	<select id="findAllModel" parameterType="String" resultType="BpModel">
+		select * from bp_model
+	</select>
+	
+	<select id="findModel" parameterType="String" resultType="BpModel">
+		select * from bp_model where MOD_CODE = #{modCode}
+	</select>
+</mapper>
