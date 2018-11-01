@@ -72,7 +72,7 @@ allprojects {
 	 		//'io.lettuce:lettuce-core',
 	 		//'org.apache.commons:commons-pool2',
 	 	)	 
-	 	compile fileTree(dir:'f:\\work\\skys\\libs',include:['*.jar'])	
+	 	compile fileTree(dir:'..\\libs',include:['*.jar'])	
 	 	testCompile 'junit:junit:${junitVersion}'
 		testCompile 'org.testng:testng:6.14.2'
 		testCompile 'org.mockito:mockito-core:2.17.0'
