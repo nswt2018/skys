@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sky.app.org.mapper.orgmapper">
+ 
+	<select id="findForOrgList" parameterType="Page" resultType="Org1">
+	       select 
+	         * 
+	       from 
+	         sys_org
+	       where 1=1
+	             <if test="variables.orgCode !=null and variables.orgCode !=''">
+	             		and org_Code=#{variables.orgCode}
+	             </if>
+	             <if test="variables.orgBrief!=null and variables.orgBrief!=''">
+		             	and org_Brief=#{variables.orgBrief}
+		          </if>  
+	 </select>
+	 <insert id="insertOrgId" parameterType="Org1">
+	       insert into sys_org
+	       (org_Id,org_Code,org_Brief,up_ORG_CODE,org_Category,org_Grade,org_Level) 
+	       value
+	       (#{orgId},#{orgCode},#{orgBrief},#{upOrgCode},#{orgCategory},#{orgGrade},#{orgLevel})
+	 </insert>
+	 <update id="updateOrgId" parameterType="Org1">
+	       update 
+	       		sys_org 
+	       set 
+	       org_Id=#{orgId},org_Code=#{orgCode},org_Brief=#{orgBrief},up_ORG_CODE=#{upOrgCode},
+	       org_Category=#{orgCategory},org_Grade=#{orgGrade},org_Level=#{orgLevel}
+	       where 
+	       		org_Id=#{orgId} 
+	 </update>
+	 <delete id="deleteOrgId">
+	 	delete from
+	 		sys_org
+	 	where 
+	 		org_Id=#{orgId} 	
+	 </delete>
+</mapper>
