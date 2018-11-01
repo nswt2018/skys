@@ -23,7 +23,7 @@ public class BpElement implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="ELE_CODE")
-	private String eleCode;
+	private Integer eleCode;
 
 	@Column(name="ELE_ENAME")
     private String eleEName;
@@ -56,11 +56,11 @@ public class BpElement implements Serializable{
     private String unitName;
 
 	
-	public String getEleCode() {
+	public Integer getEleCode() {
 		return eleCode;
 	}
 
-	public void setEleCode(String eleCode) {
+	public void setEleCode(Integer eleCode) {
 		this.eleCode = eleCode;
 	}
 
