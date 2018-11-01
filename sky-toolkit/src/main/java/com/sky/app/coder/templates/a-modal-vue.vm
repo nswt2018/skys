@@ -1,0 +1,11 @@
+#if($modals)
+#foreach($modal in $modals) 
+	 <Modal v-model="${modal.value}" title="${modal.title}" width="${modal.width}" #if(${modal.okText})ok-text="${modal.okText}"#end #if(${modal.cancelText})cancel-text="${modal.cancelText}"#end#if(${modal.closable}):closable="false"#end 
+#if(${modal.loading}) :loading="${modal.loading}"#end #if(${modal.scrollable})scrollable#end #if(${modal.fullscreen})fullscreen#end #if(${modal.draggable})draggable#end
+#if(${modal.maskClosable}):mask-closable="false"#end #if(${modal.onOk}) @on-ok="saving(${modal.form}Ref)"#end #if(${modal.onCancel})@on-cancel="reseting(${modal.form}Ref)"#end>
+#if(${modal.form})
+#parse("com/sky/app/coder/templates/a-form-vue.vm")
+#end	 
+	 </Modal>  
+#end
+#end 

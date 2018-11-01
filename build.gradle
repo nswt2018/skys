@@ -63,7 +63,8 @@ allprojects {
 	 		
 	 		
 	 		//'org.springframework.cloud:spring-cloud-starter-oauth2:2.0.0.RELEASE',
-	 		'org.springframework.cloud:spring-cloud-starter-security:2.0.0.RELEASE'
+	 		'org.springframework.cloud:spring-cloud-starter-security:2.0.0.RELEASE',
+	 		'dom4j:dom4j:1.6.1'
 	 		//'org.hyperic:sigar:1.6.4'
 	 		//'org.springframework.boot:spring-boot-starter-parent:2.0.0.RELEASE',
 			//'org.springframework.boot:spring-boot-dependencies:2.0.0.RELEASE',
@@ -71,7 +72,7 @@ allprojects {
 	 		//'io.lettuce:lettuce-core',
 	 		//'org.apache.commons:commons-pool2',
 	 	)	 
-	 	compile fileTree(dir:'D:\\workspaces\\skys\\libs',include:['*.jar'])	
+	 	compile fileTree(dir:'f:\\work\\skys\\libs',include:['*.jar'])	
 	 	testCompile 'junit:junit:${junitVersion}'
 		testCompile 'org.testng:testng:6.14.2'
 		testCompile 'org.mockito:mockito-core:2.17.0'

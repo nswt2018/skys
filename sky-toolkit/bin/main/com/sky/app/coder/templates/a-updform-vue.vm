@@ -1,0 +1,47 @@
+	        <Form #if(${updform.ref})ref="${updform.ref}"#end :model="${updform.model}" #if(${updform.rules}):rules="${updform.rules}"#end #if(${updform.labelWidth}):label-width="${updform.labelWidth}">#end
+#if($updformitems)
+#foreach($formitem in $updformitems)
+
+	              <FormItem label="${formitem.label}��" #if(${formitem.prop})prop="${formitem.prop}"#end #if(${formitem.required})required#end #if(${formitem.labelWidth})label-width="${formitem.labelWidth}"#end>
+#if(${formitem.type}=="input")	                 
+	                 <Input v-model="updForm.${formitem.propValue}" placeholder="请输入${formitem.label}" />
+#end
+#if(${formitem.type}=="select")	                 
+	                 <Select  v-model="updForm.${formitem.propValue}" placeholder="请输入${formitem.label}" />
+	                 	 <Option value="beijing">New York</Option>
+                	 </Select>
+#end
+#if(${formitem.type}=="radioGroup")	                 
+	                 <RadioGroup v-model="updForm.${formitem.propValue}">
+                		 <Radio label="male">Male</Radio>
+                		 <Radio label="female">Female</Radio>
+            		 </RadioGroup>
+#end
+#if(${formitem.type}=="checkboxGroup")	                 
+	                 <CheckboxGroup v-model="updForm.${formitem.propValue}">
+		                 <Checkbox label="Eat"></Checkbox>
+		                 <Checkbox label="Sleep"></Checkbox>
+		                 <Checkbox label="Run"></Checkbox>
+		                 <Checkbox label="Movie"></Checkbox>
+           			 </CheckboxGroup>
+#end
+#if(${formitem.type}=="switch")	                 
+	                 <i-switch v-model="updForm.${formitem.propValue}" size="large">
+                		 <span slot="open">On</span>
+                		 <span slot="close">Off</span>
+            		 </i-switch>
+#end
+#if(${formitem.type}=="slider")	                 
+	                 <Slider v-model="updForm.${formitem.propValue}" range></Slider>
+#end
+#if(${formitem.type}=="DatePicker")	                 
+	                 <DatePicker  type="date" v-model="updForm.${formitem.propValue}" placeholder="��ѡ��${formitem.label}"></DatePicker>
+#end
+#if(${formitem.type}=="TimePicker")	                 
+	                 <TimePicker type="time" v-model="updForm.${formitem.propValue}" placeholder="��ѡ��${formitem.label}" ></TimePicker>
+#end	                 
+	              </FormItem>
+#end
+#end         
+	        </Form>
+	        

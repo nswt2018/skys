@@ -1,0 +1,9 @@
+#set($iServicePath=${models.iServicePath})
+#set($model=${models.model})
+package ${iServicePath};
+
+import com.sky.core.base.service.IBaseService;
+import com.sky.app.model.${model};
+
+public interface I${model}Service extends IBaseService<${model}> {
+}

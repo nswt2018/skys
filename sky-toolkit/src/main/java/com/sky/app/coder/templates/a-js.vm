@@ -1,0 +1,35 @@
+#set($tablecolumns=${models.tablecolumns})
+#set($model=${models.model})
+#set($table=${models.table})
+import Vue from 'vue';
+import iView from 'iview';
+import datetool from '@/libs/datetool';
+
+let ${model}Column = {};
+
+${model}Column .getColumns = function() {
+	return [
+#if(${table.isSelectAll}=="true")				
+		   {
+			 type: 'selection',
+			 width: 60,
+			 align: 'center'
+		    },
+#end
+#if(${table})
+#if($tablecolumns)
+#foreach($tablecolumn in $tablecolumns)
+			    
+		  {
+			title: '${tablecolumn.label}',
+			key: '${tablecolumn.value}',
+			align: 'center'
+		  }#if($foreach.hasNext),#end
+#end			    
+#end 
+#end
+			    
+	]
+};
+
+export default ${model}Column ;
