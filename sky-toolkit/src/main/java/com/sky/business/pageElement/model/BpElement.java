@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -21,7 +19,6 @@ public class BpElement implements Serializable{
 
 	//主键
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="ELE_CODE")
 	private Integer eleCode;
 
