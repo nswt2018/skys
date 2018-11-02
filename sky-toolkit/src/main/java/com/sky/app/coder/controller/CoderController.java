@@ -23,7 +23,7 @@ import com.sky.app.coder.model.Model;
 import com.sky.app.coder.service.ICoderService;
 
 @RestController
-@RequestMapping(value = "/system")
+@RequestMapping(value = "/business")
 public class CoderController {
 	@Resource(name = "CoderService")
 	private ICoderService CoderService;
@@ -34,7 +34,7 @@ public class CoderController {
 	 * 3.将模板所需要的全部信息封装在model实体类中 。
 	 * 4.通过velocity根据传入的数据、模板、路径生成相应的文件。
 	 */
-	@RequestMapping(value = "/Coder.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/TK0004G.do", method = RequestMethod.POST)
 	@ResponseBody
 	public Boolean getSysParmList(@RequestParam String moduCode, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {

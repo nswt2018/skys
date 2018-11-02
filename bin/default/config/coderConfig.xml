@@ -15,7 +15,7 @@
     <item name="packname" value="com.sky.app.controller" description="包路径"/>
     <item name="path" value="F:\\git\\skys\\src\\main\\java\\com\\sky\\app\\controller\\Parmcontroller.java" description="controller存放的路径,及文件名"/>
     <item name="template" value="a-controller.java.vm" description="controller模板名称"/>
-    <item name="flag" value="true" description="true为生成文件，false则不生成"/>
+    <item name="flag" value="false" description="true为生成文件，false则不生成"/>
   </category>	
   
   <category name="mapperXml" description="mapper文件配置">
