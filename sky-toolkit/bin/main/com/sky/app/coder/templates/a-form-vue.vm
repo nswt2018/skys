@@ -1,7 +1,0 @@
-#if(${modal.form}=="addForm")
-#parse("com/sky/app/coder/templates/a-addform-vue.vm")             
-#elseif(${modal.form}=="updForm")
-#parse("com/sky/app/coder/templates/a-updform-vue.vm")
-#elseif(${modal.form}=="viewForm")
-#parse("com/sky/app/coder/templates/a-viewform-vue.vm")
-#end
