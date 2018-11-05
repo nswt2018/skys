@@ -23,7 +23,7 @@ import net.sf.json.JSONObject;
  */
 public class VelocityGetTemplateData {
 	// 将模板中所需要的数据都封装在Model实体类中
-	public Model getModel(List<Element> list) {
+	public Model getModel(List<Element> list,Element el) {
 		Model model = new Model();
 		List<Input> inputs = new ArrayList<Input>();
 		Input input = null;
@@ -31,10 +31,10 @@ public class VelocityGetTemplateData {
 		Page1 page = null;
 		List<FormItem> addformitems = new ArrayList<FormItem>();
 		List<FormItem> updformitems = new ArrayList<FormItem>();
-		List<FormItem> delformitems = new ArrayList<FormItem>();
+		List<FormItem> viewformitems = new ArrayList<FormItem>();
 		List<TableColumn> tablecolumns = new ArrayList<TableColumn>();
 		for (int i = 0; i < list.size(); i++) {
-			if (list.get(i).getUnitType().equals("C")) {
+			if (list.get(i).getComName().equals("条件搜索")) {
 				input = new Input();
 				// 如果搜索框的标签信息没有录入，则设置默认值
 				if (list.get(i).getTagInfo() == null || list.get(i).getTagInfo() == "") {
@@ -48,19 +48,18 @@ public class VelocityGetTemplateData {
 					input = (Input) JSONObject.toBean(jsonObject, Input.class);
 				}
 				inputs.add(input);
-			} else if (list.get(i).getUnitType().equals("B")) {
+			} else if (list.get(i).getComName().equals("按钮信息")) {
 				button = new Button();
 				// 如果按钮的标签信息没有录入，则设置默认值
 				if (list.get(i).getTagInfo() == null || list.get(i).getTagInfo() == "") {
 					button.setSize("true");
-					button.setType("true");
 					button.setIcon("true");
 				} else {
 					JSONObject jsonObject = JSONObject.fromObject(list.get(i).getTagInfo());
 					button = (Button) JSONObject.toBean(jsonObject, Button.class);
 				}
 
-			} else if (list.get(i).getUnitType().equals("P")) {
+			} else if (list.get(i).getComName().equals("分页信息")) {
 				page = new Page1();
 				// 如果分页的标签信息没有录入，则设置默认值
 				if (list.get(i).getTagInfo() == null || list.get(i).getTagInfo() == "") {
@@ -73,23 +72,23 @@ public class VelocityGetTemplateData {
 					page = (Page1) JSONObject.toBean(jsonObject, Page1.class);
 				}
 
-			} else if (list.get(i).getUnitType().equals("L")) {
+			} else if (list.get(i).getComName().equals("列表信息")) {
 				TableColumn tablecolumn = new TableColumn();
 				tablecolumn.setLabel(list.get(i).getEleEname());
 				tablecolumn.setValue(list.get(i).getEleCname());
 				tablecolumns.add(tablecolumn);
-			} else if (list.get(i).getUnitType().equals("A")) {
+			} else if (list.get(i).getComName().equals("新增信息")) {
 				JSONObject jsonObject = JSONObject.fromObject(list.get(i).getTagInfo());
 				FormItem fortitem = (FormItem) JSONObject.toBean(jsonObject, FormItem.class);
 				addformitems.add(fortitem);
-			} else if (list.get(i).getUnitType().equals("U")) {
+			} else if (list.get(i).getComName().equals("修改信息")) {
 				JSONObject jsonObject = JSONObject.fromObject(list.get(i).getTagInfo());
 				FormItem fortitem = (FormItem) JSONObject.toBean(jsonObject, FormItem.class);
 				updformitems.add(fortitem);
-			} else if (list.get(i).getUnitType().equals("S")) {
+			} else if (list.get(i).getComName().equals("查看信息")) {
 				JSONObject jsonObject = JSONObject.fromObject(list.get(i).getTagInfo());
 				FormItem fortitem = (FormItem) JSONObject.toBean(jsonObject, FormItem.class);
-				delformitems.add(fortitem);
+				viewformitems.add(fortitem);
 			}
 		}
 		if (button != null) {
@@ -104,12 +103,12 @@ public class VelocityGetTemplateData {
 		model.setUpdform(this.getForm()[1]);
 		model.setViewform(this.getForm()[2]);
 		// 设置模块标题名称
-		model.setTitleName("系统参数");
+		model.setTitleName(el.getModuCname());
 		// 设置模块标题图标
 		model.setTitleIconType("compose");
 		// 前后端共同需要的信息，表名、交易号（映射路径）
 		model.setModel("Parm");
-		model.setTid("SYC001");
+		model.setTid(el.getModuTc());
 		// 数据库表名
 		model.setTableName("sys_parm");
 		// 读取配置文件coderConfig.xml,获取配置文件的参数
@@ -124,7 +123,7 @@ public class VelocityGetTemplateData {
 		model.setInputs(inputs);
 		model.setAddformitem(addformitems);
 		model.setUpdformitem(updformitems);
-		model.setViewformitem(delformitems);
+		model.setViewformitem(viewformitems);
 		model.setTablecolumns(tablecolumns);
 		return model;
 	}
@@ -201,7 +200,7 @@ public class VelocityGetTemplateData {
 		return form;
 	}
 
-	public Button setButton() {
+	/*public Button setButton() {
 		Button button = new Button();
 		button.setType("true");
 		button.setIcon("true");
@@ -297,5 +296,5 @@ public class VelocityGetTemplateData {
 		list.add(fi4);
 		list.add(fi5);
 		return list;
-	}
+	}*/
 }

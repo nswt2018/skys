@@ -41,8 +41,9 @@ public class CoderController {
 		try {
 			//从数据库中取数据
 			List<Element> list = CoderService.getTagInfo("com.sky.app.core.CoderMapper.findBpForList", moduCode);
+			Element el=CoderService.getElement("com.sky.app.core.CoderMapper.findBpForOne", moduCode);
 			// 将数据库取出来的值(list)解析并放入model,然后取得model
-			Model model = new VelocityGetTemplateData().getModel(list);
+			Model model = new VelocityGetTemplateData().getModel(list,el);
 			// 将model里面的值放入VelocityContext
 			VelocityContext vcx = new VelocityContext();
 			vcx.put("models", model);

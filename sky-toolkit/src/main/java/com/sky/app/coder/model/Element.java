@@ -5,6 +5,10 @@ public class Element {
 	private String eleCname;
 	private String unitType;
 	private String tagInfo;
+	private String comName;
+	private String comCode;
+	private String moduCname;
+	private String moduTc;
 	public String getEleEname() {
 		return eleEname;
 	}
@@ -28,6 +32,30 @@ public class Element {
 	}
 	public void setTagInfo(String tagInfo) {
 		this.tagInfo = tagInfo;
+	}
+	public String getComName() {
+		return comName;
+	}
+	public void setComName(String comName) {
+		this.comName = comName;
+	}
+	public String getComCode() {
+		return comCode;
+	}
+	public void setComCode(String comCode) {
+		this.comCode = comCode;
+	}
+	public String getModuCname() {
+		return moduCname;
+	}
+	public void setModuCname(String moduCname) {
+		this.moduCname = moduCname;
+	}
+	public String getModuTc() {
+		return moduTc;
+	}
+	public void setModuTc(String moduTc) {
+		this.moduTc = moduTc;
 	}
 	
 

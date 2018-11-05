@@ -2,7 +2,6 @@
 #set($titleName=${models.titleName})
 #set($model=${models.model})
 #set($tid=${models.tid})
-
 #set($inputs=${models.inputs})
 #set($button=${models.button})
 #set($table=${models.table})
@@ -13,7 +12,6 @@
 #set($updformitems=${models.updformitem})
 #set($viewform=${models.viewform})
 #set($viewformitems=${models.viewformitem})
-
 <style>
 </style>
 <template>

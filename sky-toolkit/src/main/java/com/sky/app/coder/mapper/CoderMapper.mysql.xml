@@ -9,4 +9,13 @@
 	       where 1=1 and MODU_CODE=#{moduCode}
 	             
   </select>
+  <select id="findBpForOne" parameterType="String" resultType="Element">
+	       select 
+	         MODU_CNAME,
+	         MODU_TC
+	       from 
+	         BP_MODULE 
+	       where 1=1 and MODU_CODE=#{moduCode}
+	             
+  </select>
 </mapper>

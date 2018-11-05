@@ -34,7 +34,28 @@ export default {
             currentPage: 1,
             totalPage: 0,
             totalCount: 0,
-        	buttonInfos:[],          
+        	buttonInfos:[
+        		{title:'查看',
+		        code:'100101',
+		        icon:'info',
+		        href:'view'
+		        },
+		        {title:'新增',
+		        code:'100102',
+		        icon:'primary',
+		        href:'add'
+		        },
+		        {title:'修改',
+		        code:'100103',
+		        icon:'warning',
+		        href:'upd'
+		        },
+		        {title:'删除',
+		        code:'100104',
+		        icon:'error',
+		        href:'del'
+        		} 	   
+        	],          
         	columns:[],
         	deleteKey:[]
 #if(${addform.rules})

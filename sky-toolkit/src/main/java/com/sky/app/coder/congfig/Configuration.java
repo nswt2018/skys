@@ -36,7 +36,7 @@ public class Configuration {
 	private static Logger logger = LogManager.getLogger(Configuration.class);
 	private static Map<String, String> items = new HashMap<String, String>();
 
-	private static String CONFIG_FILE_PATH = "src\\main\\resources\\config\\coderConfig.xml";
+	private static String CONFIG_FILE_PATH = "src\\main\\resouces\\config\\coderConfig.xml";
 
 	/**
 	 * 读入配置文件

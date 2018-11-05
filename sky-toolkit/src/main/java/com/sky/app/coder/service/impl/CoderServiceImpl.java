@@ -19,4 +19,9 @@ public class CoderServiceImpl implements ICoderService {
 	public List<Element> getTagInfo(String sqlId,String moduCode) {
 		return sqlsession.selectList(sqlId,moduCode);
 	}
+	
+	@Override
+	public Element getElement(String sqlId, String moduCode) {
+		return sqlsession.selectOne(sqlId, moduCode);
+	}
 }
