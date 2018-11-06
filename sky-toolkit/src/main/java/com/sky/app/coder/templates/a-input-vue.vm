@@ -1,7 +1,7 @@
 #if($inputs)          
 #foreach($input in $inputs)
 	        <Input #if(${input.type})type="${input.type}"#end v-model="${input.value}" #if(${input.placeholder})placeholder="${input.placeholder}"#end #if(${input.width})style="width:${input.width}"#end 
-			#if(${input.onChange}=="true")@on-change="searching"#end
+#if(${input.onChange}=="true") @on-change="searching"#end
 #if(${input.onEnter}=="true") @on-enter="searching"#end
 #if(${input.icon}=="search") icon="search"#if(${input.onClick}=="true") @on-click="searching"#end#end
 #if(${input.clearable}=="true") clearable#end#if(${input.size}) :size="getSizeValue"#end 

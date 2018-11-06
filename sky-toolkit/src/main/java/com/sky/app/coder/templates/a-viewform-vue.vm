@@ -1,24 +1,24 @@
-	        <Form #if(${viewform.ref})ref="${viewform.ref}"#end :model="${viewform.model}" #if(${viewform.labelWidth}):label-width="${viewform.labelWidth}">#end
+	           <Form #if(${viewform.ref})ref="${viewform.ref}"#end :model="${viewform.model}" #if(${viewform.labelWidth}):label-width="${viewform.labelWidth}">#end
 #if($viewformitems)
 #foreach($formitem in $viewformitems)
 
 	              <FormItem label="${formitem.label}:" #if(${formitem.labelWidth})label-width="${formitem.labelWidth}"#end>
 #if(${formitem.type}=="input")	                 
-	                 <Input :readonly="true" v-model="viewForm.${formitem.propValue}" />
+	                 <Input :readonly="true" v-model="${viewform.model}.${formitem.value}" />
 #end
 #if(${formitem.type}=="select")	                 
-	                 <Select  v-model="viewForm.${formitem.propValue}" />
+	                 <Select  v-model="${viewform.model}.${formitem.value}" />
 	                 	 <Option value="beijing">New York</Option>
                 	 </Select>
 #end
 #if(${formitem.type}=="radioGroup")	                 
-	                 <RadioGroup v-model="viewForm.${formitem.propValue}">
+	                 <RadioGroup v-model="${viewform.model}.${formitem.value}">
                 		 <Radio label="male">Male</Radio>
                 		 <Radio label="female">Female</Radio>
             		 </RadioGroup>
 #end
 #if(${formitem.type}=="checkboxGroup")	                 
-	                 <CheckboxGroup v-model="viewForm.${formitem.propValue}">
+	                 <CheckboxGroup v-model="${viewform.model}.${formitem.value}">
 		                 <Checkbox label="Eat"></Checkbox>
 		                 <Checkbox label="Sleep"></Checkbox>
 		                 <Checkbox label="Run"></Checkbox>
@@ -26,13 +26,13 @@
            			 </CheckboxGroup>
 #end
 #if(${formitem.type}=="switch")	                 
-	                 <i-switch v-model="viewForm.${formitem.propValue}" size="large">
+	                 <i-switch v-model="${viewform.model}.${formitem.value}" size="large">
                 		 <span slot="open">On</span>
                 		 <span slot="close">Off</span>
             		 </i-switch>
 #end
 #if(${formitem.type}=="slider")	                 
-	                 <Slider v-model="viewForm.${formitem.propValue}" range></Slider>
+	                 <Slider v-model="${viewform.model}.${formitem.value}" range></Slider>
 #end	                 
 	              </FormItem>
 #end

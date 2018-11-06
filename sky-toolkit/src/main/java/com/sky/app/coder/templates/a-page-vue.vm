@@ -1,6 +1,5 @@
-#set($page=${models.page})
 #if($page) 
-	 <div style="float: right;">
+	 	  <div style="float: right;">
                <Page  :total="totalCount" :current="1" :page-size="pageSize" 
                	      #if(${page.transfer}):transfer="true"#end#if(${page.size}) :size="getSizeValue"#end
 #if(${page.onChange}) @on-change="changePage"#end #if(${page.onPageSizeChange})@on-page-size-change="changePageSize"#end

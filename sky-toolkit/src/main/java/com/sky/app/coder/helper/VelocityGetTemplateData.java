@@ -27,8 +27,6 @@ public class VelocityGetTemplateData {
 		Model model = new Model();
 		List<Input> inputs = new ArrayList<Input>();
 		Input input = null;
-		Button button = null;
-		Page1 page = null;
 		List<FormItem> addformitems = new ArrayList<FormItem>();
 		List<FormItem> updformitems = new ArrayList<FormItem>();
 		List<FormItem> viewformitems = new ArrayList<FormItem>();
@@ -37,66 +35,73 @@ public class VelocityGetTemplateData {
 			if (list.get(i).getComName().equals("条件搜索")) {
 				input = new Input();
 				// 如果搜索框的标签信息没有录入，则设置默认值
-				if (list.get(i).getTagInfo() == null || list.get(i).getTagInfo() == "") {
+				if (list.get(i).getTagInfo() == null || "".equals(list.get(i).getTagInfo())) {
 					input.setType("text");
 					input.setValue(list.get(i).getEleEname());
 					input.setPlaceholder("请输入" + list.get(i).getEleCname());
 					input.setIcon("search");
+					input.setWidth("200px");
 					input.setOnChange("true");
 				} else {
 					JSONObject jsonObject = JSONObject.fromObject(list.get(i).getTagInfo());
 					input = (Input) JSONObject.toBean(jsonObject, Input.class);
 				}
 				inputs.add(input);
-			} else if (list.get(i).getComName().equals("按钮信息")) {
-				button = new Button();
-				// 如果按钮的标签信息没有录入，则设置默认值
-				if (list.get(i).getTagInfo() == null || list.get(i).getTagInfo() == "") {
-					button.setSize("true");
-					button.setIcon("true");
-				} else {
-					JSONObject jsonObject = JSONObject.fromObject(list.get(i).getTagInfo());
-					button = (Button) JSONObject.toBean(jsonObject, Button.class);
-				}
-
-			} else if (list.get(i).getComName().equals("分页信息")) {
-				page = new Page1();
-				// 如果分页的标签信息没有录入，则设置默认值
-				if (list.get(i).getTagInfo() == null || list.get(i).getTagInfo() == "") {
-					page.setSize("true");
-					page.setShowTotal("true");
-					page.setShowElevator("true");
-					page.setShowSizer("true");
-				} else {
-					JSONObject jsonObject = JSONObject.fromObject(list.get(i).getTagInfo());
-					page = (Page1) JSONObject.toBean(jsonObject, Page1.class);
-				}
-
-			} else if (list.get(i).getComName().equals("列表信息")) {
+			}else if (list.get(i).getComName().equals("列表信息")) {
 				TableColumn tablecolumn = new TableColumn();
-				tablecolumn.setLabel(list.get(i).getEleEname());
-				tablecolumn.setValue(list.get(i).getEleCname());
+				tablecolumn.setLabel(list.get(i).getEleCname());
+				tablecolumn.setValue(list.get(i).getEleEname());
 				tablecolumns.add(tablecolumn);
 			} else if (list.get(i).getComName().equals("新增信息")) {
-				JSONObject jsonObject = JSONObject.fromObject(list.get(i).getTagInfo());
-				FormItem fortitem = (FormItem) JSONObject.toBean(jsonObject, FormItem.class);
-				addformitems.add(fortitem);
+				FormItem addformitem = new FormItem();
+				// 如果新增信息的标签信息没有录入，则设置默认值
+				if(list.get(i).getTagInfo()==null|| "".equals(list.get(i).getTagInfo())){
+					//字段中文
+					addformitem.setLabel(list.get(i).getEleCname());
+					//字段英文
+					addformitem.setProp(list.get(i).getEleEname());
+					addformitem.setValue(list.get(i).getEleEname());
+					addformitem.setRequired("true");
+					addformitem.setType("input");
+				}else{
+					JSONObject jsonObject = JSONObject.fromObject(list.get(i).getTagInfo());
+					addformitem = (FormItem) JSONObject.toBean(jsonObject, FormItem.class);
+				}
+				addformitems.add(addformitem);
 			} else if (list.get(i).getComName().equals("修改信息")) {
-				JSONObject jsonObject = JSONObject.fromObject(list.get(i).getTagInfo());
-				FormItem fortitem = (FormItem) JSONObject.toBean(jsonObject, FormItem.class);
-				updformitems.add(fortitem);
+				FormItem updformitem = new FormItem();
+				// 如果修改信息的标签信息没有录入，则设置默认值
+				if(list.get(i).getTagInfo()==null|| "".equals(list.get(i).getTagInfo())){
+					//字段中文
+					updformitem.setLabel(list.get(i).getEleCname());
+					//字段英文
+					updformitem.setProp(list.get(i).getEleEname());
+					updformitem.setValue(list.get(i).getEleEname());
+					updformitem.setRequired("true");
+					updformitem.setType("input");
+				}else{
+					JSONObject jsonObject = JSONObject.fromObject(list.get(i).getTagInfo());
+					updformitem = (FormItem) JSONObject.toBean(jsonObject, FormItem.class);
+				}
+				updformitems.add(updformitem);
 			} else if (list.get(i).getComName().equals("查看信息")) {
-				JSONObject jsonObject = JSONObject.fromObject(list.get(i).getTagInfo());
-				FormItem fortitem = (FormItem) JSONObject.toBean(jsonObject, FormItem.class);
-				viewformitems.add(fortitem);
+				FormItem viewformitem = new FormItem();
+				if(list.get(i).getTagInfo()==null|| "".equals(list.get(i).getTagInfo())){
+					// 如果查看信息的标签信息没有录入，则设置默认值
+					//字段中文
+					viewformitem.setLabel(list.get(i).getEleCname());
+					//字段英文
+					viewformitem.setValue(list.get(i).getEleEname());
+					viewformitem.setType("input");
+				}else{
+					JSONObject jsonObject = JSONObject.fromObject(list.get(i).getTagInfo());
+					viewformitem = (FormItem) JSONObject.toBean(jsonObject, FormItem.class);
+				}
+				viewformitems.add(viewformitem);
 			}
 		}
-		if (button != null) {
-			model.setButton(button);
-		}
-		if (page != null) {
-			model.setPage(page);
-		}
+		model.setButton(this.getButton());
+		model.setPage(this.getPage());
 		model.setTable(this.getTable());
 		model.setModals(this.getModal());
 		model.setAddform(this.getForm()[0]);
@@ -127,7 +132,11 @@ public class VelocityGetTemplateData {
 		model.setTablecolumns(tablecolumns);
 		return model;
 	}
-
+	public Button getButton() {
+		Button button = new Button();
+		button.setSize("true");
+		return button;
+	}
 	public Table getTable() {
 		Table table = new Table();
 		table.setIsSelectAll("true");
@@ -142,7 +151,17 @@ public class VelocityGetTemplateData {
 		table.setOnSelectionChange("true");
 		return table;
 	}
-
+	public Page1 getPage() {
+		Page1 page = new Page1();
+		page.setOnChange("true");
+		page.setOnPageSizeChange("true");
+		page.setShowElevator("true");
+		page.setShowSizer("true");
+		page.setShowTotal("true");
+		page.setSize("true");
+		page.setTransfer("true");
+		return page;
+	}
 	public List<Modal> getModal() {
 		Modal modal1 = new Modal();
 		modal1.setWidth("700");
@@ -181,17 +200,17 @@ public class VelocityGetTemplateData {
 	public Form[] getForm() {
 		Form addform = new Form();
 		addform.setRef("addFormRef");
-		addform.setModel("addModal");
+		addform.setModel("addForm");
 		addform.setRules("addRules");
 		addform.setLabelWidth("100");
 		Form updform = new Form();
 		updform.setRef("updFormRef");
-		updform.setModel("updModal");
+		updform.setModel("updForm");
 		updform.setRules("updRules");
 		updform.setLabelWidth("100");
 		Form viewform = new Form();
 		viewform.setRef("viewFormRef");
-		viewform.setModel("viewModel");
+		viewform.setModel("viewForm");
 		viewform.setLabelWidth("100");
 		Form[] form = new Form[3];
 		form[0] = addform;
@@ -200,25 +219,7 @@ public class VelocityGetTemplateData {
 		return form;
 	}
 
-	/*public Button setButton() {
-		Button button = new Button();
-		button.setType("true");
-		button.setIcon("true");
-		button.setSize("true");
-		return button;
-	}
-
-	public Page1 setPage() {
-		Page1 page = new Page1();
-		page.setOnChange("");
-		page.setOnPageSizeChange("");
-		page.setShowElevator("");
-		page.setShowSizer("");
-		page.setShowTotal("");
-		page.setSize("");
-		page.setTransfer("");
-		return page;
-	}
+	/*
 
 	public List<Input> setInput() {
 		Input input1 = new Input();

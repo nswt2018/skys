@@ -6,7 +6,7 @@ public class FormItem {
 	//对应表单域 model 里的字段
 	private String prop;
 	//表单字段  自己添加的不是FormItem组件的属性
-	private String propValue;
+	private String value;
 	//表单域标签的的宽度
 	private String labelWidth;
 	//是否必填，如不设置，则会根据校验规则自动生成
@@ -35,11 +35,11 @@ public class FormItem {
 		this.prop = prop;
 	}
 	
-	public String getPropValue() {
-		return propValue;
+	public String getValue() {
+		return value;
 	}
-	public void setPropValue(String propValue) {
-		this.propValue = propValue;
+	public void setValue(String value) {
+		this.value = value;
 	}
 	public String getLabelWidth() {
 		return labelWidth;

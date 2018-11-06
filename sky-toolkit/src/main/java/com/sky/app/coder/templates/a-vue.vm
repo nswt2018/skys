@@ -5,6 +5,7 @@
 #set($inputs=${models.inputs})
 #set($button=${models.button})
 #set($table=${models.table})
+#set($page=${models.page})
 #set($modals=${models.modals})
 #set($addform=${models.addform})
 #set($addformitems=${models.addformitem})
