@@ -7,7 +7,7 @@ import datetool from '@/libs/datetool';
 
 let ${model}Column = {};
 
-${model}Column .getColumns = function() {
+${model}Column.getColumns = function() {
 	return [
 #if(${table.isSelectAll}=="true")				
 		   {
@@ -19,7 +19,7 @@ ${model}Column .getColumns = function() {
 #if(${table})
 #if($tablecolumns)
 #foreach($tablecolumn in $tablecolumns)
-			    
+    
 		  {
 			title: '${tablecolumn.label}',
 			key: '${tablecolumn.value}',
@@ -32,4 +32,4 @@ ${model}Column .getColumns = function() {
 	]
 };
 
-export default ${model}Column ;
+export default ${model}Column;

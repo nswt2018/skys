@@ -86,7 +86,7 @@ public class ${model}Controller extends BaseController{
 	public Mono<Message> delete${model}(@RequestParam String[] delKeys, HttpServletRequest request,
 			HttpServletResponse response) {
 		try {
-			if (delKeyss == null || delKeys.length == 0)
+			if (delKeys == null || delKeys.length == 0)
 				throw new BusinessException("000005");
 			for (String delKey : delKeys) {
 				${model}Service.delete(delKey);
