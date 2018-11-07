@@ -119,6 +119,7 @@ export default {
         },
         choicing(selection, row) {
         	pagepublictool.choice(selection, row);
+        	this.deleteKey.push(row.${tableprimary});
         },
         cancing(selection, row){
         	pagepublictool.cancel(selection, row);
@@ -127,7 +128,7 @@ export default {
         	this.selectedLines=selection.length;
         	this.deleteKey=[];
         	for(var i=0;i<this.selectedLines;i++){
-        		this.deleteKey.push(selection[i].paraCode)
+        		this.deleteKey.push(selection[i].${tableprimary})
         	}
         },
         cancingAll(selection){

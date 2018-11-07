@@ -114,8 +114,12 @@ public class VelocityGetTemplateData {
 		// 前后端共同需要的信息，表名、交易号（映射路径）
 		model.setModel("Test");
 		model.setTid(el.getModuTc());
-		// 数据库表名
+		// 模块数据库表名
 		model.setTableName("test");
+		//模块数据库表主键字段
+		model.setTablePrimary("testKey");
+		//实体类里面的属性 get/set 方法
+		model.setModelClassStr(new reflectBean("test","testKey").getClassStr());
 		// 读取配置文件coderConfig.xml,获取配置文件的参数
 		Map<String,String> map=Configuration.loadConfig("b");
 		//包名--controller
@@ -126,6 +130,8 @@ public class VelocityGetTemplateData {
 		model.setServiceImplPath(map.get("serviceImpl.packname"));
 		//包名--dao
 		model.setDaoPath(map.get("dao.packname"));
+		//包名--model
+		model.setModelPath(map.get("model.packname"));
 		// vue各组件赋值
 		model.setInputs(inputs);
 		model.setAddformitem(addformitems);

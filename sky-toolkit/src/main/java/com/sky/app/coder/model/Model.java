@@ -18,10 +18,16 @@ public class Model {
 	private String serviceImplPath;
 	//包名--dao
 	private String  daoPath;
+	//包名--model
+	private String  modelPath;
 	//表名
 	private String model;
 	//数据库表的名称
 	private String tableName;
+	//模块数据库表主键字段
+	private String tablePrimary;
+	//model实体类里面的属性 get/set 方法
+	private String modelClassStr;
 	//交易号
 	private String tid;
 	
@@ -163,6 +169,24 @@ public class Model {
 	}
 	public void setDaoPath(String daoPath) {
 		this.daoPath = daoPath;
+	}
+	public String getTablePrimary() {
+		return tablePrimary;
+	}
+	public void setTablePrimary(String tablePrimary) {
+		this.tablePrimary = tablePrimary;
+	}
+	public String getModelClassStr() {
+		return modelClassStr;
+	}
+	public void setModelClassStr(String modelClassStr) {
+		this.modelClassStr = modelClassStr;
+	}
+	public String getModelPath() {
+		return modelPath;
+	}
+	public void setModelPath(String modelPath) {
+		this.modelPath = modelPath;
 	}
 	
 }

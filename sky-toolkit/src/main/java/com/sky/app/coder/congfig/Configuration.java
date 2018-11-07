@@ -94,6 +94,9 @@ public class Configuration {
 			if ("true".equals(items.get("dao.flag"))) {
 				cmap.put(items.get("dao.template"), items.get("dao.path"));
 			}
+			if ("true".equals(items.get("model.flag"))) {
+				cmap.put(items.get("model.template"), items.get("model.path"));
+			}
 			return cmap;
 		} else {
 			return items;

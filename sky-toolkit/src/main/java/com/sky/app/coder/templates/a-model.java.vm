@@ -1,0 +1,9 @@
+#set($modelpath=${models.modelPath})
+#set($modelclassstr=${models.modelClassStr})
+package ${modelpath};
+
+import javax.persistence.Id;
+
+$modelclassstr
+
+

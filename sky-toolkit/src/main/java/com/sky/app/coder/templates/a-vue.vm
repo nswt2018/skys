@@ -2,6 +2,7 @@
 #set($titleName=${models.titleName})
 #set($model=${models.model})
 #set($tid=${models.tid})
+#set($tableprimary=${models.tablePrimary})
 #set($inputs=${models.inputs})
 #set($button=${models.button})
 #set($table=${models.table})

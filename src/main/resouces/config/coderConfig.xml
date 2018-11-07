@@ -38,10 +38,16 @@
     <item name="flag" value="true" description="true为生成文件，false则不生成"/>
   </category>
   
-  <category name="dao" description="实体类配置">
+  <category name="dao" description="dao配置">
     <item name="packname" value="com.sky.app.dao" description="包路径"/>
-    <item name="path" value="F:\\work\\skys\\sky-system\\src\\main\\java\\com\\sky\\app\\dao\\TestDao.java" description="实体类放的路径,及文件名"/>
-    <item name="template" value="a-dao.java.vm" description="实体类模板名称"/>
+    <item name="path" value="F:\\work\\skys\\sky-system\\src\\main\\java\\com\\sky\\app\\dao\\TestDao.java" description="dao放的路径,及文件名"/>
+    <item name="template" value="a-dao.java.vm" description="dao模板名称"/>
+    <item name="flag" value="true" description="true为生成文件，false则不生成"/>
+  </category>
+  <category name="model" description="实体类配置">
+    <item name="packname" value="com.sky.app.model" description="包路径"/>
+    <item name="path" value="F:\\work\\skys\\sky-system\\src\\main\\java\\com\\sky\\app\\model\\Test.java" description="实体类放的路径,及文件名"/>
+    <item name="template" value="a-model.java.vm" description="实体类模板名称"/>
     <item name="flag" value="true" description="true为生成文件，false则不生成"/>
   </category>
 </system>
