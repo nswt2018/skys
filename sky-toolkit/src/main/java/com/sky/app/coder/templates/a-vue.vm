@@ -35,4 +35,5 @@
 </template>
 <script>
 #parse("com/sky/app/coder/templates/a-script-vue.vm") 
-</script>
+
+</script> 

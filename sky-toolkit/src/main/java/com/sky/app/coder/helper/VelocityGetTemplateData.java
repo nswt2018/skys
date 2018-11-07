@@ -112,10 +112,10 @@ public class VelocityGetTemplateData {
 		// 设置模块标题图标
 		model.setTitleIconType("compose");
 		// 前后端共同需要的信息，表名、交易号（映射路径）
-		model.setModel("Parm");
+		model.setModel("Test");
 		model.setTid(el.getModuTc());
 		// 数据库表名
-		model.setTableName("sys_parm");
+		model.setTableName("test");
 		// 读取配置文件coderConfig.xml,获取配置文件的参数
 		Map<String,String> map=Configuration.loadConfig("b");
 		//包名--controller

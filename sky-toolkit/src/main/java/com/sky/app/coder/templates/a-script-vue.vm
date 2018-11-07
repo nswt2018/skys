@@ -1,6 +1,7 @@
 import datetool from '@/libs/datetool';
 import pagepublictool from '@/libs/pagepublictool';
 import Cookies from 'js-cookie';
+import ${model}Column from './${model}-column.js';
 
 export default {
     name: '${model}-info',
@@ -57,35 +58,35 @@ export default {
         		} 	   
         	],          
         	columns:[],
-        	deleteKey:[]
 #if(${addform.rules})
-        	,${addform.rules}:{
+        	${addform.rules}:{
 #if($addformitems)
 #foreach($addformitem in $addformitems)        	
-#if(${addformitem.prop} && ${addformitem.required} && ${addformitem.propValue} && ${addformitem.label})
-        	    ${addformitem.propValue}: [
+#if(${addformitem.prop} && ${addformitem.required} && ${addformitem.value} && ${addformitem.label})
+        	    ${addformitem.value}: [
                    	 {required: true, message: '${addformitem.label}不可为空', trigger: 'blur' }
                    ]#if($foreach.hasNext),#end  
                                  
 #end
 #end
 #end
-        	} 
+        	},
 #end 
 #if(${updform.rules})
-        	,${updform.rules}:{
+        	${updform.rules}:{
 #if($updformitems)
 #foreach($updformitem in $updformitems)        	
-#if(${updformitem.prop} && ${updformitem.required} && ${updformitem.propValue} && ${updformitem.label})
-        	    ${updformitem.propValue}: [
+#if(${updformitem.prop} && ${updformitem.required} && ${updformitem.value} && ${updformitem.label})
+        	    ${updformitem.value}: [
                    	 {required: true, message: '${updformitem.label}不可为空', trigger: 'blur' }
                    ]#if($foreach.hasNext),#end
 
 #end
 #end
 #end
-        	} 
-#end        	 
+        	},
+#end 
+       	    deleteKey:[]
         };
     },
     methods: {
@@ -98,7 +99,8 @@ export default {
         init () {
        		pagepublictool.setPage(this);
         	pagepublictool.page(this.getSearch());
-        	pagepublictool.getButtons();
+        	//pagepublictool.getButtons();
+        	this.columns=${model}Column.getColumns();
         },
         searching () {
     		pagepublictool.page(this.getSearch());
@@ -113,7 +115,7 @@ export default {
          	pagepublictool.save(refValue);
         },
         reseting (refValue) {
- 			this.'$'refs[refValue].resetFields();
+ 			pagepublictool.reset(refValue);
         },
         choicing(selection, row) {
         	pagepublictool.choice(selection, row);
@@ -149,15 +151,6 @@ export default {
     	this.init();
     },
     computed:{
-    //个性化设置，设置字体大小
-    	getSizeValue(){
-    	    const sizeValue=Cookies.get("sizeValue");
-    		const size=this.'$store'.state.app.sizeFont;
-    		if(!sizeValue){
-    			return size;
-    		}else{
-    			return sizeValue;
-    		}
-    	}
+		//pagepublictool.getSizeValue();
     }  
 };

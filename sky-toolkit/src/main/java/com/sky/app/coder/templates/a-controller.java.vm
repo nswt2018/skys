@@ -30,7 +30,7 @@ import reactor.core.publisher.Mono;
 @RequestMapping(value = "/system")
 public class ${model}Controller extends BaseController{
 	@Resource(name = "${model}Service")
-	private IParmService ${model}Service;
+	private I${model}Service ${model}Service;
 	@RequestMapping(value = "/${tid}L.do", method = RequestMethod.POST)
 	@ResponseBody
 	public Mono<Page<${model}>> get${model}PageList(@RequestBody Page<${model}> page, HttpServletRequest request,
