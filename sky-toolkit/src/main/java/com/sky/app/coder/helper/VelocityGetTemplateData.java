@@ -124,6 +124,8 @@ public class VelocityGetTemplateData {
 		model.setServicePath(map.get("service.packname"));
 		//包名--serviceimpl
 		model.setServiceImplPath(map.get("serviceImpl.packname"));
+		//包名--dao
+		model.setDaoPath(map.get("dao.packname"));
 		// vue各组件赋值
 		model.setInputs(inputs);
 		model.setAddformitem(addformitems);

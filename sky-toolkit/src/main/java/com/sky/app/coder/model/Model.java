@@ -16,6 +16,8 @@ public class Model {
 	private String servicePath;
 	//包名--serviceimpl
 	private String serviceImplPath;
+	//包名--dao
+	private String  daoPath;
 	//表名
 	private String model;
 	//数据库表的名称
@@ -155,6 +157,12 @@ public class Model {
 	}
 	public void setTablecolumns(List<TableColumn> tablecolumns) {
 		this.tablecolumns = tablecolumns;
+	}
+	public String getDaoPath() {
+		return daoPath;
+	}
+	public void setDaoPath(String daoPath) {
+		this.daoPath = daoPath;
 	}
 	
 }

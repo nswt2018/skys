@@ -1,0 +1,10 @@
+#set($daopath=${models.daoPath})
+#set($model=${models.model})
+package ${daopath};
+
+import com.sky.app.model.${model};
+
+import tk.mybatis.mapper.common.Mapper;
+
+public interface ${model}Dao extends Mapper<${model}>{
+} 

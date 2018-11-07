@@ -91,6 +91,9 @@ public class Configuration {
 			if ("true".equals(items.get("mapperXml.flag"))) {
 				cmap.put(items.get("mapperXml.template"), items.get("mapperXml.path"));
 			}
+			if ("true".equals(items.get("dao.flag"))) {
+				cmap.put(items.get("dao.template"), items.get("dao.path"));
+			}
 			return cmap;
 		} else {
 			return items;
