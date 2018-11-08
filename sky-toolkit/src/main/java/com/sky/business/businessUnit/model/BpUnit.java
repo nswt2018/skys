@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -21,9 +19,8 @@ public class BpUnit implements Serializable{
 
 	//主键
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="UNIT_CODE")
-	private String unitCode;
+	private Integer unitCode;
 
 	@Column(name="UNIT_NAME")
     private String unitName;
@@ -52,11 +49,11 @@ public class BpUnit implements Serializable{
 	@Column(name="UPD_DATE")
     private Date updDate;
 
-	public String getUnitCode() {
+	public Integer getUnitCode() {
 		return unitCode;
 	}
 
-	public void setUnitCode(String unitCode) {
+	public void setUnitCode(Integer unitCode) {
 		this.unitCode = unitCode;
 	}
 

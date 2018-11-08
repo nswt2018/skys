@@ -11,10 +11,10 @@
 		bp_unit
 		WHERE 1=1 AND MODU_CODE = #{variables.moduCode}
 			<if test="variables.unitCode != null and variables.unitCode != ''">
-				AND UNIT_CODE LIKE "%"#{variables.unitCode}"%"
+				AND UNIT_CODE LIKE CONCAT('%',#{variables.unitCode},'%')
 			</if>
 			<if test="variables.unitName != null and variables.unitName != ''">
-				AND UNIT_NAME LIKE "%"#{variables.unitName}"%"
+				AND UNIT_NAME LIKE CONCAT('%',#{variables.unitName},'%')
 			</if>	
 			<if test="orderBy != null and orderBy != ''">
 				 order by ${orderBy}
@@ -28,4 +28,21 @@
 	<select id="findAllChildren" parameterType="String" resultType="BpUnit">
 		select * from bp_unit where MODU_CODE = #{moduCode}
 	</select>
+	
+	<select id="findUnit" parameterType="hashmap" resultType="BpUnit">
+		select * from bp_unit WHERE 1=1
+		<if test="moduCode != null and moduCode != ''">
+			AND MODU_CODE = #{moduCode}
+		</if>
+		<if test="unitCode != null and unitCode != ''">
+			AND UNIT_CODE = #{unitCode}
+		</if>
+		<if test="relTable != null and relTable != ''">
+			AND REL_TABLE = #{relTable}
+		</if>
+	</select>
+	
+	<delete id="delUnit" parameterType="hashmap" statementType="STATEMENT">
+		delete from ${tabName} where unit_code = '${code}'
+	</delete>
 </mapper>

@@ -11,10 +11,10 @@
 		bp_model
 		WHERE 1=1
 			<if test="variables.modCode != null and variables.modCode != ''">
-				AND MOD_CODE LIKE "%"#{variables.modCode}"%"
+				AND MOD_CODE LIKE CONCAT('%',#{variables.modCode},'%')
 			</if>	
 			<if test="variables.modName != null and variables.modName != ''">
-				AND MOD_NAME LIKE "%"#{variables.modName}"%"
+				AND MOD_NAME LIKE CONCAT('%',#{variables.modName},'%')
 			</if>
 			<if test="orderBy != null and orderBy != ''">
 				 order by ${orderBy}

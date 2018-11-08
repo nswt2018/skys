@@ -29,7 +29,7 @@ public class BpElement implements Serializable{
     private String eleCName;
 	
 	@Column(name="UNIT_CODE")
-    private String unitCode;
+    private Integer unitCode;
 
 	@Column(name="TAG_INFO")
     private String tagInfo;
@@ -77,11 +77,11 @@ public class BpElement implements Serializable{
 		this.eleCName = eleCName;
 	}
 
-	public String getUnitCode() {
+	public Integer getUnitCode() {
 		return unitCode;
 	}
 
-	public void setUnitCode(String unitCode) {
+	public void setUnitCode(Integer unitCode) {
 		this.unitCode = unitCode;
 	}
 

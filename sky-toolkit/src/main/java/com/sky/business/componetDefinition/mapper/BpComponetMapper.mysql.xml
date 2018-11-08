@@ -14,10 +14,10 @@
 				AND MOD_CODE = #{variables.modCode}
 			</if>
 			<if test="variables.comCode != null and variables.comCode != ''">
-				AND COM_CODE LIKE "%"#{variables.comCode}"%"
+				AND COM_CODE LIKE CONCAT('%',#{variables.comCode},'%')
 			</if>
 			<if test="variables.comName != null and variables.comName != ''">
-				AND COM_NAME LIKE "%"#{variables.comName}"%"
+				AND COM_NAME LIKE CONCAT('%',#{variables.comName},'%')
 			</if>	
 			<if test="orderBy != null and orderBy != ''">
 				 order by ${orderBy}
