@@ -38,6 +38,12 @@ public class VelocityGetTemplateData {
 				if (list.get(i).getTagInfo() == null || "".equals(list.get(i).getTagInfo())) {
 					input.setType("text");
 					input.setValue(list.get(i).getEleEname());
+					if(ConvertString.isAcronym(list.get(i).getEleEname())){
+						//将字段中的大写字母转为‘_小写’
+						input.setConvertValue(ConvertString.convertCharlower(list.get(i).getEleEname()));
+					}else{
+						input.setConvertValue(list.get(i).getEleEname());
+					}
 					input.setPlaceholder("请输入" + list.get(i).getEleCname());
 					input.setIcon("search");
 					input.setWidth("200px");
@@ -227,83 +233,5 @@ public class VelocityGetTemplateData {
 		return form;
 	}
 
-	/*
-
-	public List<Input> setInput() {
-		Input input1 = new Input();
-		input1.setType("text");
-		input1.setValue("categoryId");
-		input1.setPlaceholder("请输入参数类型");
-		input1.setWidth("200px");
-		input1.setClearable("clearable");
-		input1.setIcon("search");
-		input1.setReadonly("true");
-		input1.setOnChange("true");
-		input1.setOnClick("true");
-		input1.setOnEnter("true");
-		input1.setSize("true");
-		Input input2 = new Input();
-		input2.setType("text");
-		input2.setValue("paraCode");
-		input2.setPlaceholder("请输入参数代码");
-		input2.setWidth("200px");
-		input2.setClearable("clearable");
-		input2.setIcon("search");
-		input2.setReadonly("true");
-		input2.setOnChange("true");
-		input2.setOnClick("true");
-		input2.setOnEnter("true");
-		List<Input> list1 = new ArrayList<Input>();
-		list1.add(input1);
-		list1.add(input2);
-		return list1;
-	}
-
-	// FormItem�����ֵ
-	public List<FormItem> setFormItem() {
-		FormItem fi = new FormItem();
-		fi.setLabel("参数类别");
-		fi.setProp("categoryId");
-		fi.setRequired("");
-		fi.setType("input");
-		fi.setPropValue("categoryId");
-		FormItem fi1 = new FormItem();
-		fi1.setLabel("参数代码");
-		fi1.setProp("paraCode");
-		fi1.setRequired("");
-		fi1.setType("select");
-		fi1.setPropValue("paraCode");
-		FormItem fi2 = new FormItem();
-		fi2.setLabel("参数名称");
-		fi2.setProp("paraName");
-		fi2.setRequired("");
-		fi2.setType("radioGroup");
-		fi2.setPropValue("paraName");
-		FormItem fi3 = new FormItem();
-		fi3.setLabel("参数值");
-		fi3.setProp("paraValue");
-		fi3.setRequired("");
-		fi3.setType("checkboxGroup");
-		fi3.setPropValue("paraValue");
-		FormItem fi4 = new FormItem();
-		fi4.setLabel("参数描述");
-		fi4.setProp("paraDesc");
-		fi4.setRequired("");
-		fi4.setType("switch");
-		fi4.setPropValue("paraDesc");
-		FormItem fi5 = new FormItem();
-		fi5.setLabel("创建人");
-		fi5.setProp("crtUserCode");
-		fi5.setRequired("");
-		fi5.setType("slider");
-		fi5.setPropValue("crtUserCode");
-		List<FormItem> list = new ArrayList<FormItem>();
-		list.add(fi);
-		list.add(fi1);
-		list.add(fi2);
-		list.add(fi3);
-		list.add(fi4);
-		list.add(fi5);
-		return list;
-	}*/
+	
 }

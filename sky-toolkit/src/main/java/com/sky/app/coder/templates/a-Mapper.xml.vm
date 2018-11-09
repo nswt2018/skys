@@ -14,7 +14,7 @@
 #if(${inputs})	
 #foreach($input in $inputs)       
 	             <if test="variables.${input.value} !=null and variables.${input.value} !=''">
-	             		and ${input.value}=#{variables.${input.value}}
+	             		and ${input.convertValue}=#{variables.${input.value}}
 	             </if>
 #end
 #end	 
