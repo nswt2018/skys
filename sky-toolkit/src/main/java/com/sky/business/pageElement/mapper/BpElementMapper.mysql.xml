@@ -11,13 +11,13 @@
 		bp_element
 		WHERE 1=1 AND UNIT_CODE = #{variables.unitCode}
 			<if test="variables.eleCode != null and variables.eleCode != ''">
-				AND ELE_CODE LIKE "%"#{variables.eleCode}"%"
+				AND ELE_CODE LIKE CONCAT('%',#{variables.eleCode},'%')
 			</if>
 			<if test="variables.eleCName != null and variables.eleCName != ''">
-				AND ELE_CNAME LIKE "%"#{variables.eleCName}"%"
+				AND ELE_CNAME LIKE CONCAT('%',#{variables.eleCName},'%')
 			</if>	
 			<if test="variables.eleEName != null and variables.eleEName != ''">
-				AND ELE_ENAME LIKE "%"#{variables.eleEName}"%"
+				AND ELE_ENAME LIKE CONCAT('%',#{variables.eleEName},'%')
 			</if>	
 			<if test="orderBy != null and orderBy != ''">
 				 order by ${orderBy}

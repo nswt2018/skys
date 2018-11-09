@@ -1,6 +1,7 @@
 package com.sky.business.businessUnit.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -65,7 +65,7 @@ public class BpUnitController extends BaseController {
 		return Mono.justOrEmpty(page);
 	}
 	
-	@PutMapping("/TK0005I.do")
+	/*@PutMapping("/TK0005I.do")
 	@ResponseBody
 	public Mono<Message> saveComponet(@RequestBody BpUnit bpUnit, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try {
@@ -99,7 +99,7 @@ public class BpUnitController extends BaseController {
 			e.printStackTrace();
 			throw new BusinessException("000004", e.getMessage());
 		}
-	}
+	}*/
 	
 	@DeleteMapping("/TK0005D.do")
 	@ResponseBody
@@ -108,7 +108,15 @@ public class BpUnitController extends BaseController {
 			if(unitCode==null || unitCode.length == 0)
 				throw new BusinessException("000005");
 			for(String id : unitCode) {
-				bpUnitService.delete(id);
+				Map<String, String> map = new HashMap<>();
+				map.put("tabName", "bp_unit");
+				map.put("code", id);
+				bpUnitService.delUnit("com.sky.business.businessUnit.dao.BpUnitDao.delUnit", map);
+				//删除页面元素表中相关记录
+				map.clear();
+				map.put("tabName", "bp_element");
+				map.put("code", id);
+				bpUnitService.delUnit("com.sky.business.businessUnit.dao.BpUnitDao.delUnit", map);
 			}
 			return Mono.justOrEmpty(new Message("000002"));
 		} catch (Exception e) {
@@ -121,6 +129,34 @@ public class BpUnitController extends BaseController {
 	@ResponseBody
 	public Mono<Message> update(@RequestBody BpUnit bpUnit, HttpServletRequest request, HttpServletResponse response) {
 		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("moduCode", bpUnit.getModuCode());
+			map.put("unitCode", bpUnit.getUnitCode());
+			List<BpUnit> unitList = bpUnitService.findForList("com.sky.business.businessUnit.dao.BpUnitDao.findUnit", map);
+			String relColumn = bpUnit.getRelColumn();
+			
+			//如果关联字段发生变化，则先删除页面元素表中的相关记录，然后再插入新的数据
+			if(!(relColumn.equals(unitList.get(0).getRelColumn()))){
+				Map<String, String> map1 = new HashMap<>();
+				map1.put("tabName", "bp_element");
+				map1.put("code", "" + bpUnit.getUnitCode());
+				bpUnitService.delUnit("com.sky.business.businessUnit.dao.BpUnitDao.delUnit", map1);
+				
+				String[] split = relColumn.split(",");
+				for (String rInfo : split) {
+					BpElement bpElement = new BpElement();
+					bpElement.setEleEName(rInfo);
+					bpElement.setUnitCode(bpUnit.getUnitCode());
+					bpElement.setUnitName(bpUnit.getUnitName());
+					bpElement.setEleCName(rInfo);
+					bpElement.setModuCode(bpUnit.getModuCode());
+					bpElement.setComCode(bpUnit.getComCode());
+					bpElement.setComName(bpUnit.getComName());
+					bpElement.setCrtDate(new Date());
+					bpElementService.save(bpElement);
+				}
+			}
+			
 			String comCode = bpUnit.getComCode();
 			List<BpComponet> list = bpComponetService.findForList("com.sky.business.componetDefinition.dao.BpComponetDao.findComponet", comCode);
 			bpUnit.setComName(list.get(0).getComName());
@@ -184,5 +220,13 @@ public class BpUnitController extends BaseController {
 	public Mono<List<BpComponet>> getComponet(HttpServletRequest request, HttpServletResponse response) throws Exception {	
 		List<BpComponet> list = bpComponetService.findForList("com.sky.business.componetDefinition.dao.BpComponetDao.findAllComponet", "");
 		return Mono.justOrEmpty(list);
+	}
+	
+	@RequestMapping(value="/TK0005S1.do")
+	@ResponseBody
+	public Mono<List<String>> getColumnList(@RequestParam String relTable, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		List<String> columnList = bpModuleService.getTabInfo("com.sky.business.systemModule.dao.BpModuleDao.getColumnName", relTable);
+		return Mono.justOrEmpty(columnList);
 	}
 }

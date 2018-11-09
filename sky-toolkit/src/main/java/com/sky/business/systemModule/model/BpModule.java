@@ -45,6 +45,9 @@ public class BpModule implements Serializable{
 
 	@Column(name="UPD_DATE")
     private Date updDate;
+	
+	@Column(name="REL_TABLE")
+	private String relTable;
 
 	public String getModuCode() {
 		return moduCode;
@@ -112,5 +115,13 @@ public class BpModule implements Serializable{
 
 	public void setModName(String modName) {
 		this.modName = modName;
+	}
+
+	public String getRelTable() {
+		return relTable;
+	}
+
+	public void setRelTable(String relTable) {
+		this.relTable = relTable;
 	}
 }

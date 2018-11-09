@@ -37,6 +37,9 @@ public class BpModel implements Serializable{
 	@Column(name="UPD_DATE")
     private Date updDate;
 	
+	@Column(name="REMARKS")
+	private String remarks;
+	
 	public String getModCode() {
         return modCode;
     }
@@ -77,7 +80,15 @@ public class BpModel implements Serializable{
         this.updDate = updDate;
     }
     
-    public static long getSerialversionuid() {
+    public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
 }

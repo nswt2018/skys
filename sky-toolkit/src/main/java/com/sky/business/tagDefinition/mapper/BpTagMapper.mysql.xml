@@ -13,8 +13,11 @@
 			<if test="variables.tagCode != null and variables.tagCode != ''">
 				AND TAG_CODE = #{variables.tagCode}
 			</if>	
+			<if test="variables.propType != null and variables.propType != ''">
+				AND PROP_Type LIKE CONCAT('%',#{variables.propType},'%')
+			</if>
 			<if test="variables.tagProp != null and variables.tagProp != ''">
-				AND TAG_PROP LIKE "%"#{variables.tagProp}"%"
+				AND TAG_PROP LIKE CONCAT('%',#{variables.tagProp},'%')
 			</if>
 			<if test="orderBy != null and orderBy != ''">
 				 order by ${orderBy}

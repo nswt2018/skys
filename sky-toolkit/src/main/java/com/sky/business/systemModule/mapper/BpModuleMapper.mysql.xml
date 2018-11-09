@@ -11,13 +11,13 @@
 		bp_module
 		WHERE 1=1
 			<if test="variables.moduCode != null and variables.moduCode != ''">
-				AND MODU_CODE LIKE "%"#{variables.moduCode}"%"
+				AND MODU_CODE LIKE CONCAT('%',#{variables.moduCode},'%')
 			</if>	
 			<if test="variables.moduCName != null and variables.moduCName != ''">
-				AND MODU_CNAME LIKE "%"#{variables.moduCName}"%"
+				AND MODU_CNAME LIKE CONCAT('%',#{variables.moduCName},'%')
 			</if>
 			<if test="variables.moduEName != null and variables.moduEName != ''">
-				AND MODU_ENAME LIKE "%"#{variables.moduEName}"%"
+				AND MODU_ENAME LIKE CONCAT('%',#{variables.moduEName},'%')
 			</if>
 			<if test="orderBy != null and orderBy != ''">
 				 order by ${orderBy}
@@ -27,4 +27,16 @@
 	<select id="findAllModule" parameterType="String" resultType="BpModule">
 		select * from bp_module
 	</select>
+	
+	<select id="getTabName" parameterType="String" resultType="String">
+		SELECT table_name FROM information_schema.tables WHERE table_schema='sshs'
+	</select>
+	
+	<select id="getColumnName" parameterType="String" resultType="String">
+		SELECT column_name FROM information_schema.columns WHERE table_schema='sshs' AND table_name= #{relTable} ORDER BY column_name
+	</select>
+	
+	<delete id="delData" parameterType="hashmap" statementType="STATEMENT">
+		delete from ${tabName} where modu_code = '${code}'
+	</delete>
 </mapper>
