@@ -11,17 +11,20 @@ public class Model {
 	private String titleIconType;
 	
 	//包名--controller
-	private String controllerPath;
+	private String controllerPackName;
 	//包名--service
-	private String servicePath;
+	private String servicePackName;
 	//包名--serviceimpl
-	private String serviceImplPath;
+	private String serviceImplPackName;
 	//包名--dao
-	private String  daoPath;
+	private String  daoPackName;
 	//包名--model
-	private String  modelPath;
+	private String  modelPackName;
+	
 	//表名
 	private String model;
+	//模型代码
+	private String moduCode;
 	//数据库表的名称
 	private String tableName;
 	//模块数据库表主键字段
@@ -54,25 +57,6 @@ public class Model {
 	}
 	public void setTitleIconType(String titleIconType) {
 		this.titleIconType = titleIconType;
-	}
-	public String getControllerPath() {
-		return controllerPath;
-	}
-	public void setControllerPath(String controllerPath) {
-		this.controllerPath = controllerPath;
-	}
-	
-	public String getServicePath() {
-		return servicePath;
-	}
-	public void setServicePath(String servicePath) {
-		this.servicePath = servicePath;
-	}
-	public String getServiceImplPath() {
-		return serviceImplPath;
-	}
-	public void setServiceImplPath(String serviceImplPath) {
-		this.serviceImplPath = serviceImplPath;
 	}
 	public String getModel() {
 		return model;
@@ -164,12 +148,6 @@ public class Model {
 	public void setTablecolumns(List<TableColumn> tablecolumns) {
 		this.tablecolumns = tablecolumns;
 	}
-	public String getDaoPath() {
-		return daoPath;
-	}
-	public void setDaoPath(String daoPath) {
-		this.daoPath = daoPath;
-	}
 	public String getTablePrimary() {
 		return tablePrimary;
 	}
@@ -182,11 +160,41 @@ public class Model {
 	public void setModelClassStr(String modelClassStr) {
 		this.modelClassStr = modelClassStr;
 	}
-	public String getModelPath() {
-		return modelPath;
+	public String getModuCode() {
+		return moduCode;
 	}
-	public void setModelPath(String modelPath) {
-		this.modelPath = modelPath;
+	public void setModuCode(String moduCode) {
+		this.moduCode = moduCode;
+	}
+	public String getControllerPackName() {
+		return controllerPackName;
+	}
+	public void setControllerPackName(String controllerPackName) {
+		this.controllerPackName = controllerPackName;
+	}
+	public String getServicePackName() {
+		return servicePackName;
+	}
+	public void setServicePackName(String servicePackName) {
+		this.servicePackName = servicePackName;
+	}
+	public String getServiceImplPackName() {
+		return serviceImplPackName;
+	}
+	public void setServiceImplPackName(String serviceImplPackName) {
+		this.serviceImplPackName = serviceImplPackName;
+	}
+	public String getDaoPackName() {
+		return daoPackName;
+	}
+	public void setDaoPackName(String daoPackName) {
+		this.daoPackName = daoPackName;
+	}
+	public String getModelPackName() {
+		return modelPackName;
+	}
+	public void setModelPackName(String modelPackName) {
+		this.modelPackName = modelPackName;
 	}
 	
 }

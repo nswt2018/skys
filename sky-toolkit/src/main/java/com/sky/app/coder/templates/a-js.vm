@@ -1,13 +1,13 @@
 #set($tablecolumns=${models.tablecolumns})
-#set($model=${models.model})
+#set($moducode=${models.moduCode})
 #set($table=${models.table})
 import Vue from 'vue';
 import iView from 'iview';
 import datetool from '@/libs/datetool';
 
-let ${model}Column = {};
+let ${moducode}Column = {};
 
-${model}Column.getColumns = function() {
+${moducode}Column.getColumns = function() {
 	return [
 #if(${table.isSelectAll}=="true")				
 		   {
@@ -32,4 +32,4 @@ ${model}Column.getColumns = function() {
 	]
 };
 
-export default ${model}Column;
+export default ${moducode}Column;

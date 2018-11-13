@@ -1,7 +1,10 @@
-#set($controllerPath=${models.controllerPath})
+#set($controllerpackname=${models.controllerPackName})
+#set($modelpackname=${models.modelPackName})
+#set($servicepackname=${models.servicePackName})
 #set($model=${models.model})
+#set($moducode=${models.moduCode})
 #set($tid=${models.tid})
-package ${controllerPath};
+package ${controllerpackname};
 
 
 import javax.annotation.Resource;
@@ -18,8 +21,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sky.core.base.controller.BaseController;
-import com.sky.app.model.${model};
-import com.sky.app.service.I${model}Service;
+import ${modelpackname}.${model};
+import ${servicepackname}.I${model}Service;
 import com.sky.core.exception.BusinessException;
 import com.sky.core.message.Message;
 import com.sky.core.page.Page;
@@ -27,7 +30,7 @@ import com.sky.core.page.Page;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping(value = "/system")
+@RequestMapping(value = "/${moducode}")
 public class ${model}Controller extends BaseController{
 	@Resource(name = "${model}Service")
 	private I${model}Service ${model}Service;

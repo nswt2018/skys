@@ -13,11 +13,11 @@ public class reflectBean {
     private Connection connection;  
     private PreparedStatement UserQuery;  
     /*mysql url的连接字符串*/  
-    private static String url = "jdbc:mysql://127.0.0.1:3306/skys?useUnicode=true&characterEncoding=UTF-8";  
+    private static String url = "jdbc:mysql://123.125.34.39:3306/abcd?useUnicode=true&characterEncoding=UTF-8";  
     //账号  
-    private static String user = "root";  
+    private static String user = "select";  
     //密码  
-    private static String password = "123";  
+    private static String password = "123456";  
     private Vector<String> vector = new Vector<String>();  
     //mysql jdbc的java包驱动字符串  
     private String driverClassName = "com.mysql.jdbc.Driver";  
@@ -211,7 +211,7 @@ public class reflectBean {
 	   	return columnname;
    }
     public static void main(String[] args) {  
-        reflectBean bean = new reflectBean("test","");  
+        reflectBean bean = new reflectBean("test","testKey");  
         System.err.println(bean.getClassStr());  
     }  
       

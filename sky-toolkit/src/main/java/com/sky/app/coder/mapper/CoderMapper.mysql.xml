@@ -10,12 +10,19 @@
 	             
   </select>
   <select id="findBpForOne" parameterType="String" resultType="Element">
-	       select 
-	         MODU_CNAME,
-	         MODU_TC
-	       from 
-	         BP_MODULE 
-	       where 1=1 and MODU_CODE=#{moduCode}
-	             
+	       SELECT
+				MODU_CODE,
+				MODU_CNAME,
+				MODU_TC,
+				REL_TABLE,
+				b.PACK_NAME,
+				b.VUE_PATH,
+				b.JAVA_PATH 
+			FROM
+				BP_MODULE a
+				LEFT JOIN bp_systems b ON a.modu_code = b.mod_code 
+			WHERE
+				1 = 1 
+				AND MODU_CODE = #{moduCode}
   </select>
 </mapper>

@@ -1,8 +1,9 @@
-#set($daopath=${models.daoPath})
+#set($daopackname=${models.daoPackName})
+#set($modelpackname=${models.modelPackName})
 #set($model=${models.model})
-package ${daopath};
+package ${daopackname};
 
-import com.sky.app.model.${model};
+import ${modelpackname}.${model};
 
 import tk.mybatis.mapper.common.Mapper;
 

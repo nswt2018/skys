@@ -2,9 +2,7 @@ package com.sky.app.coder.helper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import com.sky.app.coder.congfig.Configuration;
 import com.sky.app.coder.model.Button;
 import com.sky.app.coder.model.Element;
 import com.sky.app.coder.model.Form;
@@ -118,26 +116,30 @@ public class VelocityGetTemplateData {
 		// 设置模块标题图标
 		model.setTitleIconType("compose");
 		// 前后端共同需要的信息，表名、交易号（映射路径）
-		model.setModel("Test");
+		//表名
+		model.setModel(ConvertString.convertFirstCharUpper(el.getModuCode()));
+		//模块代码
+		String lowerModuCode=el.getModuCode().toLowerCase();
+		model.setModuCode(lowerModuCode);
+		//模块交易号
 		model.setTid(el.getModuTc());
 		// 模块数据库表名
-		model.setTableName("test");
+		model.setTableName(el.getRelTable());
 		//模块数据库表主键字段
 		model.setTablePrimary("testKey");
-		//实体类里面的属性 get/set 方法
-		model.setModelClassStr(new reflectBean("test","testKey").getClassStr());
+		//实体类里面的属性 get/set 方法，传入参数（数据库表名，表主键）
+		model.setModelClassStr(new reflectBean(el.getRelTable(),"testKey").getClassStr());
 		// 读取配置文件coderConfig.xml,获取配置文件的参数
-		Map<String,String> map=Configuration.loadConfig("b");
-		//包名--controller
-		model.setControllerPath(map.get("controller.packname"));
-		//包名--service
-		model.setServicePath(map.get("service.packname"));
-		//包名--serviceimpl
-		model.setServiceImplPath(map.get("serviceImpl.packname"));
-		//包名--dao
-		model.setDaoPath(map.get("dao.packname"));
-		//包名--model
-		model.setModelPath(map.get("model.packname"));
+		//包名--controller   三级包名+模块代码（全部小写）+每层固体的命名
+		model.setControllerPackName(el.getPackName()+lowerModuCode+".controller");
+		//包名--service      三级包名+模块代码（全部小写）+每层固体的命名
+		model.setServicePackName(el.getPackName()+lowerModuCode+".service");
+		//包名--serviceimpl 	三级包名+模块代码（全部小写）+每层固体的命名
+		model.setServiceImplPackName(el.getPackName()+lowerModuCode+".service.impl");
+		//包名--dao			三级包名+模块代码（全部小写）+每层固体的命名
+		model.setDaoPackName(el.getPackName()+lowerModuCode+".dao");
+		//包名--model		三级包名+模块代码（全部小写）+每层固体的命名
+		model.setModelPackName(el.getPackName()+lowerModuCode+".model");
 		// vue各组件赋值
 		model.setInputs(inputs);
 		model.setAddformitem(addformitems);

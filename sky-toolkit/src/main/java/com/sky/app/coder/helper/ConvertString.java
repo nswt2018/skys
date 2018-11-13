@@ -50,8 +50,19 @@ public class ConvertString {
 		}
 		return str;
 	}
-
+	//判断字符串首字符是否大写，如果不是则大写，并返回
+	public static String convertFirstCharUpper(String str){
+		if (!Character.isUpperCase(str.charAt(0))) {
+			str=str.substring(0, 1).toUpperCase()+str.substring(1);
+		}
+		return str;
+	}
+	//替换字符串中‘\’为‘/’
+	public static String replace(String str){
+		str=str.replaceAll("\\\\", "/");
+		return str;
+	}
 	public static void main(String[] args) {
-		System.out.println(convertSomeCharUpper("test_key_one"));
+		System.out.println(replace("F:/"));
 	}
 }
