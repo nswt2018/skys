@@ -126,9 +126,10 @@ public class VelocityGetTemplateData {
 		// 模块数据库表名
 		model.setTableName(el.getRelTable());
 		//模块数据库表主键字段
-		model.setTablePrimary("testKey");
+		String colcode=ConvertString.convertCharlower(el.getColCode());
+		model.setTablePrimary(colcode);
 		//实体类里面的属性 get/set 方法，传入参数（数据库表名，表主键）
-		model.setModelClassStr(new reflectBean(el.getRelTable(),"testKey").getClassStr());
+		model.setModelClassStr(new reflectBean(el.getRelTable(),colcode).getClassStr());
 		// 读取配置文件coderConfig.xml,获取配置文件的参数
 		//包名--controller   三级包名+模块代码（全部小写）+每层固体的命名
 		model.setControllerPackName(el.getPackName()+lowerModuCode+".controller");

@@ -27,6 +27,8 @@ public class Element {
 	private String vuePath;
 	//业务逻辑组件路径
 	private String javaPath;
+	//模块数据库主键‘
+	private String colCode;
 	public String getEleEname() {
 		return eleEname;
 	}
@@ -104,6 +106,12 @@ public class Element {
 	}
 	public void setJavaPath(String javaPath) {
 		this.javaPath = javaPath;
+	}
+	public String getColCode() {
+		return colCode;
+	}
+	public void setColCode(String colCode) {
+		this.colCode = colCode;
 	}
 	
 

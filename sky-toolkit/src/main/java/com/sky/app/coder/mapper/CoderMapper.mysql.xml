@@ -25,4 +25,13 @@
 				1 = 1 
 				AND MODU_CODE = #{moduCode}
   </select>
+  <select id="findBpFieldForOne" parameterType="String" resultType="Element">
+			SELECT
+				B.COL_CODE 
+			FROM
+				BP_MODULE A LEFT JOIN ( SELECT * FROM  BP_FIELD WHERE PK_GEN IS NOT NULL ) B ON A.REL_TABLE = B.TAB_CODE 
+			WHERE
+				1 = 1 
+				AND MODU_CODE = #{moduCode} 
+  </select>
 </mapper>
