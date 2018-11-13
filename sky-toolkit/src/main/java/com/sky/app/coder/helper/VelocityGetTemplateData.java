@@ -35,13 +35,9 @@ public class VelocityGetTemplateData {
 				// 如果搜索框的标签信息没有录入，则设置默认值
 				if (list.get(i).getTagInfo() == null || "".equals(list.get(i).getTagInfo())) {
 					input.setType("text");
-					input.setValue(list.get(i).getEleEname());
-					if(ConvertString.isAcronym(list.get(i).getEleEname())){
-						//将字段中的大写字母转为‘_小写’
-						input.setConvertValue(ConvertString.convertCharlower(list.get(i).getEleEname()));
-					}else{
-						input.setConvertValue(list.get(i).getEleEname());
-					}
+					//并将英文字段中"_"去掉后第一字母大写
+					input.setValue(ConvertString.convertSomeCharUpper(list.get(i).getEleEname()));
+					input.setConvertValue(list.get(i).getEleEname());
 					input.setPlaceholder("请输入" + list.get(i).getEleCname());
 					input.setIcon("search");
 					input.setWidth("200px");
@@ -53,8 +49,10 @@ public class VelocityGetTemplateData {
 				inputs.add(input);
 			}else if (list.get(i).getComName().equals("列表信息")) {
 				TableColumn tablecolumn = new TableColumn();
+				//字段中文
 				tablecolumn.setLabel(list.get(i).getEleCname());
-				tablecolumn.setValue(list.get(i).getEleEname());
+				//字段英文，并将字段中"_"去掉后第一字母大写
+				tablecolumn.setValue(ConvertString.convertSomeCharUpper(list.get(i).getEleEname()));
 				tablecolumns.add(tablecolumn);
 			} else if (list.get(i).getComName().equals("新增信息")) {
 				FormItem addformitem = new FormItem();
@@ -62,9 +60,9 @@ public class VelocityGetTemplateData {
 				if(list.get(i).getTagInfo()==null|| "".equals(list.get(i).getTagInfo())){
 					//字段中文
 					addformitem.setLabel(list.get(i).getEleCname());
-					//字段英文
-					addformitem.setProp(list.get(i).getEleEname());
-					addformitem.setValue(list.get(i).getEleEname());
+					//字段英文，并将字段中"_"去掉后第一字母大写
+					addformitem.setProp(ConvertString.convertSomeCharUpper(list.get(i).getEleEname()));
+					addformitem.setValue(ConvertString.convertSomeCharUpper(list.get(i).getEleEname()));
 					addformitem.setRequired("true");
 					addformitem.setType("input");
 				}else{
@@ -78,9 +76,9 @@ public class VelocityGetTemplateData {
 				if(list.get(i).getTagInfo()==null|| "".equals(list.get(i).getTagInfo())){
 					//字段中文
 					updformitem.setLabel(list.get(i).getEleCname());
-					//字段英文
-					updformitem.setProp(list.get(i).getEleEname());
-					updformitem.setValue(list.get(i).getEleEname());
+					//字段英文，并将字段中"_"去掉后第一字母大写
+					updformitem.setProp(ConvertString.convertSomeCharUpper(list.get(i).getEleEname()));
+					updformitem.setValue(ConvertString.convertSomeCharUpper(list.get(i).getEleEname()));
 					updformitem.setRequired("true");
 					updformitem.setType("input");
 				}else{
@@ -94,8 +92,8 @@ public class VelocityGetTemplateData {
 					// 如果查看信息的标签信息没有录入，则设置默认值
 					//字段中文
 					viewformitem.setLabel(list.get(i).getEleCname());
-					//字段英文
-					viewformitem.setValue(list.get(i).getEleEname());
+					//字段英文,并将字段中"_"去掉后第一字母大写
+					viewformitem.setValue(ConvertString.convertSomeCharUpper(list.get(i).getEleEname()));
 					viewformitem.setType("input");
 				}else{
 					JSONObject jsonObject = JSONObject.fromObject(list.get(i).getTagInfo());
@@ -126,20 +124,20 @@ public class VelocityGetTemplateData {
 		// 模块数据库表名
 		model.setTableName(el.getRelTable());
 		//模块数据库表主键字段
-		String colcode=ConvertString.convertCharlower(el.getColCode());
+		String colcode=ConvertString.convertSomeCharUpper(el.getColCode());
 		model.setTablePrimary(colcode);
 		//实体类里面的属性 get/set 方法，传入参数（数据库表名，表主键）
 		model.setModelClassStr(new reflectBean(el.getRelTable(),colcode).getClassStr());
 		// 读取配置文件coderConfig.xml,获取配置文件的参数
-		//包名--controller   三级包名+模块代码（全部小写）+每层固体的命名
+		//包名--controller   三级包名+模块代码（全部小写）+每层固定的命名
 		model.setControllerPackName(el.getPackName()+lowerModuCode+".controller");
-		//包名--service      三级包名+模块代码（全部小写）+每层固体的命名
+		//包名--service      三级包名+模块代码（全部小写）+每层固定的命名
 		model.setServicePackName(el.getPackName()+lowerModuCode+".service");
-		//包名--serviceimpl 	三级包名+模块代码（全部小写）+每层固体的命名
+		//包名--serviceimpl 	三级包名+模块代码（全部小写）+每层固定的命名
 		model.setServiceImplPackName(el.getPackName()+lowerModuCode+".service.impl");
-		//包名--dao			三级包名+模块代码（全部小写）+每层固体的命名
+		//包名--dao			三级包名+模块代码（全部小写）+每层固定的命名
 		model.setDaoPackName(el.getPackName()+lowerModuCode+".dao");
-		//包名--model		三级包名+模块代码（全部小写）+每层固体的命名
+		//包名--model		三级包名+模块代码（全部小写）+每层固定的命名
 		model.setModelPackName(el.getPackName()+lowerModuCode+".model");
 		// vue各组件赋值
 		model.setInputs(inputs);
