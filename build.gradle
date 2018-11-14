@@ -11,6 +11,7 @@ buildscript {
 
 dependencies {
     compile project(':sky-toolkit')
+    compile project(':sky-system')
 }
 
 allprojects {
