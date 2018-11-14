@@ -1,13 +1,13 @@
+apply plugin: 'java'
+    
 buildscript {
     repositories {
         mavenCentral()
     }
     dependencies {
-        //classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.0.RELEASE")
-    }
+        //classpath("org.springframework.boot:spring-boot-gradle-plugin:2.1.0.RELEASE")
+    }    
 }
-
-	apply plugin: 'war'
 
 dependencies {
     compile project(':sky-toolkit')
