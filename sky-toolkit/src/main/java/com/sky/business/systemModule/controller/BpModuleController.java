@@ -106,7 +106,7 @@ public class BpModuleController extends BaseController {
 			BpUnit bpUnit = new BpUnit();
 			bpUnit.setCrtDate(new Date());
 			bpUnit.setModuCode(bpModule.getModuCode());
-			bpUnit.setUnitName(bpModule.getModName());
+			bpUnit.setUnitName(bpModule.getModuCName() + "-" + bpComponet.getComName());
 			bpUnit.setComCode(bpComponet.getComCode());
 			bpUnit.setComName(bpComponet.getComName());
 			bpUnit.setRelColumn(relColumn);
