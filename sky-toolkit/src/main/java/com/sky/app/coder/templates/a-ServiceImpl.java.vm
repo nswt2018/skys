@@ -1,11 +1,13 @@
-#set($serviceImplPath=${models.serviceImplPath})
+#set($serviceimplpackname=${models.serviceImplPackName})
+#set($servicepackname=${models.servicePackName})
+#set($modelpackname=${models.modelPackName})
 #set($model=${models.model})
-package ${serviceImplPath};
+package ${serviceimplpackname};
 
 import com.sky.core.base.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
-import com.sky.app.model.${model};
-import com.sky.app.service.I${model}Service;
+import ${modelpackname}.${model};
+import ${servicepackname}.I${model}Service;
 
 @Service("${model}Service")
 public class ${model}ServiceImpl extends BaseServiceImpl<${model}> implements I${model}Service{

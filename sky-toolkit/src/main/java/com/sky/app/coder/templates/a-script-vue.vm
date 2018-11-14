@@ -1,16 +1,17 @@
+#set($store="\$store")
 import datetool from '@/libs/datetool';
 import pagepublictool from '@/libs/pagepublictool';
 import Cookies from 'js-cookie';
-import ${model}Column from './${model}-column.js';
+import ${moducode}Column from './${moducode}-column.js';
 
 export default {
-    name: '${model}-info',
+    name: '${moducode}-info',
     data () {
         return {
-        	listurl: '/system/${tid}L.do', 
-        	saveurl: '/system/${tid}I.do',
-        	deleteurl: '/system/${tid}D.do',
-        	updateurl: '/system/${tid}U.do',
+        	listurl: '/${moducode}/${tid}L.do', 
+        	saveurl: '/${moducode}/${tid}I.do',
+        	deleteurl: '/${moducode}/${tid}D.do',
+        	updateurl: '/${moducode}/${tid}U.do',
 #if($inputs)
 #foreach($input in $inputs)       	
         	${input.value}:'',
@@ -100,7 +101,7 @@ export default {
        		pagepublictool.setPage(this);
         	pagepublictool.page(this.getSearch());
         	//pagepublictool.getButtons();
-        	this.columns=${model}Column.getColumns();
+        	this.columns=${moducode}Column.getColumns();
         },
         searching () {
     		pagepublictool.page(this.getSearch());
@@ -123,6 +124,9 @@ export default {
         },
         cancing(selection, row){
         	pagepublictool.cancel(selection, row);
+        	if(this.selectedLines>0){
+        		this.deleteKey.splice(this.deleteKey.indexOf(row.${tableprimary}), 1);
+        	}
         },
         choicingAll(selection){
         	this.selectedLines=selection.length;
@@ -152,6 +156,15 @@ export default {
     	this.init();
     },
     computed:{
-		//pagepublictool.getSizeValue();
+			getSizeValue(){
+			 	//个性化设置，设置字体大小
+				const sizeValue=Cookies.get("sizeValue");
+				const size=this.$store.state.app.sizeFont;
+				if(!sizeValue){
+					return size;
+				}else{
+					return sizeValue;
+				}
+	    	}
     }  
 };

@@ -1,6 +1,6 @@
-#set($modelpath=${models.modelPath})
+#set($modelpackname=${models.modelPackName})
 #set($modelclassstr=${models.modelClassStr})
-package ${modelpath};
+package ${modelpackname};
 
 import javax.persistence.Id;
 

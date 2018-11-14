@@ -1,6 +1,7 @@
 #set($titleIconType=${models.titleIconType})
 #set($titleName=${models.titleName})
 #set($model=${models.model})
+#set($moducode=${models.moduCode})
 #set($tid=${models.tid})
 #set($tableprimary=${models.tablePrimary})
 #set($inputs=${models.inputs})
