@@ -42,7 +42,7 @@ public class Test {
 		  while((line=br.readLine())!=null && line!=""){
 	          sb.append("   ").append(new String(line.getBytes(), "GBK"));
 	          System.out.println(new String(line.getBytes(), "GBK"));
-			  if(line.indexOf("JVM running for")!=-1) {
+			 /* if(line.indexOf("JVM running for")!=-1) {
 				  sb.append("重新部署应用成功！");
 				  System.out.println("重新部署应用成功！");
 				  break;
@@ -50,7 +50,7 @@ public class Test {
 				  sb.append("重新部署应用失败，请检查输出信息！");
 				  System.out.println("重新部署应用失败，请检查输出信息！");
 				  break;
-			  }
+			  }*/
 			//Thread.sleep(60*60*1000);
 		   }
 	       br.close();
