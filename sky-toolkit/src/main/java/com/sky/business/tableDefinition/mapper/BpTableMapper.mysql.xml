@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sky.business.tableDefinition.dao.BpTableDao">
+
+	<!-- 分页 -->
+	<select id="findForPageList" parameterType="Page"
+		resultType="BpTable">
+		SELECT  
+		*
+		FROM 
+		bp_tables
+		WHERE 1=1	
+			<if test="variables.tabCode != null and variables.tabCode != ''">
+				AND tab_code LIKE CONCAT('%',#{variables.tabCode},'%')
+			</if>
+			<if test="variables.tabName != null and variables.tabName != ''">
+				AND tab_name LIKE CONCAT('%',#{variables.tabName},'%')
+			</if>
+			<if test="orderBy != null and orderBy != ''">
+				 order by ${orderBy}
+			</if>
+	</select>
+	
+	<select id="findAllTab" parameterType="String" resultType="BpTable">
+		select * from bp_tables where 1=1
+	</select>
+	
+	<insert id="creatTable" parameterType="hashmap" statementType="STATEMENT">
+        create table ${tabCode}
+        <foreach collection="keys" item="k" index="index" open="(" separator="," close=");">
+         	${k[0]} ${k[2]} ${k[3]} COMMENT '${k[1]}'
+        </foreach>
+    </insert>
+</mapper>
