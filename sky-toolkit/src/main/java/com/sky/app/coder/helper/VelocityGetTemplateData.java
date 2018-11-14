@@ -130,15 +130,15 @@ public class VelocityGetTemplateData {
 		model.setModelClassStr(new reflectBean(el.getRelTable(),colcode).getClassStr());
 		// 读取配置文件coderConfig.xml,获取配置文件的参数
 		//包名--controller   三级包名+模块代码（全部小写）+每层固定的命名
-		model.setControllerPackName(el.getPackName()+lowerModuCode+".controller");
+		model.setControllerPackName(el.getPackName()+"."+lowerModuCode+".controller");
 		//包名--service      三级包名+模块代码（全部小写）+每层固定的命名
-		model.setServicePackName(el.getPackName()+lowerModuCode+".service");
+		model.setServicePackName(el.getPackName()+"."+lowerModuCode+".service");
 		//包名--serviceimpl 	三级包名+模块代码（全部小写）+每层固定的命名
-		model.setServiceImplPackName(el.getPackName()+lowerModuCode+".service.impl");
+		model.setServiceImplPackName(el.getPackName()+"."+lowerModuCode+".service.impl");
 		//包名--dao			三级包名+模块代码（全部小写）+每层固定的命名
-		model.setDaoPackName(el.getPackName()+lowerModuCode+".dao");
+		model.setDaoPackName(el.getPackName()+"."+lowerModuCode+".dao");
 		//包名--model		三级包名+模块代码（全部小写）+每层固定的命名
-		model.setModelPackName(el.getPackName()+lowerModuCode+".model");
+		model.setModelPackName(el.getPackName()+"."+lowerModuCode+".model");
 		// vue各组件赋值
 		model.setInputs(inputs);
 		model.setAddformitem(addformitems);
