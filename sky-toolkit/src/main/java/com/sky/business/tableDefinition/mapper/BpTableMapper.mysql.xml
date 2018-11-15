@@ -22,13 +22,21 @@
 	</select>
 	
 	<select id="findAllTab" parameterType="String" resultType="BpTable">
-		select * from bp_tables where 1=1
+		select * from bp_tables where 1=1 
+		<if test="_parameter != null and _parameter != ''">
+			AND tab_code = #{_parameter}
+		</if>
 	</select>
 	
 	<insert id="creatTable" parameterType="hashmap" statementType="STATEMENT">
         create table ${tabCode}
-        <foreach collection="keys" item="k" index="index" open="(" separator="," close=");">
+        <foreach collection="keys" item="k" index="index" open="(" separator="," close=")">
          	${k[0]} ${k[2]} ${k[3]} COMMENT '${k[1]}'
         </foreach>
+        COMMENT "${tabName}"
     </insert>
+    
+    <update id="dropTable" parameterType="String" statementType="STATEMENT">  
+	   drop table ${_parameter}
+	</update>  
 </mapper>
