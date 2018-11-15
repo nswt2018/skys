@@ -22,5 +22,9 @@ public class BpTableServiceImpl extends BaseServiceImpl<BpTable> implements IBpT
 		return sqlSessionTemplate.insert(sqlId, map);
 	}
 
+	public int dropTab(String sqlId, String parameter) {
+		return sqlSessionTemplate.update(sqlId, parameter);
+	}
+
 }
 

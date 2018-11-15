@@ -29,7 +29,7 @@
 	</select>
 	
 	<insert id="creatTable" parameterType="hashmap" statementType="STATEMENT">
-        create table ${tabCode}
+        create table sshs.${tabCode}
         <foreach collection="keys" item="k" index="index" open="(" separator="," close=")">
          	${k[0]} ${k[2]} ${k[3]} COMMENT '${k[1]}'
         </foreach>

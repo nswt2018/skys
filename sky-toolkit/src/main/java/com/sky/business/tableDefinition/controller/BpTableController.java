@@ -84,7 +84,22 @@ public class BpTableController extends BaseController {
 			if(tabCode==null || tabCode.length == 0)
 				throw new BusinessException("000005");
 			for(String id : tabCode) {
+				//删除表定义
 				bpTableService.delete(id);
+				//查询字段定义表,有记录删除,没有返回
+				List<BpField> list = bpFieldService.findForList("com.sky.business.columnDefinition.dao.BpFieldDao.findAllField", id);
+				if(list != null && list.size() > 0){
+					Map<String, String> map = new HashMap<String, String>();
+					map.put("tabCode", id);
+					bpFieldService.delField("com.sky.business.columnDefinition.dao.BpFieldDao.deleteById", map);
+				}
+				
+				//查询数据库 该表是否存在,存在则删除
+				List<BpField> list1 = bpFieldService.findForList("com.sky.business.columnDefinition.dao.BpFieldDao.findTable", id);
+				if(list1 != null && list1.size() > 0){
+					bpTableService.dropTab("com.sky.business.tableDefinition.dao.BpTableDao.dropTable", id);
+				}
+				
 			}
 			return Mono.justOrEmpty(new Message("000002"));
 		} catch (Exception e) {
@@ -111,8 +126,15 @@ public class BpTableController extends BaseController {
 	@RequestMapping(value="/TK0007T.do")
 	@ResponseBody
 	public Mono<List<BpTable>> getTabList(HttpServletRequest request, HttpServletResponse response) throws Exception {	
-		List<BpTable> list = bpTableService.findForList("com.sky.business.tableDefinition.dao.BpTableDao.findAllTab", "");
-		return Mono.justOrEmpty(list);
+		String tabCode = "";
+		try {
+			List<BpTable> list = bpTableService.findForList("com.sky.business.tableDefinition.dao.BpTableDao.findAllTab", tabCode);
+			return Mono.justOrEmpty(list);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+		
 	}
 	
 	@RequestMapping("/TK0007G.do")
@@ -121,33 +143,39 @@ public class BpTableController extends BaseController {
 		
 		try {
 			if(tabCode==null || tabCode.length == 0)
-				return Mono.justOrEmpty(new Message("100001", "必须选中一条记录！"));
+				return Mono.justOrEmpty(new Message("100002", "必须选中一条记录！"));
 			
 			for (String code : tabCode) {
 				//查询数据库 该表是否存在
 				List<BpField> list = bpFieldService.findForList("com.sky.business.columnDefinition.dao.BpFieldDao.findTable", code);
 				//存在则报错返回
 				if(list != null && list.size() > 0)
-					return Mono.justOrEmpty(new Message("100001", code + "表已经存在！"));
+					return Mono.justOrEmpty(new Message("100002", code + "表已经存在！"));
 				
 				//查询字段定义表 
 				List<BpField> list1 = bpFieldService.findForList("com.sky.business.columnDefinition.dao.BpFieldDao.findAllField", code);
 				//没有记录则返回
 				if(list1 == null || list1.size() == 0)
-					return Mono.justOrEmpty(new Message("100001", code + "表还未录入字段！"));
+					return Mono.justOrEmpty(new Message("100002", code + "表还未录入字段！"));
 				
 				this.tabFactory(list1);
 			}
 			return Mono.justOrEmpty(new Message("000001", "成功"));
 		} catch (Exception e) {
-			throw new BusinessException("000006", e.getMessage());
+			throw new BusinessException("100001", e.getMessage());
 		}
 	}
 
 	private void tabFactory(List<BpField> list) {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("tabCode", list.get(0).getTabCode());
+		String tabCode = list.get(0).getTabCode();
+		
+		List<BpTable> tList = bpTableService.findForList("com.sky.business.tableDefinition.dao.BpTableDao.findAllTab", "");
+		
+		String tabName = tList.get(0).getTabName();
+		map.put("tabCode", tabCode);
+		map.put("tabName", tabName);
 		
 		String[][] keys = new String[list.size()][];
 		
@@ -160,21 +188,19 @@ public class BpTableController extends BaseController {
 			String pkGen = bpField.getPkGen();
 			String data = "";
 			
-			if ("char".equals(dataType) || "varchar".equals(dataType) || "int".equals(dataType)) {
+			if ("char".equals(dataType) || "varchar".equals(dataType)) {
 				data = dataType + "(" + dataLen +  ")";
 			}else if("decimal".equals(dataType)){
 				if(dataLen.indexOf(",") == -1)
 					data = dataType + "(" + dataLen + ", 0)";
 				else
 					data = dataType + "(" + dataLen + ")";
-			}else if("date".equals(dataType) || "datetime".equals(dataType)){
+			}else if("date".equals(dataType) || "datetime".equals(dataType) || "int".equals(dataType)){
 				data = dataType;
 			}
 			
-			if("0".equals(pkGen))
+			if("0".equals(pkGen) || "1".equals(pkGen))
 				pkGen = "PRIMARY KEY";
-			else if("1".equals(pkGen))
-				pkGen = "PRIMARY KEY AUTO_INCREMENT";
 			else
 				pkGen = "";
 			
@@ -187,10 +213,16 @@ public class BpTableController extends BaseController {
 		bpTableService.creatTable("com.sky.business.tableDefinition.dao.BpTableDao.creatTable", map);
 	}
 	
-	@RequestMapping("/TK0007R.do")
+	@RequestMapping(value="/TK0007F.do")
 	@ResponseBody
-	public Mono<Message> reset(HttpServletRequest request, HttpServletResponse response) {
+	public Mono<Message> findTab(@RequestParam String tabCode, HttpServletRequest request, HttpServletResponse response) throws Exception {	
 		
-		return null;
+		//查询数据库 该表是否存在
+		List<BpField> list = bpFieldService.findForList("com.sky.business.columnDefinition.dao.BpFieldDao.findTable", tabCode);
+		
+		if(list != null && list.size() > 0)
+			return Mono.justOrEmpty(new Message("000001", tabCode + "表已经存在！"));
+		else
+			return Mono.justOrEmpty(new Message("100001", tabCode + "表不存在！"));
 	}
 }

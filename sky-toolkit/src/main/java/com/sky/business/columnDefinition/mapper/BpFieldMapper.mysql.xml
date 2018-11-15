@@ -22,7 +22,10 @@
 	</select>
 	
 	<delete id="deleteById" parameterType="hashmap">
-		delete from BP_FIELD where tab_code = #{tabCode} and col_code = #{colCode}
+		delete from BP_FIELD where tab_code = #{tabCode}
+		<if test="colCode != null and colCode != ''">
+			and col_code = #{colCode}
+		</if>
 	</delete>
 	
 	<select id="findTable" parameterType="String" resultType="BpField">
@@ -36,7 +39,7 @@
 		FROM 
 			information_schema.columns 
 		WHERE 
-			table_schema ='abcd'  
+			table_schema ='sshs'  
 			AND table_name = #{tabCode}
 	</select>
 	
