@@ -29,6 +29,8 @@ public class Model {
 	private String tableName;
 	//模块数据库表主键字段
 	private String tablePrimary;
+	//模块数据库表主键策略 0为手动录入，1为自动录入
+	private String tablePrimaryValue;
 	//model实体类里面的属性 get/set 方法
 	private String modelClassStr;
 	//交易号
@@ -195,6 +197,12 @@ public class Model {
 	}
 	public void setModelPackName(String modelPackName) {
 		this.modelPackName = modelPackName;
+	}
+	public String getTablePrimaryValue() {
+		return tablePrimaryValue;
+	}
+	public void setTablePrimaryValue(String tablePrimaryValue) {
+		this.tablePrimaryValue = tablePrimaryValue;
 	}
 	
 }

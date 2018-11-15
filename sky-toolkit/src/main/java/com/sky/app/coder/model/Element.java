@@ -27,8 +27,10 @@ public class Element {
 	private String vuePath;
 	//业务逻辑组件路径
 	private String javaPath;
-	//模块数据库主键‘
+	//模块数据库表主键字段
 	private String colCode;
+	//模块数据库主键策略值
+	private String pkGen;
 	public String getEleEname() {
 		return eleEname;
 	}
@@ -112,6 +114,12 @@ public class Element {
 	}
 	public void setColCode(String colCode) {
 		this.colCode = colCode;
+	}
+	public String getPkGen() {
+		return pkGen;
+	}
+	public void setPkGen(String pkGen) {
+		this.pkGen = pkGen;
 	}
 	
 
