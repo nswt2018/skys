@@ -29,11 +29,11 @@
 	</select>
 	
 	<select id="getTabName" parameterType="String" resultType="String">
-		SELECT table_name FROM information_schema.tables WHERE table_schema='sshs'
+		SELECT tab_name from bp_tables
 	</select>
 	
 	<select id="getColumnName" parameterType="String" resultType="String">
-		SELECT column_name FROM information_schema.columns WHERE table_schema='sshs' AND table_name= #{relTable} ORDER BY column_name
+		SELECT column_name FROM information_schema.columns WHERE table_schema='abcd' AND table_name= #{relTable} ORDER BY column_name
 	</select>
 	
 	<delete id="delData" parameterType="hashmap" statementType="STATEMENT">
