@@ -237,12 +237,12 @@ public class BpTagController extends BaseController {
 						if("1".equals(propType)){
 							json1.put(tagProp, tagValue);
 						}else if("2".equals(propType)){
-							json1.put(":" + tagProp, tagValue);
+							json1.put("*" + tagProp, tagValue);
 						}else if("3".equals(propType)){
 							json1.put("@" + tagProp, tagValue);
 						}
 					}
-					json.put(tagName, json1);
+					json.put(tagName.toLowerCase(), json1);
 				}
 				jarr.put(json);
 				List<BpElement> list2 = bpElementService.findForList("com.sky.business.pageElement.dao.BpElementDao.findElementById", eleCode);
