@@ -29,7 +29,7 @@
 	</select>
 	
 	<insert id="creatTable" parameterType="hashmap" statementType="STATEMENT">
-        create table sshs.${tabCode}
+        create table ${tabCode}
         <foreach collection="keys" item="k" index="index" open="(" separator="," close=")">
          	${k[0]} ${k[2]} ${k[3]} COMMENT '${k[1]}'
         </foreach>
@@ -37,6 +37,6 @@
     </insert>
     
     <update id="dropTable" parameterType="String" statementType="STATEMENT">  
-	   drop table sshs.${_parameter}
+	   drop table ${_parameter}
 	</update>  
 </mapper>
