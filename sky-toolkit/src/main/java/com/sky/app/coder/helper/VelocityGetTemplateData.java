@@ -119,7 +119,7 @@ public class VelocityGetTemplateData {
 		model.setTitleIconType("compose");
 		// 前后端共同需要的信息，表名、交易号（映射路径）
 		// 表名 首个字母大写
-		model.setModel(ConvertString.convertFirstCharUpper(el.getModuCode()));
+		model.setModel(ConvertString.convertFirstCharUpper(el.getModuCode().toLowerCase()));
 		// 模块代码 全部字符小写
 		String lowerModuCode = el.getModuCode().toLowerCase();
 		model.setModuCode(lowerModuCode);
@@ -127,8 +127,8 @@ public class VelocityGetTemplateData {
 		model.setTid(el.getModuTc());
 		// 模块数据库表名
 		model.setTableName(el.getRelTable());
-		// 模块数据库表主键字段 首个字母大写
-		String colcode = ConvertString.convertSomeCharUpper(el.getColCode());
+		//全部小写，模块数据库表主键字段 
+		String colcode = ConvertString.convertSomeCharUpper(el.getColCode().toLowerCase());
 		model.setTablePrimary(colcode);
 		// 模块数据库表主键策略 0为手动录入，1为自动录入
 		model.setTablePrimaryValue(el.getPkGen());

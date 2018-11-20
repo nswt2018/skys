@@ -59,7 +59,7 @@ public class CoderServiceImpl implements ICoderService {
 			for (int i = 1; i <= len; i++) {
 				// System.out.println(metadata.getColumnName(i)+":"+metadata.getColumnTypeName(i)+":"+sqlType2JavaType(metadata.getColumnTypeName(i).toLowerCase())+":"+metadata.getColumnDisplaySize(i));
 				// metadata.getColumnDisplaySize(i);
-				colnames[i] = ConvertString.convertSomeCharUpper(metadata.getColumnName(i)); // 获取字段名称
+				colnames[i] = ConvertString.convertSomeCharUpper(metadata.getColumnName(i).toLowerCase()); // 获取字段名称
 				System.out.println(colnames[i]);
 				if (colnames[i].equals(convertTablePri)) {
 					colTypes[i] = "String"; // 如果是主键,则类型全为字符串

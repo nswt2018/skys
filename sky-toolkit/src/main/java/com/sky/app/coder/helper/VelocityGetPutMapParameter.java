@@ -8,7 +8,7 @@ import com.sky.app.coder.model.Element;
 public class VelocityGetPutMapParameter {
 	public static Map<String, String> getMap(Element el) {
 		// 将模块代码首字母大写
-		String cModuCode = ConvertString.convertFirstCharUpper(el.getModuCode());
+		String cModuCode = ConvertString.convertFirstCharUpper(el.getModuCode().toLowerCase());
 		// 将模块代码字母全部小写
 		String lModuCode = el.getModuCode().toLowerCase();
 		// 替换字符串中‘\’为‘/’

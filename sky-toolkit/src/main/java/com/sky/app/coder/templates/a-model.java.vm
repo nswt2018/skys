@@ -1,10 +1,16 @@
 #set($modelpackname=${models.modelPackName})
 #set($modelclassstr=${models.modelClassStr})
+#set($tablename=${models.tableName})
 package ${modelpackname};
 
+import java.util.Date;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
+import org.apache.ibatis.type.Alias;
+
+@Alias("${model}")
+@Table(name="${tablename}")
 public class ${model} {
 $modelclassstr
 }
