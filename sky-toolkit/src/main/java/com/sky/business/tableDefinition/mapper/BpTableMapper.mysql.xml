@@ -37,6 +37,6 @@
     </insert>
     
     <update id="dropTable" parameterType="String" statementType="STATEMENT">  
-	   drop table ${_parameter}
+	   drop table sshs.${_parameter}
 	</update>  
 </mapper>
