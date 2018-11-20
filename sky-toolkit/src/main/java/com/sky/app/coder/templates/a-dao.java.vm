@@ -5,6 +5,7 @@ package ${daopackname};
 
 import ${modelpackname}.${model};
 
+
 import tk.mybatis.mapper.common.Mapper;
 
 public interface ${model}Dao extends Mapper<${model}>{

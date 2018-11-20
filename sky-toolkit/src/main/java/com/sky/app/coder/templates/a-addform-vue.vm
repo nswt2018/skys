@@ -1,9 +1,10 @@
 	           <Form #if(${addform.ref})ref="${addform.ref}"#end :model="${addform.model}" #if(${addform.rules}):rules="${addform.rules}"#end #if(${addform.labelWidth}):label-width="${addform.labelWidth}">#end
 #if($addformitems)
 #foreach($formitem in $addformitems)
-
+#if(((${formitem.value}==${tableprimary})&&(${tableprimaryvalue}=="0")) || (${formitem.value}!=${tableprimary}))
+	              
 	              <FormItem label="${formitem.label}:" #if(${formitem.prop})prop="${formitem.prop}"#end #if(${formitem.required})required#end #if(${formitem.labelWidth})label-width="${formitem.labelWidth}"#end>
-#if(${formitem.type}=="input")	                 
+#if(${formitem.type}=="input")
 	                 <Input v-model="${addform.model}.${formitem.value}" placeholder="请输入${formitem.label}" />
 #end
 #if(${formitem.type}=="select")	                 
@@ -39,9 +40,11 @@
 #end
 #if(${formitem.type}=="TimePicker")	                 
 	                 <TimePicker type="time" v-model="${addform.model}.${formitem.value}" placeholder="请输入${formitem.label}" ></TimePicker>
-#end	                 
+#end
 	              </FormItem>
 #end
-#end         
+#end
+#end
+        
 	          </Form>
 	        

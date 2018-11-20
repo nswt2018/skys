@@ -4,6 +4,7 @@
 #set($moducode=${models.moduCode})
 #set($tid=${models.tid})
 #set($tableprimary=${models.tablePrimary})
+#set($tableprimaryvalue=${models.tablePrimaryValue})
 #set($inputs=${models.inputs})
 #set($button=${models.button})
 #set($table=${models.table})

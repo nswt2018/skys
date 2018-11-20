@@ -77,7 +77,19 @@ public class ConvertString {
 		str=str.replaceAll("\\\\", "/");
 		return str;
 	}
+	//替换字符串中的特殊字符如‘@’，‘:’
+	public static String replaceSomeChar(String str){
+		String temporary;
+		// 存放特殊字符数组的下标
+		for (int i = 0; i < str.length(); i++) {
+			temporary = String.valueOf(str.charAt(i));
+			if ("@".equals(temporary)||"*".equals(temporary)) {
+				str = str.substring(0, i) +  str.substring(i + 1);
+			}
+		}
+		return str;
+	}
 	public static void main(String[] args) {
-		System.out.println(convertSomeCharUpper(null));
+		System.out.println(replaceSomeChar("[{\"Input\":{\"@onChange\":\"true\",\"@onChange\":\"true\",\"*readonly\":\"true\",\"*readonly\":\"true\",\"value\":\"parnName\"}}]"));
 	}
 }

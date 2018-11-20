@@ -1,7 +1,9 @@
 package com.sky.app.coder.helper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.sky.app.coder.model.Button;
 import com.sky.app.coder.model.Element;
@@ -14,6 +16,7 @@ import com.sky.app.coder.model.Page1;
 import com.sky.app.coder.model.Table;
 import com.sky.app.coder.model.TableColumn;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 /*
@@ -21,83 +24,84 @@ import net.sf.json.JSONObject;
  */
 public class VelocityGetTemplateData {
 	// 将模板中所需要的数据都封装在Model实体类中
-	public Model getModel(List<Element> list,Element el) {
+	public Model getModel(List<Element> list, Element el, String str) {
 		Model model = new Model();
 		List<Input> inputs = new ArrayList<Input>();
-		Input input = null;
 		List<FormItem> addformitems = new ArrayList<FormItem>();
 		List<FormItem> updformitems = new ArrayList<FormItem>();
 		List<FormItem> viewformitems = new ArrayList<FormItem>();
 		List<TableColumn> tablecolumns = new ArrayList<TableColumn>();
 		for (int i = 0; i < list.size(); i++) {
 			if (list.get(i).getComName().equals("条件搜索")) {
-				input = new Input();
+				Input input = new Input();
 				// 如果搜索框的标签信息没有录入，则设置默认值
 				if (list.get(i).getTagInfo() == null || "".equals(list.get(i).getTagInfo())) {
 					input.setType("text");
-					//并将英文字段中"_"去掉后第一字母大写
-					input.setValue(ConvertString.convertSomeCharUpper(list.get(i).getEleEname()));
+					// 字段，字段全部小写，如果字段中有“_”,则将字段中"_"去掉后第一字母大写
+					input.setValue(ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase()));
+					// 设置mapping映射文件where后条件的字段，就是数据库表字段
 					input.setConvertValue(list.get(i).getEleEname());
+					// 字段名称
 					input.setPlaceholder("请输入" + list.get(i).getEleCname());
 					input.setIcon("search");
 					input.setWidth("200px");
 					input.setOnChange("true");
 				} else {
-					JSONObject jsonObject = JSONObject.fromObject(list.get(i).getTagInfo());
-					input = (Input) JSONObject.toBean(jsonObject, Input.class);
+					// 将数据库中取出的JSON字符串放入input实体类中
+					input = this.getTagInfo(ConvertString.replaceSomeChar(list.get(i).getTagInfo())).getInput();
 				}
 				inputs.add(input);
-			}else if (list.get(i).getComName().equals("列表信息")) {
+			} else if (list.get(i).getComName().equals("列表信息")) {
 				TableColumn tablecolumn = new TableColumn();
-				//字段中文
+				// 字段名称
 				tablecolumn.setLabel(list.get(i).getEleCname());
-				//字段英文，并将字段中"_"去掉后第一字母大写
-				tablecolumn.setValue(ConvertString.convertSomeCharUpper(list.get(i).getEleEname()));
+				// 字段，先全部小写，如果字段中有“_”,将字段中"_"去掉后第一字母大写
+				tablecolumn.setValue(ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase()));
 				tablecolumns.add(tablecolumn);
 			} else if (list.get(i).getComName().equals("新增信息")) {
 				FormItem addformitem = new FormItem();
 				// 如果新增信息的标签信息没有录入，则设置默认值
-				if(list.get(i).getTagInfo()==null|| "".equals(list.get(i).getTagInfo())){
-					//字段中文
+				if (list.get(i).getTagInfo() == null || "".equals(list.get(i).getTagInfo())) {
+					// 字段名称
 					addformitem.setLabel(list.get(i).getEleCname());
-					//字段英文，并将字段中"_"去掉后第一字母大写
-					addformitem.setProp(ConvertString.convertSomeCharUpper(list.get(i).getEleEname()));
-					addformitem.setValue(ConvertString.convertSomeCharUpper(list.get(i).getEleEname()));
+					// 字段，先全部小写，如果字段中有“_”,将字段中"_"去掉后第一字母大写
+					addformitem.setProp(ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase()));
+					addformitem.setValue(ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase()));
 					addformitem.setRequired("true");
 					addformitem.setType("input");
-				}else{
-					JSONObject jsonObject = JSONObject.fromObject(list.get(i).getTagInfo());
-					addformitem = (FormItem) JSONObject.toBean(jsonObject, FormItem.class);
+				} else {
+					// 将数据库中取出的JSON字符串放入FormItem实体类中
+					addformitem = this.getTagInfo(ConvertString.replaceSomeChar(list.get(i).getTagInfo())).getFormitem();
 				}
 				addformitems.add(addformitem);
 			} else if (list.get(i).getComName().equals("修改信息")) {
 				FormItem updformitem = new FormItem();
 				// 如果修改信息的标签信息没有录入，则设置默认值
-				if(list.get(i).getTagInfo()==null|| "".equals(list.get(i).getTagInfo())){
-					//字段中文
+				if (list.get(i).getTagInfo() == null || "".equals(list.get(i).getTagInfo())) {
+					// 字段名称
 					updformitem.setLabel(list.get(i).getEleCname());
-					//字段英文，并将字段中"_"去掉后第一字母大写
-					updformitem.setProp(ConvertString.convertSomeCharUpper(list.get(i).getEleEname()));
-					updformitem.setValue(ConvertString.convertSomeCharUpper(list.get(i).getEleEname()));
+					// 字段，先全部小写，如果字段中有“_”,将字段中"_"去掉后第一字母大写
+					updformitem.setProp(ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase()));
+					updformitem.setValue(ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase()));
 					updformitem.setRequired("true");
 					updformitem.setType("input");
-				}else{
-					JSONObject jsonObject = JSONObject.fromObject(list.get(i).getTagInfo());
-					updformitem = (FormItem) JSONObject.toBean(jsonObject, FormItem.class);
+				} else {
+					// 将数据库中取出的JSON字符串放入FormItem实体类中
+					updformitem = this.getTagInfo(ConvertString.replaceSomeChar(list.get(i).getTagInfo())).getFormitem();
 				}
 				updformitems.add(updformitem);
 			} else if (list.get(i).getComName().equals("查看信息")) {
 				FormItem viewformitem = new FormItem();
-				if(list.get(i).getTagInfo()==null|| "".equals(list.get(i).getTagInfo())){
+				if (list.get(i).getTagInfo() == null || "".equals(list.get(i).getTagInfo())) {
 					// 如果查看信息的标签信息没有录入，则设置默认值
-					//字段中文
+					// 字段名称
 					viewformitem.setLabel(list.get(i).getEleCname());
-					//字段英文,并将字段中"_"去掉后第一字母大写
-					viewformitem.setValue(ConvertString.convertSomeCharUpper(list.get(i).getEleEname()));
+					// 字段，先全部小写，如果字段中有“_”,将字段中"_"去掉后第一字母大写
+					viewformitem.setValue(ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase()));
 					viewformitem.setType("input");
-				}else{
-					JSONObject jsonObject = JSONObject.fromObject(list.get(i).getTagInfo());
-					viewformitem = (FormItem) JSONObject.toBean(jsonObject, FormItem.class);
+				} else {
+					// 将数据库中取出的JSON字符串放入FormItem实体类中
+					viewformitem = this.getTagInfo(ConvertString.replaceSomeChar(list.get(i).getTagInfo())).getFormitem();
 				}
 				viewformitems.add(viewformitem);
 			}
@@ -114,31 +118,32 @@ public class VelocityGetTemplateData {
 		// 设置模块标题图标
 		model.setTitleIconType("compose");
 		// 前后端共同需要的信息，表名、交易号（映射路径）
-		//表名
+		// 表名 首个字母大写
 		model.setModel(ConvertString.convertFirstCharUpper(el.getModuCode()));
-		//模块代码
-		String lowerModuCode=el.getModuCode().toLowerCase();
+		// 模块代码 全部字符小写
+		String lowerModuCode = el.getModuCode().toLowerCase();
 		model.setModuCode(lowerModuCode);
-		//模块交易号
+		// 模块交易号
 		model.setTid(el.getModuTc());
 		// 模块数据库表名
 		model.setTableName(el.getRelTable());
-		//模块数据库表主键字段
-		String colcode=ConvertString.convertSomeCharUpper(el.getColCode());
+		// 模块数据库表主键字段 首个字母大写
+		String colcode = ConvertString.convertSomeCharUpper(el.getColCode());
 		model.setTablePrimary(colcode);
-		//实体类里面的属性 get/set 方法，传入参数（数据库表名，表主键）
-		model.setModelClassStr(new reflectBean(el.getRelTable(),colcode).getClassStr());
-		// 读取配置文件coderConfig.xml,获取配置文件的参数
-		//包名--controller   三级包名+模块代码（全部小写）+每层固定的命名
-		model.setControllerPackName(el.getPackName()+"."+lowerModuCode+".controller");
-		//包名--service      三级包名+模块代码（全部小写）+每层固定的命名
-		model.setServicePackName(el.getPackName()+"."+lowerModuCode+".service");
-		//包名--serviceimpl 	三级包名+模块代码（全部小写）+每层固定的命名
-		model.setServiceImplPackName(el.getPackName()+"."+lowerModuCode+".service.impl");
-		//包名--dao			三级包名+模块代码（全部小写）+每层固定的命名
-		model.setDaoPackName(el.getPackName()+"."+lowerModuCode+".dao");
-		//包名--model		三级包名+模块代码（全部小写）+每层固定的命名
-		model.setModelPackName(el.getPackName()+"."+lowerModuCode+".model");
+		// 模块数据库表主键策略 0为手动录入，1为自动录入
+		model.setTablePrimaryValue(el.getPkGen());
+		// 实体类里面的属性 get/set 方法，传入参数（数据库表名，表主键）
+		model.setModelClassStr(str);
+		// 包名--controller 三级包名+模块代码（全部小写）+每层固定的命名
+		model.setControllerPackName(el.getPackName() + "." + lowerModuCode + ".controller");
+		// 包名--service 三级包名+模块代码（全部小写）+每层固定的命名
+		model.setServicePackName(el.getPackName() + "." + lowerModuCode + ".service");
+		// 包名--serviceimpl 三级包名+模块代码（全部小写）+每层固定的命名
+		model.setServiceImplPackName(el.getPackName() + "." + lowerModuCode + ".service.impl");
+		// 包名--dao 三级包名+模块代码（全部小写）+每层固定的命名
+		model.setDaoPackName(el.getPackName() + "." + lowerModuCode + ".dao");
+		// 包名--model 三级包名+模块代码（全部小写）+每层固定的命名
+		model.setModelPackName(el.getPackName() + "." + lowerModuCode + ".model");
 		// vue各组件赋值
 		model.setInputs(inputs);
 		model.setAddformitem(addformitems);
@@ -147,11 +152,30 @@ public class VelocityGetTemplateData {
 		model.setTablecolumns(tablecolumns);
 		return model;
 	}
+
+	/*
+	 * 将这种JSON字符串[{"input":{"value":"paraValue"}}]，转为map,并将数据转到model实体类中
+	 */
+	public Model getTagInfo(String tagInfo) {
+		// JSONObject
+		JSONArray jsonArray = JSONArray.fromObject(tagInfo);
+		// 获得jsonArray的第一个元素
+		Object o = jsonArray.get(0);
+		JSONObject jsonObject = JSONObject.fromObject(o);
+		Map map = new HashMap();
+		map.put("input", Input.class);
+		map.put("formitem", FormItem.class);
+		// 使用了toBean方法，需要三个参数
+		Model model = (Model) JSONObject.toBean(jsonObject, Model.class, map);
+		return model;
+	}
+
 	public Button getButton() {
 		Button button = new Button();
 		button.setSize("true");
 		return button;
 	}
+
 	public Table getTable() {
 		Table table = new Table();
 		table.setIsSelectAll("true");
@@ -166,6 +190,7 @@ public class VelocityGetTemplateData {
 		table.setOnSelectionChange("true");
 		return table;
 	}
+
 	public Page1 getPage() {
 		Page1 page = new Page1();
 		page.setOnChange("true");
@@ -177,6 +202,7 @@ public class VelocityGetTemplateData {
 		page.setTransfer("true");
 		return page;
 	}
+
 	public List<Modal> getModal() {
 		Modal modal1 = new Modal();
 		modal1.setWidth("700");
@@ -234,5 +260,4 @@ public class VelocityGetTemplateData {
 		return form;
 	}
 
-	
 }

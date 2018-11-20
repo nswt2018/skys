@@ -42,8 +42,10 @@ public class Model {
 	private Form addform;
 	private Form updform;
 	private Form viewform;
+	private Input input;
 	private List<Input> inputs;
 	private List<Modal> modals;
+	private FormItem formitem;
 	private List<FormItem> addformitem;
 	private List<FormItem> updformitem;
 	private List<FormItem> viewformitem;
@@ -203,6 +205,18 @@ public class Model {
 	}
 	public void setTablePrimaryValue(String tablePrimaryValue) {
 		this.tablePrimaryValue = tablePrimaryValue;
+	}
+	public Input getInput() {
+		return input;
+	}
+	public void setInput(Input input) {
+		this.input = input;
+	}
+	public FormItem getFormitem() {
+		return formitem;
+	}
+	public void setFormitem(FormItem formitem) {
+		this.formitem = formitem;
 	}
 	
 }

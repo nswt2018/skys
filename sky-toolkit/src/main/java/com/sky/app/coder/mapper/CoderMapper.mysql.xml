@@ -18,7 +18,8 @@
 				b.PACK_NAME,
 				b.VUE_PATH,
 				b.JAVA_PATH,
-				C.COL_CODE 
+				C.COL_CODE,
+				C.PK_GEN 
 			FROM
 				BP_MODULE a
 				LEFT JOIN bp_systems b ON a.modu_code = b.mod_code 
