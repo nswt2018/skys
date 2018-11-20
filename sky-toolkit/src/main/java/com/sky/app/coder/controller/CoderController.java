@@ -42,7 +42,7 @@ public class CoderController {
 			List<Element> list = CoderService.getTagInfo("com.sky.app.core.CoderMapper.findBpForList", moduCode);
 			Element el = CoderService.getElement("com.sky.app.core.CoderMapper.findBpForOne", moduCode);
 			//根据传入的模块编号、模块数据库表主键，生成实体类中的内容，属性和get/set方法
-			String str=CoderService.getClassStr(el.getModuCode(),el.getColCode());
+			String str=CoderService.getClassStr(el.getRelTable(),el.getColCode());
 			// 将数据库取出来的值放入model解析,然后取得model
 			Model model = new VelocityGetTemplateData().getModel(list, el,str);
 			// 将model里面的变量值放入VelocityContext
