@@ -3,6 +3,10 @@ package com.sky.app.coder.model;
 public class Element {
 	//字段中文
 	private String eleEname;
+	//字段名称
+	private String colName;
+	//字段类型
+	private String dataType;
 	//字段英文
 	private String eleCname;
 	//单元类型
@@ -120,6 +124,18 @@ public class Element {
 	}
 	public void setPkGen(String pkGen) {
 		this.pkGen = pkGen;
+	}
+	public String getColName() {
+		return colName;
+	}
+	public void setColName(String colName) {
+		this.colName = colName;
+	}
+	public String getDataType() {
+		return dataType;
+	}
+	public void setDataType(String dataType) {
+		this.dataType = dataType;
 	}
 	
 
