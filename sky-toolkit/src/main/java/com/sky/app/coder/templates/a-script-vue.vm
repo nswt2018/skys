@@ -63,8 +63,8 @@ export default {
         	${addform.rules}:{
 #if($addformitems)
 #foreach($addformitem in $addformitems)        	
-#if(${addformitem.prop} && ${addformitem.required} && ${addformitem.value} && ${addformitem.label})
-        	    ${addformitem.value}: [
+#if(${addformitem.prop} && ${addformitem.required} && ${addformitem.input.value} && ${addformitem.label})
+        	    ${addformitem.input.value}: [
                    	 {required: true, message: '${addformitem.label}不可为空', trigger: 'blur' }
                    ]#if($foreach.hasNext),#end  
                                  
@@ -77,8 +77,8 @@ export default {
         	${updform.rules}:{
 #if($updformitems)
 #foreach($updformitem in $updformitems)        	
-#if(${updformitem.prop} && ${updformitem.required} && ${updformitem.value} && ${updformitem.label})
-        	    ${updformitem.value}: [
+#if(${updformitem.prop} && ${updformitem.required} && ${updformitem.input.value} && ${updformitem.label})
+        	    ${updformitem.input.value}: [
                    	 {required: true, message: '${updformitem.label}不可为空', trigger: 'blur' }
                    ]#if($foreach.hasNext),#end
 

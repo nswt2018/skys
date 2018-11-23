@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sky.app.coder.model.Button;
+import com.sky.app.coder.model.DatePicker;
 import com.sky.app.coder.model.Element;
 import com.sky.app.coder.model.Form;
 import com.sky.app.coder.model.FormItem;
@@ -26,6 +27,8 @@ public class VelocityGetTemplateData {
 	// 将模板中所需要的数据都封装在Model实体类中
 	public Model getModel(List<Element> list, Element el, String str) {
 		Model model = new Model();
+		String cname=null;
+		String ename=null;
 		List<Input> inputs = new ArrayList<Input>();
 		List<FormItem> addformitems = new ArrayList<FormItem>();
 		List<FormItem> updformitems = new ArrayList<FormItem>();
@@ -47,7 +50,7 @@ public class VelocityGetTemplateData {
 					input.setWidth("200px");
 					input.setOnChange("true");
 				} else {
-					// 将数据库中取出的JSON字符串放入input实体类中
+					// 将数据库中取出的JSON字符串，去除字符串中的‘@’、‘：’放入input实体类中
 					input = this.getTagInfo(ConvertString.replaceSomeChar(list.get(i).getTagInfo())).getInput();
 				}
 				inputs.add(input);
@@ -63,21 +66,30 @@ public class VelocityGetTemplateData {
 				// 如果新增信息的标签信息没有录入，则设置默认值
 				if (list.get(i).getTagInfo() == null || "".equals(list.get(i).getTagInfo())) {
 					// 字段名称
-					addformitem.setLabel(list.get(i).getEleCname());
-					// 字段，先全部小写，如果字段中有“_”,将字段中"_"去掉后第一字母大写
-					addformitem.setValue(ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase()));
-					
+					cname=list.get(i).getEleCname();
+					//字段,先全部小写，如果字段中有“_”,将字段中"_"去掉后第一字母大写
+					ename=ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase());
+					addformitem.setLabel(cname);
 					if(list.get(i).getDataType().equals("date")){
-						addformitem.setType("DatePicker");
+						DatePicker dp=new DatePicker();
+						dp.setValue(ename);
+						dp.setPlaceholder(cname);
+						addformitem.setDatepicker(dp);
 					}else{
-						addformitem.setType("input");
-						// 字段，先全部小写，如果字段中有“_”,将字段中"_"去掉后第一字母大写
-						addformitem.setProp(ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase()));
+						Input ainput=new Input();
+						ainput.setValue(ename);
+						ainput.setPlaceholder(cname);
+						addformitem.setInput(ainput);
+						addformitem.setProp(ename);
 						addformitem.setRequired("true");
 					}
 				} else {
-					// 将数据库中取出的JSON字符串放入FormItem实体类中
-					addformitem = this.getTagInfo(ConvertString.replaceSomeChar(list.get(i).getTagInfo())).getFormitem();
+					Model amodel = new Model();
+					// 将数据库中取出的JSON字符串,去除字符串中的‘@’、‘：’，放入FormItem实体类中
+					amodel=this.getTagInfo(ConvertString.replaceSomeChar(list.get(i).getTagInfo()));
+					addformitem = amodel.getFormitem();
+					addformitem.setInput(amodel.getInput());
+					addformitem.setDatepicker(amodel.getDatepicker());
 				}
 				addformitems.add(addformitem);
 			} else if (list.get(i).getComName().equals("修改信息")) {
@@ -85,35 +97,50 @@ public class VelocityGetTemplateData {
 				// 如果修改信息的标签信息没有录入，则设置默认值
 				if (list.get(i).getTagInfo() == null || "".equals(list.get(i).getTagInfo())) {
 					// 字段名称
-					updformitem.setLabel(list.get(i).getEleCname());
-					// 字段，先全部小写，如果字段中有“_”,将字段中"_"去掉后第一字母大写
-					updformitem.setValue(ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase()));
+					cname=list.get(i).getEleCname();
+					//字段,先全部小写，如果字段中有“_”,将字段中"_"去掉后第一字母大写
+					ename=ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase());
+					updformitem.setLabel(cname);
 					if(list.get(i).getDataType().equals("date")){
-						updformitem.setType("DatePicker");
+						DatePicker dp=new DatePicker();
+						dp.setValue(ename);
+						dp.setPlaceholder(cname);
+						updformitem.setDatepicker(dp);
 					}else{
-						updformitem.setType("input");
-						// 字段，先全部小写，如果字段中有“_”,将字段中"_"去掉后第一字母大写
-						updformitem.setProp(ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase()));
+						Input uinput=new Input();
+						uinput.setValue(ename);
+						uinput.setPlaceholder(cname);
+						updformitem.setInput(uinput);
+						updformitem.setProp(ename);
 						updformitem.setRequired("true");
 					}
 				} else {
-					// 将数据库中取出的JSON字符串放入FormItem实体类中
-					updformitem = this.getTagInfo(ConvertString.replaceSomeChar(list.get(i).getTagInfo())).getFormitem();
+					Model umodel = new Model();
+					// 将数据库中取出的JSON字符串，去除字符串中的‘@’、‘：’，放入FormItem实体类中
+					umodel=this.getTagInfo(ConvertString.replaceSomeChar(list.get(i).getTagInfo()));
+					updformitem = umodel.getFormitem();
+					updformitem.setInput(umodel.getInput());
+					updformitem.setDatepicker(umodel.getDatepicker());
 				}
 				updformitems.add(updformitem);
 			} else if (list.get(i).getComName().equals("查看信息")) {
 				FormItem viewformitem = new FormItem();
+				// 如果查看信息的标签信息没有录入，则设置默认值
 				if (list.get(i).getTagInfo() == null || "".equals(list.get(i).getTagInfo())) {
-					// 如果查看信息的标签信息没有录入，则设置默认值
 					// 字段名称
 					viewformitem.setLabel(list.get(i).getEleCname());
 					// 字段，先全部小写，如果字段中有“_”,将字段中"_"去掉后第一字母大写
-					viewformitem.setValue(ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase()));
-					viewformitem.setType("input");
+					Input vinput=new Input();
+					vinput.setValue(ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase()));
+					viewformitem.setInput(vinput);
 				} else {
-					// 将数据库中取出的JSON字符串放入FormItem实体类中
-					viewformitem = this.getTagInfo(ConvertString.replaceSomeChar(list.get(i).getTagInfo())).getFormitem();
-				}
+					Model vmodel = new Model();
+					// 将数据库中取出的JSON字符串，去除字符串中的‘@’、‘：’放入FormItem实体类中
+					vmodel=this.getTagInfo(ConvertString.replaceSomeChar(list.get(i).getTagInfo()));
+					viewformitem = vmodel.getFormitem();
+					viewformitem.setInput(vmodel.getInput());
+					viewformitem.setDatepicker(vmodel.getDatepicker());
+				 }
 				viewformitems.add(viewformitem);
 			}
 		}
@@ -176,6 +203,7 @@ public class VelocityGetTemplateData {
 		Map map = new HashMap();
 		map.put("input", Input.class);
 		map.put("formitem", FormItem.class);
+		map.put("datepicker", DatePicker.class);
 		// 使用了toBean方法，需要三个参数
 		Model model = (Model) JSONObject.toBean(jsonObject, Model.class, map);
 		return model;

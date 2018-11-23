@@ -19,7 +19,7 @@ ${moducode}Column.getColumns = function() {
 #if(${table})
 #if($tablecolumns)
 #foreach($tablecolumn in $tablecolumns)
-    
+		  
 		  {
 			title: '${tablecolumn.label}',
 			key: '${tablecolumn.value}',

@@ -3,8 +3,8 @@
 #foreach($formitem in $viewformitems)
 
 	              <FormItem label="${formitem.label}:" #if(${formitem.labelWidth})label-width="${formitem.labelWidth}"#end>
-#if(${formitem.type}=="input")	                 
-	                 <Input :readonly="true" v-model="${viewform.model}.${formitem.value}" />
+#if(${formitem.input})
+	                 <Input :readonly="true" v-model="${viewform.model}.${formitem.input.value}"/>
 #end
 #if(${formitem.type}=="select")	                 
 	                 <Select  v-model="${viewform.model}.${formitem.value}" />
