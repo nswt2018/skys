@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//eDTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sky.factory.dao.BpSystemsDao">
+	
+	<select id="findSystems" parameterType="hashmap" resultType="BpSystems">
+		select * from BP_SYSTEMS WHERE 1=1
+		<if test="sysKey != null and sysKey != ''">
+			AND SYS_KEY = #{sysKey}
+		</if>
+		<if test="upperSys != null and upperSys != ''">
+			AND UPPER_SYS = #{upperSys}
+		</if>
+	</select>
+	
+	<select id="findMaxKey" parameterType="String" resultType="String">
+		SELECT MAX(SYS_KEY) FROM BP_SYSTEMS WHERE 1=1
+		<if test="_parameter != null and _parameter != ''">
+			AND UPPER_SYS = #{_parameter}
+		</if>
+		<if test="_parameter == null or _parameter == ''">
+			AND UPPER_SYS is null or UPPER_SYS = ''
+		</if>
+	</select>
+	
+	<delete id="deleteBySysKey" parameterType="String" statementType="STATEMENT">
+		delete from bp_systems where SYS_KEY LIKE '${_parameter}%'
+	</delete>
+</mapper>
