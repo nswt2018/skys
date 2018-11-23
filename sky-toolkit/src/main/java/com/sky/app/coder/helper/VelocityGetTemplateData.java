@@ -65,10 +65,16 @@ public class VelocityGetTemplateData {
 					// 字段名称
 					addformitem.setLabel(list.get(i).getEleCname());
 					// 字段，先全部小写，如果字段中有“_”,将字段中"_"去掉后第一字母大写
-					addformitem.setProp(ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase()));
 					addformitem.setValue(ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase()));
-					addformitem.setRequired("true");
-					addformitem.setType("input");
+					
+					if(list.get(i).getDataType().equals("date")){
+						addformitem.setType("DatePicker");
+					}else{
+						addformitem.setType("input");
+						// 字段，先全部小写，如果字段中有“_”,将字段中"_"去掉后第一字母大写
+						addformitem.setProp(ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase()));
+						addformitem.setRequired("true");
+					}
 				} else {
 					// 将数据库中取出的JSON字符串放入FormItem实体类中
 					addformitem = this.getTagInfo(ConvertString.replaceSomeChar(list.get(i).getTagInfo())).getFormitem();
@@ -81,10 +87,15 @@ public class VelocityGetTemplateData {
 					// 字段名称
 					updformitem.setLabel(list.get(i).getEleCname());
 					// 字段，先全部小写，如果字段中有“_”,将字段中"_"去掉后第一字母大写
-					updformitem.setProp(ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase()));
 					updformitem.setValue(ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase()));
-					updformitem.setRequired("true");
-					updformitem.setType("input");
+					if(list.get(i).getDataType().equals("date")){
+						updformitem.setType("DatePicker");
+					}else{
+						updformitem.setType("input");
+						// 字段，先全部小写，如果字段中有“_”,将字段中"_"去掉后第一字母大写
+						updformitem.setProp(ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase()));
+						updformitem.setRequired("true");
+					}
 				} else {
 					// 将数据库中取出的JSON字符串放入FormItem实体类中
 					updformitem = this.getTagInfo(ConvertString.replaceSomeChar(list.get(i).getTagInfo())).getFormitem();
