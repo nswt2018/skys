@@ -43,9 +43,10 @@ public class Model {
 	private Form updform;
 	private Form viewform;
 	private Input input;
+	private FormItem formitem;
+	private DatePicker datepicker;
 	private List<Input> inputs;
 	private List<Modal> modals;
-	private FormItem formitem;
 	private List<FormItem> addformitem;
 	private List<FormItem> updformitem;
 	private List<FormItem> viewformitem;
@@ -217,6 +218,12 @@ public class Model {
 	}
 	public void setFormitem(FormItem formitem) {
 		this.formitem = formitem;
+	}
+	public DatePicker getDatepicker() {
+		return datepicker;
+	}
+	public void setDatepicker(DatePicker datepicker) {
+		this.datepicker = datepicker;
 	}
 	
 }

@@ -1,11 +1,11 @@
 	           <Form #if(${addform.ref})ref="${addform.ref}"#end :model="${addform.model}" #if(${addform.rules}):rules="${addform.rules}"#end #if(${addform.labelWidth}):label-width="${addform.labelWidth}">#end
 #if($addformitems)
 #foreach($formitem in $addformitems)
-#if(((${formitem.value}==${tableprimary})&&(${tableprimaryvalue}=="0")) || (${formitem.value}!=${tableprimary}))
+#if(((${formitem.input.value}==${tableprimary})&&(${tableprimaryvalue}=="0")) || (${formitem.input.value}!=${tableprimary}))
 	              
 	              <FormItem label="${formitem.label}:" #if(${formitem.prop})prop="${formitem.prop}"#end #if(${formitem.required})required#end #if(${formitem.labelWidth})label-width="${formitem.labelWidth}"#end>
-#if(${formitem.type}=="input")
-	                 <Input v-model="${addform.model}.${formitem.value}" placeholder="请输入${formitem.label}" />
+#if(${formitem.input})
+	                 <Input v-model="${addform.model}.${formitem.input.value}" placeholder="${formitem.input.placeholder}" />
 #end
 #if(${formitem.type}=="select")	                 
 	                 <Select  v-model="${addform.model}.${formitem.value}" placeholder="请输入${formitem.label}" />
@@ -35,8 +35,8 @@
 #if(${formitem.type}=="slider")	                 
 	                 <Slider v-model="${addform.model}.${formitem.value}" range></Slider>
 #end
-#if(${formitem.type}=="DatePicker")	                 
-	                 <DatePicker  type="date" v-model="${addform.model}.${formitem.value}" placeholder="请输入${formitem.label}"></DatePicker>
+#if(${formitem.datepicker})	                 
+	                 <DatePicker  type="date" v-model="${addform.model}.${formitem.datepicker.value}" placeholder="${formitem.datepicker.placeholder}"></DatePicker>
 #end
 #if(${formitem.type}=="TimePicker")	                 
 	                 <TimePicker type="time" v-model="${addform.model}.${formitem.value}" placeholder="请输入${formitem.label}" ></TimePicker>
