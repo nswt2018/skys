@@ -33,7 +33,7 @@
 	</select>
 	
 	<select id="getColumnName" parameterType="String" resultType="String">
-		SELECT column_name FROM information_schema.columns WHERE table_schema='abcd' AND table_name= #{relTable} ORDER BY column_name
+		SELECT CONCAT(col_code ,',', col_name) AS elename FROM bp_field WHERE tab_code = #{relTable} ORDER BY col_name
 	</select>
 	
 	<delete id="delData" parameterType="hashmap" statementType="STATEMENT">

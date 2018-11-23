@@ -28,6 +28,16 @@
 		</if>
 	</select>
 	
+	<select id="findTable" parameterType="String" resultType="BpTable">
+		SELECT 
+			*
+		FROM 
+			bp_tables 
+		WHERE 
+			ISEXIST = '1'
+			AND tab_name = #{tabCode}
+	</select>
+	
 	<insert id="creatTable" parameterType="hashmap" statementType="STATEMENT">
         create table ${tabCode}
         <foreach collection="keys" item="k" index="index" open="(" separator="," close=")">
@@ -39,4 +49,8 @@
     <update id="dropTable" parameterType="String" statementType="STATEMENT">  
 	   drop table ${_parameter}
 	</update>  
+	
+	<update id="updTab" parameterType="String" statementType="STATEMENT">  
+	   update bp_tables set ISEXIST = '1' where tab_code = '${_parameter}'
+	</update> 
 </mapper>

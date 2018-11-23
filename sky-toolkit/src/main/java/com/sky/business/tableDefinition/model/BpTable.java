@@ -36,6 +36,17 @@ public class BpTable implements Serializable{
 
 	@Column(name="UPD_DATE")
     private Date updDate;
+	
+	@Column(name="ISEXIST")
+	private String isExist;
+
+	public String getIsExist() {
+		return isExist;
+	}
+
+	public void setIsExist(String isExist) {
+		this.isExist = isExist;
+	}
 
 	public String getTabCode() {
 		return tabCode;

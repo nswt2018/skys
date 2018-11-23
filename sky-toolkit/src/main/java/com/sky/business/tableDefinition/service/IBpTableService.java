@@ -10,5 +10,7 @@ public interface IBpTableService extends IBaseService<BpTable> {
 	int creatTable(String sqlId, Map<String, Object> map);
 
 	int dropTab(String sqlId, String parameter);
+	
+	int updTab(String sqlId, String parameter);
 }
 

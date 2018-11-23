@@ -1,5 +1,6 @@
 package com.sky.business.systemModule.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -99,8 +100,13 @@ public class BpModuleController extends BaseController {
 		List<BpComponet> componetList = bpComponetService.findForList("com.sky.business.componetDefinition.dao.BpComponetDao.findAllComponet", "");
 		//取关联表所有字段名
 		String relTable = bpModule.getRelTable();
-		List<String> cNameList = bpModuleService.getTabInfo("com.sky.business.systemModule.dao.BpModuleDao.getColumnName", relTable);
-		String relColumn= StringUtils.join(cNameList,",");
+		List<String> nameList = bpModuleService.getTabInfo("com.sky.business.systemModule.dao.BpModuleDao.getColumnName", relTable);
+		List<String> eNameList = new ArrayList<String>();
+		for (String nList : nameList) {
+			eNameList.add(nList.split(",")[0]);
+		}
+		
+		String relColumn= StringUtils.join(eNameList,",");
 		//插入到业务平台-业务单元表中
 		for (BpComponet bpComponet : componetList) {
 			BpUnit bpUnit = new BpUnit();
@@ -119,10 +125,10 @@ public class BpModuleController extends BaseController {
 		//插入到业务平台-页面元素表中
 		List<BpUnit> unitList = bpUnitService.findForList("com.sky.business.businessUnit.dao.BpUnitDao.findAllChildren", bpModule.getModuCode());
 		for (BpUnit bpUnit2 : unitList) {
-			for (String cName : cNameList) {
+			for (String nList : nameList) {
 				BpElement bpElement = new BpElement();
-				bpElement.setEleEName(cName);
-				bpElement.setEleCName(cName);
+				bpElement.setEleEName(nList.split(",")[0]);
+				bpElement.setEleCName(nList.split(",")[1]);
 				bpElement.setModuCode(bpModule.getModuCode());
 				bpElement.setUnitCode(bpUnit2.getUnitCode());
 				bpElement.setUnitName(bpUnit2.getUnitName());
@@ -132,8 +138,6 @@ public class BpModuleController extends BaseController {
 				bpElementService.save(bpElement);
 			}
 		}
-		
-		
 	}
 
 	@DeleteMapping("/TK0004D.do")

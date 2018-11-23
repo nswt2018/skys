@@ -1,7 +1,6 @@
 package com.sky.business.columnDefinition.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -97,20 +96,6 @@ public class BpFieldController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new BusinessException("000006", e.getMessage());
-		}
-	}
-	
-	@RequestMapping(value="/TK0008L1.do")
-	@ResponseBody
-	public Mono<Message> findTable(@RequestParam String tabCode, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
-		//查询数据库 该表是否存在
-		List<BpField> list = bpFieldService.findForList("com.sky.business.columnDefinition.dao.BpFieldDao.findTable", tabCode);
-		//存在则报错返回
-		if(list != null && list.size() > 0){
-			return Mono.justOrEmpty(new Message("100001", "该表已经存在"));
-		}else{
-			return Mono.justOrEmpty(new Message("000001"));
 		}
 	}
 }

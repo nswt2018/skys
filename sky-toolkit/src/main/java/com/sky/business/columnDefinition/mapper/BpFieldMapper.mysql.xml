@@ -30,17 +30,16 @@
 	
 	<select id="findTable" parameterType="String" resultType="BpField">
 		SELECT 
-			table_name AS tab_code,
-			column_name AS col_code,
-			column_comment AS col_name,
+			tab_code,
+			col_code,
+			col_name,
 			data_type,
-			CHARACTER_MAXIMUM_LENGTH AS data_len,
-			CASE WHEN column_key = 'PRI' THEN '1' END AS pk_gen
+			data_len,
+			pk_gen
 		FROM 
-			information_schema.columns 
+			bp_field
 		WHERE 
-			table_schema ='sshs'  
-			AND table_name = #{tabCode}
+			tab_code = #{tabCode}
 	</select>
 	
 	<select id="findAllField" parameterType="String" resultType="BpField">
