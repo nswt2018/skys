@@ -29,7 +29,7 @@
 	</select>
 	
 	<select id="getTabName" parameterType="String" resultType="String">
-		SELECT tab_name from bp_tables
+		SELECT tab_code from bp_tables
 	</select>
 	
 	<select id="getColumnName" parameterType="String" resultType="String">

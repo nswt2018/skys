@@ -222,11 +222,25 @@ public class BpUnitController extends BaseController {
 		return Mono.justOrEmpty(list);
 	}
 	
+	/**
+	 * 获取所有字段
+	 * @param relTable
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value="/TK0005S1.do")
 	@ResponseBody
 	public Mono<List<String>> getColumnList(@RequestParam String relTable, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		List<String> columnList = bpModuleService.getTabInfo("com.sky.business.systemModule.dao.BpModuleDao.getColumnName", relTable);
-		return Mono.justOrEmpty(columnList);
+		List<String> cList = new ArrayList<String>();
+		
+		for (String column : columnList) {
+			column = column.split(",")[0];
+			cList.add(column);
+		}
+		return Mono.justOrEmpty(cList);
 	}
 }
