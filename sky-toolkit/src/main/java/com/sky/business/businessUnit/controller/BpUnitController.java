@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sky.business.businessUnit.model.BpUnit;
 import com.sky.business.businessUnit.service.IBpUnitService;
+import com.sky.business.columnDefinition.model.BpField;
+import com.sky.business.columnDefinition.service.IBpFieldService;
 import com.sky.business.componetDefinition.model.BpComponet;
 import com.sky.business.componetDefinition.service.IBpComponetService;
 import com.sky.business.pageElement.model.BpElement;
@@ -45,14 +47,16 @@ public class BpUnitController extends BaseController {
 	private final IBpModuleService bpModuleService;
 	private final IBpElementService bpElementService;
 	private final IBpComponetService bpComponetService;
+	private final IBpFieldService bpFieldService;
 
 	@Autowired
-	public BpUnitController(final IBpUnitService bpUnitService, 
+	public BpUnitController(final IBpUnitService bpUnitService, final IBpFieldService bpFieldService, 
 			final IBpModuleService bpModuleService, final IBpElementService bpElementService, final IBpComponetService bpComponetService) {
 		this.bpUnitService = bpUnitService;
 		this.bpModuleService = bpModuleService;
 		this.bpElementService = bpElementService;
 		this.bpComponetService = bpComponetService;
+		this.bpFieldService = bpFieldService;
 	}
 	
 	@RequestMapping(value="/TK0005L.do")
@@ -142,13 +146,15 @@ public class BpUnitController extends BaseController {
 				map1.put("code", "" + bpUnit.getUnitCode());
 				bpUnitService.delUnit("com.sky.business.businessUnit.dao.BpUnitDao.delUnit", map1);
 				
+				String relTable = bpUnit.getRelTable();
 				String[] split = relColumn.split(",");
 				for (String rInfo : split) {
+					List<BpField> fList = bpFieldService.findForList("com.sky.business.columnDefinition.dao.BpFieldDao.findAllField", relTable);
 					BpElement bpElement = new BpElement();
 					bpElement.setEleEName(rInfo);
 					bpElement.setUnitCode(bpUnit.getUnitCode());
 					bpElement.setUnitName(bpUnit.getUnitName());
-					bpElement.setEleCName(rInfo);
+					bpElement.setEleCName(fList.get(0).getColName());
 					bpElement.setModuCode(bpUnit.getModuCode());
 					bpElement.setComCode(bpUnit.getComCode());
 					bpElement.setComName(bpUnit.getComName());
