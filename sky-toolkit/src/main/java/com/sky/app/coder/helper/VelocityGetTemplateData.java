@@ -173,15 +173,15 @@ public class VelocityGetTemplateData {
 		// 实体类里面的属性 get/set 方法，传入参数（数据库表名，表主键）
 		model.setModelClassStr(str);
 		// 包名--controller 三级包名+模块代码（全部小写）+每层固定的命名
-		model.setControllerPackName(packname + "." + lowerModuCode + ".controller");
+		model.setControllerPackName(packname  + ".controller");
 		// 包名--service 三级包名+模块代码（全部小写）+每层固定的命名
-		model.setServicePackName(packname + "." + lowerModuCode + ".service");
+		model.setServicePackName(packname  + ".service");
 		// 包名--serviceimpl 三级包名+模块代码（全部小写）+每层固定的命名
-		model.setServiceImplPackName(packname + "." + lowerModuCode + ".service.impl");
+		model.setServiceImplPackName(packname  + ".service.impl");
 		// 包名--dao 三级包名+模块代码（全部小写）+每层固定的命名
-		model.setDaoPackName(packname + "." + lowerModuCode + ".dao");
+		model.setDaoPackName(packname  + ".dao");
 		// 包名--model 三级包名+模块代码（全部小写）+每层固定的命名
-		model.setModelPackName(packname + "." + lowerModuCode + ".model");
+		model.setModelPackName(packname  + ".model");
 		// vue各组件赋值
 		model.setInputs(inputs);
 		model.setAddformitem(addformitems);
