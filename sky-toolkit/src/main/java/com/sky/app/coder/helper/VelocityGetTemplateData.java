@@ -25,7 +25,7 @@ import net.sf.json.JSONObject;
  */
 public class VelocityGetTemplateData {
 	// 将模板中所需要的数据都封装在Model实体类中
-	public Model getModel(List<Element> list, Element el, String str) {
+	public Model getModel(List<Element> list, Element el, String str,String packname) {
 		Model model = new Model();
 		String cname=null;
 		String ename=null;
@@ -173,15 +173,15 @@ public class VelocityGetTemplateData {
 		// 实体类里面的属性 get/set 方法，传入参数（数据库表名，表主键）
 		model.setModelClassStr(str);
 		// 包名--controller 三级包名+模块代码（全部小写）+每层固定的命名
-		model.setControllerPackName(el.getPackName() + "." + lowerModuCode + ".controller");
+		model.setControllerPackName(packname + "." + lowerModuCode + ".controller");
 		// 包名--service 三级包名+模块代码（全部小写）+每层固定的命名
-		model.setServicePackName(el.getPackName() + "." + lowerModuCode + ".service");
+		model.setServicePackName(packname + "." + lowerModuCode + ".service");
 		// 包名--serviceimpl 三级包名+模块代码（全部小写）+每层固定的命名
-		model.setServiceImplPackName(el.getPackName() + "." + lowerModuCode + ".service.impl");
+		model.setServiceImplPackName(packname + "." + lowerModuCode + ".service.impl");
 		// 包名--dao 三级包名+模块代码（全部小写）+每层固定的命名
-		model.setDaoPackName(el.getPackName() + "." + lowerModuCode + ".dao");
+		model.setDaoPackName(packname + "." + lowerModuCode + ".dao");
 		// 包名--model 三级包名+模块代码（全部小写）+每层固定的命名
-		model.setModelPackName(el.getPackName() + "." + lowerModuCode + ".model");
+		model.setModelPackName(packname + "." + lowerModuCode + ".model");
 		// vue各组件赋值
 		model.setInputs(inputs);
 		model.setAddformitem(addformitems);
