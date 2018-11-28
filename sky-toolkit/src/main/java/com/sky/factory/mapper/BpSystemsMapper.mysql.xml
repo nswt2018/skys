@@ -25,4 +25,12 @@
 	<delete id="deleteBySysKey" parameterType="String" statementType="STATEMENT">
 		delete from bp_systems where SYS_KEY LIKE '${_parameter}%'
 	</delete>
+	
+	<select id="findAll" parameterType="String" resultType="BpSystems">
+		select * from BP_SYSTEMS
+	</select>
+	
+	<select id="findChildren" parameterType="String" resultType="BpSystems">
+		select * from BP_SYSTEMS WHERE upper_sys = #{sysKey}
+	</select>
 </mapper>

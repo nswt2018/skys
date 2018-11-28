@@ -200,4 +200,66 @@ public class BpSystemsController extends BaseController {
 			throw new BusinessException("000005", e.getMessage());
 		}
 	}
+	
+	@RequestMapping("/AF0004G2.do")
+	@ResponseBody
+	public Mono<Message> sysDeployment(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		try {
+			List<BpSystems> sList = bpSystemsService.findForList("com.sky.factory.dao.BpSystemsDao.findAll", "");
+			List<BpSystems> sysList = this.getList(sList);
+		
+			for (BpSystems bpSystems : sysList) {
+				System.out.println(bpSystems.toString());
+			}
+			if( bpSystemsService.flushRouter(sysList)) return Mono.justOrEmpty(new Message("000001"));
+			else return Mono.justOrEmpty(new Message("100001"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new BusinessException("000005", e.getMessage());
+		}
+	}
+
+	/**
+	 * 去掉无效的记录
+	 * @param sList
+	 * @return
+	 */
+	private List<BpSystems> getList(List<BpSystems> sList) {
+		
+		List<BpSystems> sysList = new ArrayList<>();
+		
+		for (BpSystems bpSystems : sList) {
+			String sysKey = bpSystems.getSysKey();
+			String modCode = bpSystems.getModCode();
+			if(modCode != null && !("".equals(modCode)))
+				sysList.add(bpSystems);
+			else{
+				List<BpSystems> sList1 = bpSystemsService.findForList("com.sky.factory.dao.BpSystemsDao.findChildren", sysKey);
+				if(sList1 != null && sList1.size() > 0){
+					for (BpSystems bpSystems2 : sList1) {
+						String modCode2 = bpSystems2.getModCode();
+						String sysKey2 = bpSystems2.getSysKey();
+						if(modCode2 != null && !("".equals(modCode2))){
+							sysList.add(bpSystems);
+							break;
+						}else{
+							List<BpSystems> sList2 = bpSystemsService.findForList("com.sky.factory.dao.BpSystemsDao.findChildren", sysKey2);
+							if(sList2 != null && sList2.size() > 0){
+								for (BpSystems bpSystems3 : sList2) {
+									String modCode3 = bpSystems3.getModCode();
+									if(modCode3 != null && !("".equals(modCode3))){
+										sysList.add(bpSystems);
+										break;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return sysList;
+	}
 }

@@ -154,4 +154,12 @@ public class BpSystems implements Serializable{
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+
+	@Override
+	public String toString() {
+		return "BpSystems [sysKey=" + sysKey + ", sysCode=" + sysCode + ", sysName=" + sysName + ", sysComm=" + sysComm
+				+ ", upperSys=" + upperSys + ", upperName=" + upperName + ", modCode=" + modCode + ", vuePath="
+				+ vuePath + ", javaPath=" + javaPath + ", packName=" + packName + ", crtDate=" + crtDate + ", updDate="
+				+ updDate + "]";
+	}
 }
