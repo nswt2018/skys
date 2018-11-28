@@ -31,6 +31,6 @@
 	</select>
 	
 	<select id="findChildren" parameterType="String" resultType="BpSystems">
-		select * from BP_SYSTEMS WHERE upper_sys = #{sysKey}
+		select * from BP_SYSTEMS WHERE sys_key LIKE CONCAT(#{sysKey},'%')
 	</select>
 </mapper>

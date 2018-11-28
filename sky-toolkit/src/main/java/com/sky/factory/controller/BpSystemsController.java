@@ -230,32 +230,12 @@ public class BpSystemsController extends BaseController {
 		List<BpSystems> sysList = new ArrayList<>();
 		
 		for (BpSystems bpSystems : sList) {
-			String sysKey = bpSystems.getSysKey();
-			String modCode = bpSystems.getModCode();
-			if(modCode != null && !("".equals(modCode)))
-				sysList.add(bpSystems);
-			else{
-				List<BpSystems> sList1 = bpSystemsService.findForList("com.sky.factory.dao.BpSystemsDao.findChildren", sysKey);
-				if(sList1 != null && sList1.size() > 0){
-					for (BpSystems bpSystems2 : sList1) {
-						String modCode2 = bpSystems2.getModCode();
-						String sysKey2 = bpSystems2.getSysKey();
-						if(modCode2 != null && !("".equals(modCode2))){
-							sysList.add(bpSystems);
-							break;
-						}else{
-							List<BpSystems> sList2 = bpSystemsService.findForList("com.sky.factory.dao.BpSystemsDao.findChildren", sysKey2);
-							if(sList2 != null && sList2.size() > 0){
-								for (BpSystems bpSystems3 : sList2) {
-									String modCode3 = bpSystems3.getModCode();
-									if(modCode3 != null && !("".equals(modCode3))){
-										sysList.add(bpSystems);
-										break;
-									}
-								}
-							}
-						}
-					}
+			List<BpSystems> sList1 = bpSystemsService.findForList("com.sky.factory.dao.BpSystemsDao.findChildren", bpSystems.getSysKey());
+			for (BpSystems bpSystems2 : sList1) {
+				String modCode = bpSystems2.getModCode();
+				if(modCode != null && !("".equals(modCode))){
+					sysList.add(bpSystems);
+					break;
 				}
 			}
 		}
