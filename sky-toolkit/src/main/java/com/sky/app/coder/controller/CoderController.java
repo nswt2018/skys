@@ -48,13 +48,13 @@ public class CoderController {
 					String javaPath=null;
 					String sysCode="";
 					String tempSysCode=null;
-					String lastSysCode=syslist.get(i).getSysCode().toLowerCase();
-					String packName=syslist.get(i).getPackName();
+					String packName=null;
 					for(int j=0;j<upperSysList.size();j++){
 						Systems system=CoderService.getSystemsOne("com.sky.app.core.CoderMapper.findBpSystemsOne", upperSysList.get(j));
 						if(!system.getVuePath().equals("") && !system.getJavaPath().equals("")){
 							vuePath=system.getVuePath();
 							javaPath=system.getJavaPath();
+							packName=system.getPackName();
 						}
 						tempSysCode=system.getSysCode().toLowerCase();
 						packName+="."+tempSysCode;
@@ -64,9 +64,8 @@ public class CoderController {
 							sysCode+="\\"+tempSysCode;
 						}
 					}
-					vuePath=vuePath+sysCode+"\\"+lastSysCode;
-					javaPath=javaPath+"\\"+packName.replace(".", "\\")+"\\"+lastSysCode;
-					packName=packName+"."+lastSysCode;
+					vuePath=vuePath+sysCode;
+					javaPath=javaPath+"\\"+packName.replace(".", "\\");
 					// 从数据库中取数据
 					List<Element> list = CoderService.getTagInfo("com.sky.app.core.CoderMapper.findBpForList", syslist.get(i).getModCode());
 					Element el = CoderService.getElement("com.sky.app.core.CoderMapper.findBpForOne", syslist.get(i).getModCode());
