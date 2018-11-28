@@ -10,5 +10,7 @@ public interface IBpSystemsService extends IBaseService<BpSystems> {
 	List<String> findMaxKey(String sqlId, String parameter);
 
 	int deleteBySysKey(String sqlId, String parameter);
+	
+	public boolean flushRouter(List<BpSystems> sList);
 }
 
