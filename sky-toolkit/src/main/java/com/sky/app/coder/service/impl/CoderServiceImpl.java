@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.sky.app.coder.helper.ConvertString;
 import com.sky.app.coder.model.Element;
+import com.sky.app.coder.model.Systems;
 import com.sky.app.coder.service.ICoderService;
 
 @Service("CoderService")
@@ -27,6 +28,16 @@ public class CoderServiceImpl implements ICoderService {
 	// 列名类型数组
 	private String[] colTypes;
 
+	@Override
+	public List<Systems> getSystems(String sqlId, String sysKey) {
+		return sqlsession.selectList(sqlId, sysKey);
+	}
+	
+	@Override
+	public Systems getSystemsOne(String sqlId, String upperSys) {
+		return sqlsession.selectOne(sqlId, upperSys);
+	}
+	
 	@Override
 	public List<Element> getTagInfo(String sqlId, String moduCode) {
 		return sqlsession.selectList(sqlId, moduCode);
@@ -197,4 +208,7 @@ public class CoderServiceImpl implements ICoderService {
 		format += "    }\r\n";
 		return new StringBuffer(format);
 	}
+
+
+	
 }

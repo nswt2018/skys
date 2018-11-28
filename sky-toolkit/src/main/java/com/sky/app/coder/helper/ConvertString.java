@@ -1,5 +1,9 @@
 package com.sky.app.coder.helper;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 public class ConvertString {
 	// 判断字符串中是否有大写字母
 	public static boolean isAcronym(String word) {
@@ -89,7 +93,42 @@ public class ConvertString {
 		}
 		return str;
 	}
+	//将java字符串每两个分为一组
+	public static List<String>  groupString(String str){
+		List<String> list = new ArrayList<String>();
+		for(;str.length()>2;){
+		list.add(str.substring(str.length()-2));
+		str = str.substring(0,str.length()-2);
+		}
+		if(str.length()>0){
+		list.add(str);
+		}
+		return list;
+	}
+	//获取数值字符串的2位,4位,8位....依次往后
+	public static List<String>  subString(String str){
+		List<String> list = new ArrayList<String>();
+		int j=1;
+		for(;j<str.length()/2;j++){
+			list.add(str.substring(0,2*j));
+		}
+		return list;
+		/*List<Map<String, String>> list1 = null;
+		Map<String,Map> mapAll = null;
+		String str1 = "";
+		for( int i=0; i<list1.size(); i++) {
+			Map<String, String> map = list1.get(i);
+			if(!map.get("pack_name").equals("") ) {
+				String uper = map.get("upper_sys");				
+				while(uper!=null) {
+					str1 += uper+"/";
+					uper = (String)mapAll.get(uper).get("upper_sys");
+				}
+			}
+		}*/
+		
+	}
 	public static void main(String[] args) {
-		System.out.println(replaceSomeChar("[{\"Input\":{\"@onChange\":\"true\",\"@onChange\":\"true\",\"*readonly\":\"true\",\"*readonly\":\"true\",\"value\":\"parnName\"}}]"));
+		System.out.println("010201".substring(0,2));
 	}
 }
