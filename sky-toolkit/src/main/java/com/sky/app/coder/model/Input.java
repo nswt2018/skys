@@ -7,8 +7,10 @@ public class Input {
 	 */
 	//输入框的数据
 	private String value;
-	//自己加的属性，映射文件（mapper）where后的条件字段
+	//自己加的属性，映射文件（mapper）where后的条件字段（数据库字段）
 	private String convertValue;
+	//自己加的属性,默认给字段赋值
+	private String defaultValue;
 	//输入框提示语
 	private String placeholder;
 	//输入框宽度
@@ -53,6 +55,12 @@ public class Input {
 	}
 	public void setConvertValue(String convertValue) {
 		this.convertValue = convertValue;
+	}
+	public String getDefaultValue() {
+		return defaultValue;
+	}
+	public void setDefaultValue(String defaultValue) {
+		this.defaultValue = defaultValue;
 	}
 	public String getPlaceholder() {
 		return placeholder;

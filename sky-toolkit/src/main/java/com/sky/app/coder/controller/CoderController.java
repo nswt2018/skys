@@ -49,6 +49,7 @@ public class CoderController {
 					String sysCode="";
 					String tempSysCode=null;
 					String packName=null;
+					String lastSysCode=null;
 					for(int j=0;j<upperSysList.size();j++){
 						Systems system=CoderService.getSystemsOne("com.sky.app.core.CoderMapper.findBpSystemsOne", upperSysList.get(j));
 						if(!system.getVuePath().equals("") && !system.getJavaPath().equals("")){
@@ -63,6 +64,9 @@ public class CoderController {
 						}else{
 							sysCode+="\\"+tempSysCode;
 						}
+						if(j==upperSysList.size()-1){
+							lastSysCode=system.getSysCode().toLowerCase();
+						}
 					}
 					vuePath=vuePath+sysCode;
 					javaPath=javaPath+"\\"+packName.replace(".", "\\");
@@ -72,7 +76,7 @@ public class CoderController {
 					//根据传入的模块编号、模块数据库表主键，生成实体类中的内容，属性和get/set方法
 					String str=CoderService.getClassStr(el.getRelTable(),el.getColCode());
 					// 将数据库取出来的值放入model解析,然后取得model
-					Model model = new VelocityGetTemplateData().getModel(list, el,str,packName);
+					Model model = new VelocityGetTemplateData().getModel(list, el,str,packName,lastSysCode);
 					// 将model里面的变量值放入VelocityContext
 					VelocityContext vcx = new VelocityContext();
 					vcx.put("models", model);

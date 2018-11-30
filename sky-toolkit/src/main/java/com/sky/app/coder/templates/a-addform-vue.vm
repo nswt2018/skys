@@ -1,4 +1,4 @@
-	           <Form #if(${addform.ref})ref="${addform.ref}"#end :model="${addform.model}" #if(${addform.rules}):rules="${addform.rules}"#end #if(${addform.labelWidth}):label-width="${addform.labelWidth}">#end
+	           <Form #if(${addform.ref})ref="${addform.ref}"#end :model="${addform.model}" #if(${addform.rules}):rules="${addform.rules}"#end #if(${addform.labelWidth}):label-width="${addform.labelWidth}"#end #if(${addform.inline})inline#end>
 #if($addformitems)
 #foreach($formitem in $addformitems)
 #if(((${formitem.input.value}==${tableprimary})&&(${tableprimaryvalue}=="0")) || (${formitem.input.value}!=${tableprimary}))
@@ -6,6 +6,12 @@
 	              <FormItem label="${formitem.label}:" #if(${formitem.prop})prop="${formitem.prop}"#end #if(${formitem.required})required#end #if(${formitem.labelWidth})label-width="${formitem.labelWidth}"#end>
 #if(${formitem.input})
 	                 <Input v-model="${addform.model}.${formitem.input.value}" placeholder="${formitem.input.placeholder}" />
+#end
+#if(${formitem.inputNumber})	                 
+	                 <InputNumber #if(${formitem.inputNumber.max}):max="${formitem.inputNumber.max}"#end #if(${formitem.inputNumber.min}):min="${formitem.inputNumber.min}"#end v-model="${addform.model}.${formitem.inputNumber.value}"  #if(${formitem.inputNumber.placeholder})placeholder="${formitem.inputNumber.placeholder}"#end ></InputNumber>
+#end
+#if(${formitem.datepicker})	                 
+	                 <DatePicker  type="date" v-model="${addform.model}.${formitem.datepicker.value}" placeholder="${formitem.datepicker.placeholder}"></DatePicker>
 #end
 #if(${formitem.type}=="select")	                 
 	                 <Select  v-model="${addform.model}.${formitem.value}" placeholder="请输入${formitem.label}" />
@@ -34,9 +40,6 @@
 #end
 #if(${formitem.type}=="slider")	                 
 	                 <Slider v-model="${addform.model}.${formitem.value}" range></Slider>
-#end
-#if(${formitem.datepicker})	                 
-	                 <DatePicker  type="date" v-model="${addform.model}.${formitem.datepicker.value}" placeholder="${formitem.datepicker.placeholder}"></DatePicker>
 #end
 #if(${formitem.type}=="TimePicker")	                 
 	                 <TimePicker type="time" v-model="${addform.model}.${formitem.value}" placeholder="请输入${formitem.label}" ></TimePicker>

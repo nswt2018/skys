@@ -109,7 +109,7 @@ public class ConvertString {
 	public static List<String>  subString(String str){
 		List<String> list = new ArrayList<String>();
 		int j=1;
-		for(;j<str.length()/2;j++){
+		for(;j<str.length()/2+1;j++){
 			list.add(str.substring(0,2*j));
 		}
 		return list;

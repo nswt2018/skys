@@ -1,4 +1,4 @@
-	           <Form #if(${updform.ref})ref="${updform.ref}"#end :model="${updform.model}" #if(${updform.rules}):rules="${updform.rules}"#end #if(${updform.labelWidth}):label-width="${updform.labelWidth}">#end
+	           <Form #if(${updform.ref})ref="${updform.ref}"#end :model="${updform.model}" #if(${updform.rules}):rules="${updform.rules}"#end #if(${updform.labelWidth}):label-width="${updform.labelWidth}" #if(${addform.inline})inline#end>#end
 #if($updformitems)
 #foreach($formitem in $updformitems)
 #if(${formitem.input.value}!=${tableprimary})
@@ -6,6 +6,12 @@
 	              <FormItem label="${formitem.label}:" #if(${formitem.prop})prop="${formitem.prop}"#end #if(${formitem.required})required#end #if(${formitem.labelWidth})label-width="${formitem.labelWidth}"#end>
 #if(${formitem.input})
 	                 <Input v-model="${updform.model}.${formitem.input.value}" placeholder="${formitem.input.placeholder}" />
+#end
+#if(${formitem.inputNumber})	                 
+	                 <InputNumber #if(${formitem.inputNumber.max}):max="${formitem.inputNumber.max}"#end #if(${formitem.inputNumber.min}):min="${formitem.inputNumber.min}"#end v-model="${updform.model}.${formitem.inputNumber.value}"  #if(${formitem.inputNumber.placeholder})placeholder="${formitem.inputNumber.placeholder}"#end ></InputNumber>
+#end
+#if(${formitem.datepicker})	                 
+	                 <DatePicker  type="date" v-model="${updform.model}.${formitem.datepicker.value}" placeholder="${formitem.datepicker.placeholder}"></DatePicker>
 #end
 #if(${formitem.type}=="select")	                 
 	                 <Select  v-model="${updform.model}.${formitem.value}" placeholder="请输入${formitem.label}" />
@@ -34,9 +40,6 @@
 #end
 #if(${formitem.type}=="slider")	                 
 	                 <Slider v-model="${updform.model}.${formitem.value}" range></Slider>
-#end
-#if(${formitem.datepicker})	                 
-	                 <DatePicker  type="date" v-model="${updform.model}.${formitem.datepicker.value}" placeholder="${formitem.datepicker.placeholder}"></DatePicker>
 #end
 #if(${formitem.type}=="TimePicker")	                 
 	                 <TimePicker type="time" v-model="${updform.model}.${formitem.value}" placeholder="请输入${formitem.label}" ></TimePicker>

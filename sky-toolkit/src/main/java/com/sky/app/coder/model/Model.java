@@ -25,6 +25,8 @@ public class Model {
 	private String model;
 	//模型代码
 	private String moduCode;
+	//系统简码
+	private String sysCode;
 	//数据库表的名称
 	private String tableName;
 	//模块数据库表主键字段
@@ -35,16 +37,18 @@ public class Model {
 	private String modelClassStr;
 	//交易号
 	private String tid;
-	
+	//用于标签信息解析
+	private Input input;
+	private FormItem formitem;
+	private DatePicker datepicker;
+	private InputNumber inputnumber;
+
 	private Button button;
 	private Table table;
 	private Page1 page;
 	private Form addform;
 	private Form updform;
 	private Form viewform;
-	private Input input;
-	private FormItem formitem;
-	private DatePicker datepicker;
 	private List<Input> inputs;
 	private List<Modal> modals;
 	private List<FormItem> addformitem;
@@ -224,6 +228,18 @@ public class Model {
 	}
 	public void setDatepicker(DatePicker datepicker) {
 		this.datepicker = datepicker;
+	}
+	public InputNumber getInputnumber() {
+		return inputnumber;
+	}
+	public void setInputnumber(InputNumber inputnumber) {
+		this.inputnumber = inputnumber;
+	}
+	public String getSysCode() {
+		return sysCode;
+	}
+	public void setSysCode(String sysCode) {
+		this.sysCode = sysCode;
 	}
 	
 }

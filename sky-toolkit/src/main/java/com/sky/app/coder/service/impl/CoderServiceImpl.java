@@ -108,21 +108,19 @@ public class CoderServiceImpl implements ICoderService {
 	 */
 	private String sqlType2JavaType(String sqlType) {
 
-		if (sqlType.equalsIgnoreCase("bit")) {
+		if (sqlType.equalsIgnoreCase("bit")||sqlType.equalsIgnoreCase("boolean")) {
 			return "boolean";
 		} else if (sqlType.equalsIgnoreCase("tinyint")) {
 			return "byte";
 		} else if (sqlType.equalsIgnoreCase("smallint")) {
 			return "short";
 		} else if (sqlType.equalsIgnoreCase("int")) {
-			return "int";
+			return "Integer";
 		} else if (sqlType.equalsIgnoreCase("bigint")) {
 			return "long";
-		} else if (sqlType.equalsIgnoreCase("float")) {
-			return "float";
-		} else if (sqlType.equalsIgnoreCase("decimal") || sqlType.equalsIgnoreCase("numeric")
-				|| sqlType.equalsIgnoreCase("real") || sqlType.equalsIgnoreCase("money")
-				|| sqlType.equalsIgnoreCase("smallmoney")) {
+		} else if (sqlType.equalsIgnoreCase("decimal")|| sqlType.equalsIgnoreCase("numeric")) {
+			return "BigDecimal";
+		} else if (sqlType.equalsIgnoreCase("float") || sqlType.equalsIgnoreCase("double")) {
 			return "double";
 		} else if (sqlType.equalsIgnoreCase("varchar") || sqlType.equalsIgnoreCase("char")
 				|| sqlType.equalsIgnoreCase("nvarchar") || sqlType.equalsIgnoreCase("nchar")
@@ -130,8 +128,8 @@ public class CoderServiceImpl implements ICoderService {
 			return "String";
 		} else if (sqlType.equalsIgnoreCase("datetime") || sqlType.equalsIgnoreCase("date")) {
 			return "Date";
-		} else if (sqlType.equalsIgnoreCase("image")) {
-			return "Blod";
+		} else if (sqlType.equalsIgnoreCase("blob")) {
+			return "Blob";
 		} else if (sqlType.equalsIgnoreCase("timestamp")) {
 			return "Timestamp";
 		}
