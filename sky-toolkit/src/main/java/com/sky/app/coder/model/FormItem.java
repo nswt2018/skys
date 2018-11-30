@@ -24,6 +24,7 @@ public class FormItem {
 	private String type;
 	private Input input;
 	private DatePicker datepicker;
+	private InputNumber inputNumber;
 	public String getLabel() {
 		return label;
 	}
@@ -96,6 +97,12 @@ public class FormItem {
 	}
 	public void setDatepicker(DatePicker datepicker) {
 		this.datepicker = datepicker;
+	}
+	public InputNumber getInputNumber() {
+		return inputNumber;
+	}
+	public void setInputNumber(InputNumber inputNumber) {
+		this.inputNumber = inputNumber;
 	}
 	
 }

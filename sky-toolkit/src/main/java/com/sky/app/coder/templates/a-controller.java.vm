@@ -4,6 +4,7 @@
 #set($model=${models.model})
 #set($moducode=${models.moduCode})
 #set($tid=${models.tid})
+#set($syscode=${models.sysCode})
 package ${controllerpackname};
 
 
@@ -30,11 +31,10 @@ import com.sky.core.page.Page;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping(value = "/${moducode}")
 public class ${model}Controller extends BaseController{
 	@Resource(name = "${model}Service")
 	private I${model}Service ${model}Service;
-	@RequestMapping(value = "/${tid}L.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/${syscode}/${tid}L.do", method = RequestMethod.POST)
 	@ResponseBody
 	public Mono<Page<${model}>> get${model}PageList(@RequestBody Page<${model}> page, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -44,7 +44,7 @@ public class ${model}Controller extends BaseController{
 		return Mono.justOrEmpty(page);
 	}
 
-	@PutMapping(value = "/${tid}I.do")
+	@PutMapping(value = "/${syscode}/${tid}I.do")
 	@ResponseBody
 	public Mono<Message> insert${model}(@RequestBody ${model} ${model}, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -61,10 +61,10 @@ public class ${model}Controller extends BaseController{
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new BusinessException("000004", e.getMessage());
+			throw new BusinessException("-000000", e.getMessage());
 		}
 	}
-	@PutMapping(value = "/${tid}U.do")
+	@PutMapping(value = "/${syscode}/${tid}U.do")
 	@ResponseBody
 	public Mono<Message> update${model}(@RequestBody ${model} ${model}, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -81,10 +81,10 @@ public class ${model}Controller extends BaseController{
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new BusinessException("000006", e.getMessage());
+			throw new BusinessException("-000000", e.getMessage());
 		}
 	}
-	@DeleteMapping("/${tid}D.do")
+	@DeleteMapping("/${syscode}/${tid}D.do")
 	@ResponseBody
 	public Mono<Message> delete${model}(@RequestParam String[] delKeys, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -97,7 +97,7 @@ public class ${model}Controller extends BaseController{
 			return Mono.justOrEmpty(new Message("000002"));
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new BusinessException("000005", e.getMessage());
+			throw new BusinessException("-000000", e.getMessage());
 		}
 	}
 

@@ -11,6 +11,7 @@ import com.sky.app.coder.model.Element;
 import com.sky.app.coder.model.Form;
 import com.sky.app.coder.model.FormItem;
 import com.sky.app.coder.model.Input;
+import com.sky.app.coder.model.InputNumber;
 import com.sky.app.coder.model.Modal;
 import com.sky.app.coder.model.Model;
 import com.sky.app.coder.model.Page1;
@@ -25,23 +26,29 @@ import net.sf.json.JSONObject;
  */
 public class VelocityGetTemplateData {
 	// 将模板中所需要的数据都封装在Model实体类中
-	public Model getModel(List<Element> list, Element el, String str,String packname) {
+	public Model getModel(List<Element> list, Element el, String str, String packname,String lastSysCode) {
 		Model model = new Model();
-		String cname=null;
-		String ename=null;
+		//字段名称
+		String cname = null;
+		//字段
+		String ename = null;
 		List<Input> inputs = new ArrayList<Input>();
 		List<FormItem> addformitems = new ArrayList<FormItem>();
 		List<FormItem> updformitems = new ArrayList<FormItem>();
 		List<FormItem> viewformitems = new ArrayList<FormItem>();
 		List<TableColumn> tablecolumns = new ArrayList<TableColumn>();
 		for (int i = 0; i < list.size(); i++) {
+			// 字段名称
+			cname = list.get(i).getEleCname();
+			// 字段，字段全部小写，如果字段中有“_”,则将字段中"_"去掉后第一字母大写
+			ename=ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase());
 			if (list.get(i).getComName().equals("条件搜索")) {
 				Input input = new Input();
 				// 如果搜索框的标签信息没有录入，则设置默认值
 				if (list.get(i).getTagInfo() == null || "".equals(list.get(i).getTagInfo())) {
 					input.setType("text");
-					// 字段，字段全部小写，如果字段中有“_”,则将字段中"_"去掉后第一字母大写
-					input.setValue(ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase()));
+					// 字段
+					input.setValue(ename);
 					// 设置mapping映射文件where后条件的字段，就是数据库表字段
 					input.setConvertValue(list.get(i).getEleEname());
 					// 字段名称
@@ -52,95 +59,97 @@ public class VelocityGetTemplateData {
 				} else {
 					// 将数据库中取出的JSON字符串，去除字符串中的‘@’、‘：’放入input实体类中
 					input = this.getTagInfo(ConvertString.replaceSomeChar(list.get(i).getTagInfo())).getInput();
+					input.setDefaultValue(input.getValue());
+					input.setValue(ename);
+					// 设置mapping映射文件where后条件的字段，就是数据库表字段
+					input.setConvertValue(list.get(i).getEleEname());
 				}
 				inputs.add(input);
 			} else if (list.get(i).getComName().equals("列表信息")) {
 				TableColumn tablecolumn = new TableColumn();
 				// 字段名称
-				tablecolumn.setLabel(list.get(i).getEleCname());
-				// 字段，先全部小写，如果字段中有“_”,将字段中"_"去掉后第一字母大写
-				tablecolumn.setValue(ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase()));
+				tablecolumn.setLabel(cname);
+				// 字段
+				tablecolumn.setValue(ename);
 				tablecolumns.add(tablecolumn);
-			} else if (list.get(i).getComName().equals("新增信息")) {
-				FormItem addformitem = new FormItem();
-				// 如果新增信息的标签信息没有录入，则设置默认值
+			} else if (list.get(i).getComName().equals("新增信息")||list.get(i).getComName().equals("修改信息")) {
+				FormItem formitem = new FormItem();
+				// 如果新增信息或修改信息标签信息没有录入，则设置默认值
 				if (list.get(i).getTagInfo() == null || "".equals(list.get(i).getTagInfo())) {
-					// 字段名称
-					cname=list.get(i).getEleCname();
-					//字段,先全部小写，如果字段中有“_”,将字段中"_"去掉后第一字母大写
-					ename=ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase());
-					addformitem.setLabel(cname);
-					if(list.get(i).getDataType().equals("date")){
-						DatePicker dp=new DatePicker();
+					formitem.setLabel(cname);
+					formitem.setProp(ename);
+					formitem.setRequired("true");
+					//新增信息或修改信息表单，现在只支持input输入框,日期,数值
+					if (list.get(i).getDataType().equals("date")||list.get(i).getDataType().equals("datetime")) {
+						DatePicker dp = new DatePicker();
 						dp.setValue(ename);
 						dp.setPlaceholder(cname);
-						addformitem.setDatepicker(dp);
-					}else{
-						Input ainput=new Input();
+						formitem.setDatepicker(dp);
+					}else if (list.get(i).getDataType().equals("decimal")
+							|| list.get(i).getDataType().equals("numeric")
+							|| list.get(i).getDataType().equals("double")
+							|| list.get(i).getDataType().equals("float")
+							|| list.get(i).getDataType().equals("int")
+							|| list.get(i).getDataType().equals("bigint")) {
+						InputNumber in=new InputNumber();
+						in.setValue(ename);
+						in.setPlaceholder(cname);
+						in.setMax(1000000);
+						in.setMin(0);
+						formitem.setInputNumber(in);
+					}else {
+						Input ainput = new Input();
 						ainput.setValue(ename);
 						ainput.setPlaceholder(cname);
-						addformitem.setInput(ainput);
-						addformitem.setProp(ename);
-						addformitem.setRequired("true");
+						formitem.setInput(ainput);
 					}
 				} else {
-					Model amodel = new Model();
+					Model aumodel = new Model();
 					// 将数据库中取出的JSON字符串,去除字符串中的‘@’、‘：’，放入FormItem实体类中
-					amodel=this.getTagInfo(ConvertString.replaceSomeChar(list.get(i).getTagInfo()));
-					addformitem = amodel.getFormitem();
-					addformitem.setInput(amodel.getInput());
-					addformitem.setDatepicker(amodel.getDatepicker());
-				}
-				addformitems.add(addformitem);
-			} else if (list.get(i).getComName().equals("修改信息")) {
-				FormItem updformitem = new FormItem();
-				// 如果修改信息的标签信息没有录入，则设置默认值
-				if (list.get(i).getTagInfo() == null || "".equals(list.get(i).getTagInfo())) {
-					// 字段名称
-					cname=list.get(i).getEleCname();
-					//字段,先全部小写，如果字段中有“_”,将字段中"_"去掉后第一字母大写
-					ename=ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase());
-					updformitem.setLabel(cname);
-					if(list.get(i).getDataType().equals("date")){
-						DatePicker dp=new DatePicker();
-						dp.setValue(ename);
-						dp.setPlaceholder(cname);
-						updformitem.setDatepicker(dp);
-					}else{
-						Input uinput=new Input();
-						uinput.setValue(ename);
-						uinput.setPlaceholder(cname);
-						updformitem.setInput(uinput);
-						updformitem.setProp(ename);
-						updformitem.setRequired("true");
+					aumodel = this.getTagInfo(ConvertString.replaceSomeChar(list.get(i).getTagInfo()));
+					formitem = aumodel.getFormitem();
+					//如果新增或修改组件中录入的标签信息有input、Datepicker、InputNumber标签，则将value的值赋给defaultvalue
+					if(aumodel.getInput()!=null){
+						aumodel.getInput().setDefaultValue(aumodel.getInput().getValue());
+						aumodel.getInput().setValue(ename);
 					}
-				} else {
-					Model umodel = new Model();
-					// 将数据库中取出的JSON字符串，去除字符串中的‘@’、‘：’，放入FormItem实体类中
-					umodel=this.getTagInfo(ConvertString.replaceSomeChar(list.get(i).getTagInfo()));
-					updformitem = umodel.getFormitem();
-					updformitem.setInput(umodel.getInput());
-					updformitem.setDatepicker(umodel.getDatepicker());
+					if(aumodel.getDatepicker()!=null){
+						aumodel.getDatepicker().setDefaultValue(aumodel.getDatepicker().getValue());
+						aumodel.getDatepicker().setValue(ename);
+					}
+					if(aumodel.getInputnumber()!=null){
+						aumodel.getInputnumber().setDefaultValue(aumodel.getInputnumber().getValue());
+						aumodel.getInputnumber().setValue(ename);
+					}
+					formitem.setInput(aumodel.getInput());
+					formitem.setDatepicker(aumodel.getDatepicker());
+					formitem.setInputNumber(aumodel.getInputnumber());;
 				}
-				updformitems.add(updformitem);
-			} else if (list.get(i).getComName().equals("查看信息")) {
+				if(list.get(i).getComName().equals("新增信息")){
+					addformitems.add(formitem);
+				}else{
+					updformitems.add(formitem);
+				}
+			}else if (list.get(i).getComName().equals("查看信息")) {
 				FormItem viewformitem = new FormItem();
 				// 如果查看信息的标签信息没有录入，则设置默认值
 				if (list.get(i).getTagInfo() == null || "".equals(list.get(i).getTagInfo())) {
 					// 字段名称
-					viewformitem.setLabel(list.get(i).getEleCname());
-					// 字段，先全部小写，如果字段中有“_”,将字段中"_"去掉后第一字母大写
-					Input vinput=new Input();
-					vinput.setValue(ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase()));
+					viewformitem.setLabel(cname);
+					Input vinput = new Input();
+					// 字段
+					vinput.setValue(ename);
 					viewformitem.setInput(vinput);
 				} else {
 					Model vmodel = new Model();
 					// 将数据库中取出的JSON字符串，去除字符串中的‘@’、‘：’放入FormItem实体类中
-					vmodel=this.getTagInfo(ConvertString.replaceSomeChar(list.get(i).getTagInfo()));
+					vmodel = this.getTagInfo(ConvertString.replaceSomeChar(list.get(i).getTagInfo()));
 					viewformitem = vmodel.getFormitem();
+					if(vmodel.getInput()!=null){
+						vmodel.getInput().setValue(ename);
+					}
 					viewformitem.setInput(vmodel.getInput());
-					viewformitem.setDatepicker(vmodel.getDatepicker());
-				 }
+				}
 				viewformitems.add(viewformitem);
 			}
 		}
@@ -159,29 +168,29 @@ public class VelocityGetTemplateData {
 		// 表名 首个字母大写
 		model.setModel(ConvertString.convertFirstCharUpper(el.getModuCode().toLowerCase()));
 		// 模块代码 全部字符小写
-		String lowerModuCode = el.getModuCode().toLowerCase();
-		model.setModuCode(lowerModuCode);
+		model.setModuCode(el.getModuCode().toLowerCase());
 		// 模块交易号
 		model.setTid(el.getModuTc());
+		//系统简码
+		model.setSysCode(lastSysCode);
 		// 模块数据库表名
 		model.setTableName(el.getRelTable());
-		//全部小写，模块数据库表主键字段 
-		String colcode = ConvertString.convertSomeCharUpper(el.getColCode().toLowerCase());
-		model.setTablePrimary(colcode);
+		// 全部小写，模块数据库表主键字段
+		model.setTablePrimary(ConvertString.convertSomeCharUpper(el.getColCode().toLowerCase()));
 		// 模块数据库表主键策略 0为手动录入，1为自动录入
 		model.setTablePrimaryValue(el.getPkGen());
 		// 实体类里面的属性 get/set 方法，传入参数（数据库表名，表主键）
 		model.setModelClassStr(str);
-		// 包名--controller 三级包名+模块代码（全部小写）+每层固定的命名
-		model.setControllerPackName(packname  + ".controller");
-		// 包名--service 三级包名+模块代码（全部小写）+每层固定的命名
-		model.setServicePackName(packname  + ".service");
-		// 包名--serviceimpl 三级包名+模块代码（全部小写）+每层固定的命名
-		model.setServiceImplPackName(packname  + ".service.impl");
-		// 包名--dao 三级包名+模块代码（全部小写）+每层固定的命名
-		model.setDaoPackName(packname  + ".dao");
-		// 包名--model 三级包名+模块代码（全部小写）+每层固定的命名
-		model.setModelPackName(packname  + ".model");
+		// 包名--controller 二级包名+系统简码（全部小写）+每层固定的命名
+		model.setControllerPackName(packname + ".controller");
+		// 包名--service 二级包名+系统简码（全部小写）+每层固定的命名
+		model.setServicePackName(packname + ".service");
+		// 包名--serviceimpl 二级包名+系统简码（全部小写）+每层固定的命名
+		model.setServiceImplPackName(packname + ".service.impl");
+		// 包名--dao 二级包名+系统简码（全部小写）+每层固定的命名
+		model.setDaoPackName(packname + ".dao");
+		// 包名--model 二级包名+系统简码（全部小写）+每层固定的命名
+		model.setModelPackName(packname + ".model");
 		// vue各组件赋值
 		model.setInputs(inputs);
 		model.setAddformitem(addformitems);
@@ -201,9 +210,11 @@ public class VelocityGetTemplateData {
 		Object o = jsonArray.get(0);
 		JSONObject jsonObject = JSONObject.fromObject(o);
 		Map map = new HashMap();
+		//参数必须小写
 		map.put("input", Input.class);
 		map.put("formitem", FormItem.class);
 		map.put("datepicker", DatePicker.class);
+		map.put("inputnumber", InputNumber.class);
 		// 使用了toBean方法，需要三个参数
 		Model model = (Model) JSONObject.toBean(jsonObject, Model.class, map);
 		return model;
@@ -283,6 +294,7 @@ public class VelocityGetTemplateData {
 		addform.setModel("addForm");
 		addform.setRules("addRules");
 		addform.setLabelWidth("100");
+		addform.setInline("true");
 		Form updform = new Form();
 		updform.setRef("updFormRef");
 		updform.setModel("updForm");

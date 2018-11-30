@@ -3,6 +3,7 @@
 #set($model=${models.model})
 #set($moducode=${models.moduCode})
 #set($tid=${models.tid})
+#set($syscode=${models.sysCode})
 #set($tableprimary=${models.tablePrimary})
 #set($tableprimaryvalue=${models.tablePrimaryValue})
 #set($inputs=${models.inputs})

@@ -36,7 +36,7 @@
 				BP_SYSTEMS 
 			WHERE
 				1 = 1 
-				AND SYS_KEY LIKE CONCAT('%',#{sysKey},'%')
+				AND SYS_KEY LIKE CONCAT(#{sysKey},'%')
   </select>
   <select id="findBpSystemsOne" parameterType="String" resultType="Systems">
 	       SELECT

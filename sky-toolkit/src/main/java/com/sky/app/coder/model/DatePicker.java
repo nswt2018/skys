@@ -1,14 +1,17 @@
 package com.sky.app.coder.model;
 
 public class DatePicker {
-	private String date;
+	private String type;
 	private String placeholder;
 	private String value;
-	public String getDate() {
-		return date;
+	//自己加的属性,默认给字段赋值
+	private String defaultValue;
+	
+	public String getType() {
+		return type;
 	}
-	public void setDate(String date) {
-		this.date = date;
+	public void setType(String type) {
+		this.type = type;
 	}
 	public String getPlaceholder() {
 		return placeholder;
@@ -21,6 +24,12 @@ public class DatePicker {
 	}
 	public void setValue(String value) {
 		this.value = value;
+	}
+	public String getDefaultValue() {
+		return defaultValue;
+	}
+	public void setDefaultValue(String defaultValue) {
+		this.defaultValue = defaultValue;
 	}
 	
 

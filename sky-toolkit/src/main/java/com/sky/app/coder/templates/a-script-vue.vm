@@ -8,13 +8,17 @@ export default {
     name: '${moducode}-info',
     data () {
         return {
-        	listurl: '/${moducode}/${tid}L.do', 
-        	saveurl: '/${moducode}/${tid}I.do',
-        	deleteurl: '/${moducode}/${tid}D.do',
-        	updateurl: '/${moducode}/${tid}U.do',
+        	listurl: '/${syscode}/${tid}L.do', 
+        	saveurl: '/${syscode}/${tid}I.do',
+        	deleteurl: '/${syscode}/${tid}D.do',
+        	updateurl: '/${syscode}/${tid}U.do',
 #if($inputs)
-#foreach($input in $inputs)       	
+#foreach($input in $inputs) 
+#if(${input.defaultValue})
+			${input.value}:'${input.defaultValue}',
+#else     	
         	${input.value}:'',
+#end
 #end
 #end
 #if($modals) 
@@ -23,7 +27,23 @@ export default {
         	${modal.value}:false,
 #end
 #if(${modal.form})         	
-        	${modal.form}:{},
+        	${modal.form}:{
+#if(${modal.form}=="addForm")
+#if($addformitems)
+#foreach($formitem in $addformitems)
+#if(${formitem.input}&&${formitem.input.defaultValue})
+				"${formitem.input.value}":"${formitem.input.defaultValue}",
+#end
+#if(${formitem.inputNumber}&&${formitem.inputNumber.defaultValue})
+				"${formitem.inputNumber.value}":"${formitem.inputNumber.defaultValue}",
+#end
+#if(${formitem.datepicker}&&${formitem.datepicker.defaultValue})
+				"${formitem.datepicker.value}":"${formitem.datepicker.defaultValue}",
+#end
+#end
+#end
+#end
+             },
 #if(${modal.loading})        	
         	${modal.loading}:true,
 #end        	
@@ -63,11 +83,22 @@ export default {
         	${addform.rules}:{
 #if($addformitems)
 #foreach($addformitem in $addformitems)        	
-#if(${addformitem.prop} && ${addformitem.required} && ${addformitem.input.value} && ${addformitem.label})
+#if(${addformitem.prop} && ${addformitem.required} && ${addformitem.label})
+#if(${addformitem.input})
         	    ${addformitem.input.value}: [
                    	 {required: true, message: '${addformitem.label}不可为空', trigger: 'blur' }
-                   ]#if($foreach.hasNext),#end  
-                                 
+                   ],
+#end
+#if(${addformitem.datepicker})
+        	    ${addformitem.datepicker.value}: [
+                   	 {required: true,type:'date', message: '${addformitem.label}不可为空', trigger: 'blur' }
+                   ],
+#end
+#if(${addformitem.inputNumber})
+        	    ${addformitem.inputNumber.value}: [
+                   	 {required: true,type:'number', message: '${addformitem.label}不可为空', trigger: 'blur' }
+                   ],
+#end                                
 #end
 #end
 #end
@@ -77,11 +108,22 @@ export default {
         	${updform.rules}:{
 #if($updformitems)
 #foreach($updformitem in $updformitems)        	
-#if(${updformitem.prop} && ${updformitem.required} && ${updformitem.input.value} && ${updformitem.label})
+#if(${updformitem.prop} && ${updformitem.required} && ${updformitem.label})
+#if(${updformitem.input})
         	    ${updformitem.input.value}: [
                    	 {required: true, message: '${updformitem.label}不可为空', trigger: 'blur' }
-                   ]#if($foreach.hasNext),#end
-
+                   ],
+#end
+#if(${updformitem.datepicker})
+        	    ${updformitem.datepicker.value}: [
+                   	 {required: true,type:'date', message: '${updformitem.label}不可为空', trigger: 'blur' }
+                   ],
+#end
+#if(${updformitem.inputNumber})
+        	    ${updformitem.inputNumber.value}: [
+                   	 {required: true,type:'number', message: '${updformitem.label}不可为空', trigger: 'blur' }
+                   ],
+#end
 #end
 #end
 #end
