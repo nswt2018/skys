@@ -63,13 +63,15 @@ public class VelocityGetTemplateData {
 				} else {
 					// 将数据库中取出的JSON字符串，去除字符串中的‘@’、‘：’放入input实体类中
 					input = this.getTagInfo(ConvertString.replaceSomeChar(list.get(i).getTagInfo())).getInput();
+					// 设置默认值
 					input.setDefaultValue(input.getValue());
+					// 字段
 					input.setValue(ename);
+					// 设置mapping映射文件where后条件的字段，就是数据库表字段
+					input.setConvertValue(list.get(i).getEleEname());
+					// 如果搜索框标签信息中属性不全，则设置默认必需的属性值
 					if (input.getType() == null || input.getType() == "") {
 						input.setType("text");
-					}
-					if (input.getConvertValue() == null || input.getConvertValue() == "") {
-						input.setConvertValue(list.get(i).getEleEname());
 					}
 					if (input.getPlaceholder() == null || input.getPlaceholder() == "") {
 						input.setPlaceholder("请输入" + cname);
@@ -83,8 +85,6 @@ public class VelocityGetTemplateData {
 					if (input.getOnChange() == null || input.getOnChange() == "") {
 						input.setOnChange("true");
 					}
-					// 设置mapping映射文件where后条件的字段，就是数据库表字段
-					input.setConvertValue(list.get(i).getEleEname());
 				}
 				inputs.add(input);
 			} else if (list.get(i).getComName().equals("列表信息")) {
@@ -96,40 +96,44 @@ public class VelocityGetTemplateData {
 				tablecolumns.add(tablecolumn);
 			} else if (list.get(i).getComName().equals("新增信息") || list.get(i).getComName().equals("修改信息")) {
 				FormItem formitem = new FormItem();
+				DatePicker dp = null;
+				InputNumber in = null;
+				Input auinput = null;
 				// 如果新增信息或修改信息标签信息没有录入，则设置默认值
 				if (list.get(i).getTagInfo() == null || "".equals(list.get(i).getTagInfo())) {
 					formitem.setLabel(cname);
+					// 如果字段为主键且主键生成策略为0（手动输入），则设为必输，且有验证提示语
 					if (colcode.equals(ename) && pk.equals("0")) {
 						formitem.setProp(ename);
 						formitem.setRequired("true");
 					}
 					// 新增信息或修改信息表单，现在只支持input输入框,日期,数值
 					if (list.get(i).getDataType().equals("date") || list.get(i).getDataType().equals("datetime")) {
-						DatePicker dp = new DatePicker();
+						dp = new DatePicker();
 						dp.setValue(ename);
 						dp.setPlaceholder(cname);
-						formitem.setDatepicker(dp);
 					} else if (list.get(i).getDataType().equals("decimal")
 							|| list.get(i).getDataType().equals("numeric") || list.get(i).getDataType().equals("double")
 							|| list.get(i).getDataType().equals("float") || list.get(i).getDataType().equals("int")
 							|| list.get(i).getDataType().equals("bigint")) {
-						InputNumber in = new InputNumber();
+						in = new InputNumber();
 						in.setValue(ename);
 						in.setPlaceholder(cname);
 						in.setMax(1000000);
 						in.setMin(0);
-						formitem.setInputNumber(in);
 					} else {
-						Input ainput = new Input();
-						ainput.setValue(ename);
-						ainput.setPlaceholder(cname);
-						formitem.setInput(ainput);
+						auinput = new Input();
+						auinput.setValue(ename);
+						auinput.setPlaceholder(cname);
 					}
+					formitem.setInput(auinput);
+					formitem.setDatepicker(dp);
+					formitem.setInputNumber(in);
 				} else {
 					Model aumodel = new Model();
 					// 将数据库中取出的JSON字符串,去除字符串中的‘@’、‘：’，放入FormItem实体类中
 					aumodel = this.getTagInfo(ConvertString.replaceSomeChar(list.get(i).getTagInfo()));
-					if(aumodel.getFormitem()!=null){
+					if (aumodel.getFormitem() != null) {
 						formitem = aumodel.getFormitem();
 						if (formitem.getLabel() == null || formitem.getLabel() == "") {
 							formitem.setLabel(cname);
@@ -137,63 +141,61 @@ public class VelocityGetTemplateData {
 						if (colcode.equals(ename) && pk.equals("0")) {
 							if (formitem.getProp() == null || formitem.getProp() == "") {
 								formitem.setProp(ename);
+							} else {
+								formitem.setProp(ConvertString.convertSomeCharUpper(formitem.getProp().toLowerCase()));
 							}
 							if (formitem.getRequired() == null || formitem.getRequired() == "") {
 								formitem.setRequired("true");
 							}
 						}
-					}else{
+					} else {
 						formitem.setLabel(cname);
 						if (colcode.equals(ename) && pk.equals("0")) {
 							formitem.setProp(ename);
 							formitem.setRequired("true");
 						}
 					}
-					
+					auinput = aumodel.getInput();
 					// 如果新增或修改组件中录入的标签信息有input、Datepicker、InputNumber标签，则将value的值赋给defaultvalue
-					if (aumodel.getInput() != null) {
-						aumodel.getInput().setDefaultValue(aumodel.getInput().getValue());
-						aumodel.getInput().setValue(ename);
-						if (aumodel.getInput().getType() == null || aumodel.getInput().getType() == "") {
-							aumodel.getInput().setType("text");
+					if (auinput != null) {
+						auinput.setDefaultValue(auinput.getValue());
+						auinput.setValue(ename);
+						auinput.setConvertValue(list.get(i).getEleEname());
+						if (auinput.getPlaceholder() == null || auinput.getPlaceholder() == "") {
+							auinput.setPlaceholder("请输入" + cname);
 						}
-						if (aumodel.getInput().getConvertValue() == null
-								|| aumodel.getInput().getConvertValue() == "") {
-							aumodel.getInput().setConvertValue(list.get(i).getEleEname());
-						}
-						if (aumodel.getInput().getPlaceholder() == null || aumodel.getInput().getPlaceholder() == "") {
-							aumodel.getInput().setPlaceholder("请输入" + cname);
-						}
-						if (aumodel.getInput().getIcon() == null || aumodel.getInput().getIcon() == "") {
-							aumodel.getInput().setIcon("search");
-						}
-						if (aumodel.getInput().getWidth() == null || aumodel.getInput().getWidth() == "") {
-							aumodel.getInput().setWidth("200px");
-						}
-						if (aumodel.getInput().getOnChange() == null || aumodel.getInput().getOnChange() == "") {
-							aumodel.getInput().setOnChange("true");
+						/*
+						 * if (auinput.getType() == null || auinput.getType() ==
+						 * "") { auinput.setType("text"); } if
+						 * (auinput.getIcon() == null || auinput.getIcon() ==
+						 * "") { auinput.setIcon("search"); } if
+						 * (auinput.getWidth() == null || auinput.getWidth() ==
+						 * "") { auinput.setWidth("200px"); } if
+						 * (auinput.getOnChange() == null ||
+						 * auinput.getOnChange() == "") {
+						 * auinput.setOnChange("true"); }
+						 */
+					}
+					dp = aumodel.getDatepicker();
+					if (dp != null) {
+						dp.setDefaultValue(dp.getValue());
+						dp.setValue(ename);
+						if (dp.getPlaceholder() == null || dp.getPlaceholder() == "") {
+							dp.setPlaceholder("请输入" + cname);
 						}
 					}
-					if (aumodel.getDatepicker() != null) {
-						aumodel.getDatepicker().setDefaultValue(aumodel.getDatepicker().getValue());
-						aumodel.getDatepicker().setValue(ename);
-						if (aumodel.getDatepicker().getPlaceholder() == null
-								|| aumodel.getDatepicker().getPlaceholder() == "") {
-							aumodel.getDatepicker().setPlaceholder("请输入" + cname);
+					in = aumodel.getInputnumber();
+					if (in != null) {
+						in.setDefaultValue(in.getValue());
+						in.setValue(ename);
+						if (in.getMax() == 0) {
+							in.setMax(100000);
 						}
-					}
-					if (aumodel.getInputnumber() != null) {
-						aumodel.getInputnumber().setDefaultValue(aumodel.getInputnumber().getValue());
-						aumodel.getInputnumber().setValue(ename);
-						if (aumodel.getInputnumber().getMax() == 0) {
-							aumodel.getInputnumber().setMax(100000);
+						if (in.getMin() == 0) {
+							in.setMin(1);
 						}
-						if (aumodel.getInputnumber().getMin() == 0) {
-							aumodel.getInputnumber().setMin(1);
-						}
-						if (aumodel.getInputnumber().getPlaceholder() == null
-								|| aumodel.getInputnumber().getPlaceholder() == "") {
-							aumodel.getInputnumber().setPlaceholder("请输入" + cname);
+						if (in.getPlaceholder() == null || in.getPlaceholder() == "") {
+							in.setPlaceholder("请输入" + cname);
 						}
 					}
 					formitem.setInput(aumodel.getInput());
@@ -219,12 +221,12 @@ public class VelocityGetTemplateData {
 					Model vmodel = new Model();
 					// 将数据库中取出的JSON字符串，去除字符串中的‘@’、‘：’放入FormItem实体类中
 					vmodel = this.getTagInfo(ConvertString.replaceSomeChar(list.get(i).getTagInfo()));
-					if(vmodel.getFormitem()!=null){
+					if (vmodel.getFormitem() != null) {
 						viewformitem = vmodel.getFormitem();
 						if (viewformitem.getLabel() == null || viewformitem.getLabel() == "") {
 							viewformitem.setLabel("请输入" + cname);
 						}
-					}else{
+					} else {
 						viewformitem.setLabel(cname);
 					}
 					if (vmodel.getInput() != null) {
