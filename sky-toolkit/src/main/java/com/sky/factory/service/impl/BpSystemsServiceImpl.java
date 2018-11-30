@@ -37,7 +37,7 @@ public class BpSystemsServiceImpl extends BaseServiceImpl<BpSystems> implements 
 	
 	public boolean flushRouter(List<BpSystems> sList){
 		
-		File file = new File("C:/Users/zyc11/Desktop/router.js");//定义一个file对象，用来初始化FileInputStream
+		File file = new File("D:/sky-plat/softfactory/sofa/src/router/router.js");//定义一个file对象，用来初始化FileInputStream
 		FileInputStream is = null;
 		BufferedReader bReader = null;
 		InputStreamReader isr = null;
