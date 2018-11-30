@@ -37,7 +37,7 @@ public class BpSystemsServiceImpl extends BaseServiceImpl<BpSystems> implements 
 	
 	public boolean flushRouter(List<BpSystems> sList){
 		
-		File file = new File("D:/sky-plat/softfactory/sofa/src/router/router.js");//定义一个file对象，用来初始化FileInputStream
+		File file = new File("C:/Users/zyc11/Desktop/router.js");//定义一个file对象，用来初始化FileInputStream
 		FileInputStream is = null;
 		BufferedReader bReader = null;
 		InputStreamReader isr = null;
@@ -57,12 +57,14 @@ public class BpSystemsServiceImpl extends BaseServiceImpl<BpSystems> implements 
 			List<BpSystems> sList1 = new ArrayList<BpSystems>();
 			List<BpSystems> sList2 = new ArrayList<BpSystems>();
 			List<BpSystems> sList3 = new ArrayList<BpSystems>();
+			List<BpSystems> sList4 = new ArrayList<BpSystems>();
 			
 			for (BpSystems bpSystems : sList) {
 				String sKey = bpSystems.getSysKey();
 				if(sKey.length() == 2) sList1.add(bpSystems);
 				else if(sKey.length() == 4) sList2.add(bpSystems);
-				else sList3.add(bpSystems);
+				else if(sKey.length() == 6) sList3.add(bpSystems);
+				else if(sKey.length() == 8) sList4.add(bpSystems);
 			}
 			
 			//拼接菜单
@@ -86,35 +88,61 @@ public class BpSystemsServiceImpl extends BaseServiceImpl<BpSystems> implements 
 				}else{
 					for (int j = 0; j <sList2.size(); j++) {
 						BpSystems bpSystems2 = sList2.get(j);
-						String modCode2 = bpSystems2.getModCode(); //二级菜单
-						if(modCode2 != null && !("".equals(modCode2)) && bpSystems2.getUpperSys().equals(bpSystems.getSysKey())){ //二级菜单
-							menu.append("\t\t\t{ path: '" + bpSystems2.getSysCode().toLowerCase() +"list', title: '"+ bpSystems2.getSysName() + "', "
-								+ "name: '" + bpSystems2.getSysCode() + "-info',icon: 'navicon-round', component: () => "
-								+ "import('@/views/" + bpSystems.getSysCode().toLowerCase() + "/" + bpSystems2.getSysCode().toLowerCase() + "/" + bpSystems2.getModCode() + ".vue') },\n");
-						}else{
-							for (int k = 0; k < sList3.size(); k++) {
-								BpSystems bpSystems3 = sList3.get(k);
-								String modCode3 = bpSystems3.getModCode(); //三级菜单
-								if(modCode3 != null && !("".equals(modCode3)) && bpSystems2.getUpperSys().equals(bpSystems.getSysKey()) && bpSystems3.getUpperSys().equals(bpSystems2.getSysKey())){
-									menu.append("\t\t\t{\n");
-									menu.append("\t\t\t\tpath: '" + bpSystems3.getSysCode().toLowerCase() +"list', title: '"+ bpSystems2.getSysName() 
-										+ "', name: '" + bpSystems3.getSysCode() + "-info',icon: 'navicon-round', component: () => "
-										+ "import('@/views/system/business/artical-publish-center.vue'),\n");
-									menu.append("\t\t\t\tchildren: [\n");
-									
-									for (BpSystems bpSystems4 : sList3) {
-										if(bpSystems4.getUpperSys().equals(bpSystems2.getSysKey())){
-											menu.append("\t\t\t\t\t{ path: '" + bpSystems4.getSysCode().toLowerCase() +"list', title: '"+ bpSystems4.getSysName() + "', "
-												+ "name: '" + bpSystems4.getSysCode() + "-info',icon: 'navicon-round', component: () => "
+						String modCode2 = bpSystems2.getModCode();
+						if(bpSystems2.getUpperSys().equals(bpSystems.getSysKey())){ //子节点
+							if(modCode2 != null && !("".equals(modCode2))){ //二级菜单
+								menu.append("\t\t\t{ path: '" + bpSystems2.getSysCode().toLowerCase() +"list', title: '"+ bpSystems2.getSysName() + "', "
+									+ "name: '" + bpSystems2.getSysCode() + "-info',icon: 'navicon-round', component: () => "
+									+ "import('@/views/" + bpSystems.getSysCode().toLowerCase() + "/" + bpSystems2.getSysCode().toLowerCase() + "/" + bpSystems2.getModCode() + ".vue') },\n");
+							}else{ //三、四级菜单公共部分
+								menu.append("\t\t\t{\n");
+								menu.append("\t\t\t\tpath: '" + bpSystems2.getSysCode().toLowerCase() +"list', title: '"+ bpSystems2.getSysName() 
+									+ "', name: '" + bpSystems2.getSysCode() + "-info',icon: 'navicon-round', component: () => "
+									+ "import('@/views/system/business/artical-publish-center.vue'),\n");
+								menu.append("\t\t\t\tchildren: [\n");
+								
+								for (int k = 0; k < sList3.size(); k++) {
+									BpSystems bpSystems3 = sList3.get(k);
+									String modCode3 = bpSystems3.getModCode();
+									if(bpSystems3.getUpperSys().equals(bpSystems2.getSysKey())){
+										
+										if(modCode3 != null && !("".equals(modCode3))){ //三级菜单
+											
+											menu.append("\t\t\t\t\t{ path: '" + bpSystems3.getSysCode().toLowerCase() +"list', title: '"+ bpSystems3.getSysName() + "', "
+												+ "name: '" + bpSystems3.getSysCode() + "-info',icon: 'navicon-round', component: () => "
 												+ "import('@/views/" + bpSystems.getSysCode().toLowerCase() + "/" + bpSystems2.getSysCode().toLowerCase() + "/" 
-												+ bpSystems4.getSysCode().toLowerCase() + "/" + bpSystems4.getModCode() + ".vue') },\n");
+												+ bpSystems3.getSysCode().toLowerCase() + "/" + bpSystems3.getModCode() + ".vue') },\n");
+											
+										}else{
+											menu.append("\t\t\t\t\t{\n");
+											menu.append("\t\t\t\t\t\tpath: '" + bpSystems3.getSysCode().toLowerCase() +"list', title: '"+ bpSystems3.getSysName() 
+												+ "', name: '" + bpSystems3.getSysCode() + "-info',icon: 'navicon-round', component: () => "
+												+ "import('@/views/system/business/artical-publish-center.vue'),\n");
+											menu.append("\t\t\t\t\t\tchildren: [\n");
+											
+											for (int l = 0; l < sList4.size(); l++) {
+												BpSystems bpSystems4 = sList4.get(l);
+												if(bpSystems4.getUpperSys().equals(bpSystems3.getSysKey())){
+													for (BpSystems bpSystems5 : sList4) {
+														if(bpSystems5.getUpperSys().equals(bpSystems3.getSysKey())){
+															menu.append("\t\t\t\t\t\t\t{ path: '" + bpSystems5.getSysCode().toLowerCase() +"list', title: '"+ bpSystems5.getSysName() + "', "
+																+ "name: '" + bpSystems5.getSysCode() + "-info',icon: 'navicon-round', component: () => "
+																+ "import('@/views/" + bpSystems.getSysCode().toLowerCase() + "/" + bpSystems2.getSysCode().toLowerCase() + "/" 
+																+ bpSystems3.getSysCode().toLowerCase() + "/" + bpSystems5.getSysCode().toLowerCase() +"/" + bpSystems5.getModCode() + ".vue') },\n");
+														}
+													}
+												}
+											}
+											
+											menu.append("\t\t\t\t\t\t]\n");
+											menu.append("\t\t\t\t\t},\n");
+											break;
 										}
 									}
-									
-									menu.append("\t\t\t\t]\n");
-									menu.append("\t\t\t},\n");
-									break;
 								}
+								
+								menu.append("\t\t\t\t]\n");
+								menu.append("\t\t\t},\n");
 							}
 						}
 					}

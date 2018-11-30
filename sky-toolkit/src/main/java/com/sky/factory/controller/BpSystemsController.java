@@ -83,11 +83,13 @@ public class BpSystemsController extends BaseController {
 			String sysKey = bst.getSysKey();
 			String sysName = bst.getSysName();
 			String upperSys = bst.getUpperSys();
+			String modCode = bst.getModCode();
 			String isRoot = (upperSys == null || "".equals(upperSys)) ? "0" : "1";
 			tempMap.put("sysKey", sysKey);
 			tempMap.put("sysName", sysName);
 			tempMap.put("upperSys", upperSys);
 			tempMap.put("isRoot", isRoot);
+			tempMap.put("modCode", modCode);
 			
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("upperSys", sysKey);
