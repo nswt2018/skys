@@ -100,10 +100,28 @@ public class BpModuleController extends BaseController {
 		List<BpComponet> componetList = bpComponetService.findForList("com.sky.business.componetDefinition.dao.BpComponetDao.findAllComponet", "");
 		//取关联表所有字段名
 		String relTable = bpModule.getRelTable();
-		List<String> nameList = bpModuleService.getTabInfo("com.sky.business.systemModule.dao.BpModuleDao.getColumnName", relTable);
 		List<String> eNameList = new ArrayList<String>();
-		for (String nList : nameList) {
-			eNameList.add(nList.split(",")[0]);
+		List<String> nameList = new ArrayList<String>();
+		if(relTable.indexOf(",") != -1){ //多表
+			String[] relArr = relTable.split(",");
+			
+			for (String tabCode : relArr) {
+				List<String> colList = bpModuleService.getTabInfo("com.sky.business.systemModule.dao.BpModuleDao.getColumnName", tabCode);
+				List<String> cList = new ArrayList<String>(); 
+				for (String str : colList) {
+					str = tabCode + "." + str;
+					cList.add(str);
+				}
+				
+				
+				nameList.addAll(cList);
+			}
+		}else{
+			nameList = bpModuleService.getTabInfo("com.sky.business.systemModule.dao.BpModuleDao.getColumnName", relTable);
+		}
+		
+		for (String name : nameList) {
+			eNameList.add(name.split(",")[0]);
 		}
 		
 		String relColumn= StringUtils.join(eNameList,",");
@@ -181,6 +199,7 @@ public class BpModuleController extends BaseController {
 			String modCode = bpModule.getModuModel();
 			List<BpModel> list = bpModelService.findForList("com.sky.business.modelDefinition.dao.BpModelDao.findModel", modCode);
 			bpModule.setModName(list.get(0).getModName());
+			
 			if (bpModuleService.update(bpModule)>0) {
 				Map<String, String> map = new HashMap<String, String>();
 				map.put("moduCode", bpModule.getModuCode());
@@ -211,6 +230,14 @@ public class BpModuleController extends BaseController {
 	@ResponseBody
 	public Mono<List<String>> getTabName(HttpServletRequest request, HttpServletResponse response) throws Exception {	
 		List<String> list = bpModuleService.getTabInfo("com.sky.business.systemModule.dao.BpModuleDao.getTabName", "");
+		return Mono.justOrEmpty(list);
+	}
+	
+	@RequestMapping(value="/TK0004L2.do")
+	@ResponseBody
+	public Mono<List<String>> getColList(@RequestParam String tabCode, HttpServletRequest request, HttpServletResponse response) throws Exception {	
+		List<String> list = bpModuleService.getTabInfo("com.sky.business.systemModule.dao.BpModuleDao.getColName", tabCode);
+		
 		return Mono.justOrEmpty(list);
 	}
 }

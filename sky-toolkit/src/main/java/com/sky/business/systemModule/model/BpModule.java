@@ -48,6 +48,9 @@ public class BpModule implements Serializable{
 	
 	@Column(name="REL_TABLE")
 	private String relTable;
+	
+	@Column(name="REL_INFO")
+	private String relInfo;
 
 	public String getModuCode() {
 		return moduCode;
@@ -123,5 +126,13 @@ public class BpModule implements Serializable{
 
 	public void setRelTable(String relTable) {
 		this.relTable = relTable;
+	}
+
+	public String getRelInfo() {
+		return relInfo;
+	}
+
+	public void setRelInfo(String relInfo) {
+		this.relInfo = relInfo;
 	}
 }

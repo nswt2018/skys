@@ -149,7 +149,16 @@ public class BpUnitController extends BaseController {
 				String relTable = bpUnit.getRelTable();
 				String[] split = relColumn.split(",");
 				for (String rInfo : split) {
-					List<BpField> fList = bpFieldService.findForList("com.sky.business.columnDefinition.dao.BpFieldDao.findAllField", relTable);
+					map1.clear();
+					if(relTable.indexOf(",") != -1){
+						String[] colArr = rInfo.split("\\.");
+						map1.put("tabCode", colArr[0]);
+						map1.put("colCode", colArr[1]);
+					}else{
+						map1.put("tabCode", relTable);
+						map1.put("colCode", rInfo);
+					}
+					List<BpField> fList = bpFieldService.findForList("com.sky.business.columnDefinition.dao.BpFieldDao.findField", map1);
 					BpElement bpElement = new BpElement();
 					bpElement.setEleEName(rInfo);
 					bpElement.setUnitCode(bpUnit.getUnitCode());
@@ -240,7 +249,20 @@ public class BpUnitController extends BaseController {
 	@ResponseBody
 	public Mono<List<String>> getColumnList(@RequestParam String relTable, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		List<String> columnList = bpModuleService.getTabInfo("com.sky.business.systemModule.dao.BpModuleDao.getColumnName", relTable);
+		List<String> columnList = new ArrayList<String>();
+		if(relTable.indexOf(",") != -1){
+			String[] tabArr = relTable.split(",");
+			for (String tabCode : tabArr) {
+				List<String> cList = new ArrayList<String>();
+				cList = bpModuleService.getTabInfo("com.sky.business.systemModule.dao.BpModuleDao.getColumnName", tabCode);
+				for (String col : cList) {
+					col = tabCode + "." + col;
+					columnList.add(col);
+				}
+			}
+		}else{
+			columnList = bpModuleService.getTabInfo("com.sky.business.systemModule.dao.BpModuleDao.getColumnName", relTable);
+		}
 		List<String> cList = new ArrayList<String>();
 		
 		for (String column : columnList) {

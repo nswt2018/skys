@@ -39,4 +39,8 @@
 	<delete id="delData" parameterType="hashmap" statementType="STATEMENT">
 		delete from ${tabName} where modu_code = '${code}'
 	</delete>
+	
+	<select id="getColName" parameterType="String" resultType="String">
+		SELECT col_code FROM bp_field WHERE tab_code = #{tabCode} ORDER BY col_name
+	</select>
 </mapper>

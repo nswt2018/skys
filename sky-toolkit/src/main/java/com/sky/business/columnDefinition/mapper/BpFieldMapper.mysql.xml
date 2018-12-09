@@ -42,7 +42,7 @@
 			tab_code = #{tabCode}
 	</select>
 	
-	<select id="findAllField" parameterType="String" resultType="BpField">
-		select * from BP_FIELD where tab_code = #{tabCode}
+	<select id="findField" parameterType="hashmap" resultType="BpField">
+		select * from BP_FIELD where tab_code = #{tabCode} and col_code = #{colCode}
 	</select>
 </mapper>
