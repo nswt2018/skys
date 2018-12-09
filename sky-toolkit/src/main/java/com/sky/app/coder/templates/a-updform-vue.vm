@@ -1,7 +1,7 @@
 	           <Form #if(${updform.ref})ref="${updform.ref}"#end :model="${updform.model}" #if(${updform.rules}):rules="${updform.rules}"#end #if(${updform.labelWidth}):label-width="${updform.labelWidth}" #if(${addform.inline})inline#end>#end
 #if($updformitems)
 #foreach($formitem in $updformitems)
-#if(${formitem.input.value}!=${tableprimary})
+#if(${formitem.input.value}!=${tableprimary}||${formitem.inputNumber.value}!=${tableprimary}||${formitem.datepicker.value}!=${tableprimary})
 
 	              <FormItem label="${formitem.label}:" #if(${formitem.prop})prop="${formitem.prop}"#end #if(${formitem.required})required#end #if(${formitem.labelWidth})label-width="${formitem.labelWidth}"#end>
 #if(${formitem.input})

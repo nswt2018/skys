@@ -1,50 +1,46 @@
 package com.sky.app.coder.helper;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.sky.app.coder.model.Button;
 import com.sky.app.coder.model.DatePicker;
 import com.sky.app.coder.model.Element;
-import com.sky.app.coder.model.Form;
 import com.sky.app.coder.model.FormItem;
 import com.sky.app.coder.model.Input;
 import com.sky.app.coder.model.InputNumber;
-import com.sky.app.coder.model.Modal;
 import com.sky.app.coder.model.Model;
-import com.sky.app.coder.model.Page1;
-import com.sky.app.coder.model.Table;
 import com.sky.app.coder.model.TableColumn;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 /*
- * 单表模型，将模板中所需要的数据都封装在Model实体类中
+ * 多表模型 ， 将模板中所需要的数据都封装在Model实体类中
  */
-public class VelocityGetTemplateData {
-	// 主键字段
-	private String colcode =null;
-	// 主键策略
-	private String pk = null;
+public class VelocityGetTemplateMulitData {
+	//存放页面字段标签的相关信息
+	List<Element> list=null;
+	//用于放关联表的主键
+	List<String> colcodelist=null;
 	List<Input> inputs = new ArrayList<Input>();
 	List<FormItem> addformitems = new ArrayList<FormItem>();
 	List<FormItem> updformitems = new ArrayList<FormItem>();
 	List<FormItem> viewformitems = new ArrayList<FormItem>();
 	List<TableColumn> tablecolumns = new ArrayList<TableColumn>();
+	VelocityGetTemplateData vgtd = new VelocityGetTemplateData();
 	DefaulteVueComponentPropertyValue dv = new DefaulteVueComponentPropertyValue();
 	ParseJsonString pjs = new ParseJsonString();
-
-	public Model getModel(List<Element> list, Element el, String str, String packname, String lastSysCode) {
+	public VelocityGetTemplateMulitData(List<Element> list,List<String> colcodelist) {
+		this.list=list;
+		this.colcodelist=colcodelist;
+	}
+	public Model getModel(Element el, String packname) {
 		Model model = new Model();
-		colcode = ConvertString.convertSomeCharUpper(el.getColCode().toLowerCase());
-		pk = el.getPkGen();
 		// 设置模块标题名称
 		model.setTitleName(el.getModuCname());
 		// 设置模块标题图标
 		model.setTitleIconType("compose");
+		// 全部小写，模块数据库表主键字段,有问题待处理
+		if(colcodelist!=null){
+			model.setTablePrimary(colcodelist.get(0));
+		}
 		// 前后端共同需要的信息，表名、交易号（映射路径）
 		// 表名 首个字母大写
 		model.setModel(ConvertString.convertFirstCharUpper(el.getModuCode().toLowerCase()));
@@ -52,16 +48,6 @@ public class VelocityGetTemplateData {
 		model.setModuCode(el.getModuCode().toLowerCase());
 		// 模块交易号
 		model.setTid(el.getModuTc());
-		// 系统简码
-		model.setSysCode(lastSysCode);
-		// 模块数据库表名
-		model.setTableName(el.getRelTable());
-		// 全部小写，模块数据库表主键字段
-		model.setTablePrimary(colcode);
-		// 模块数据库表主键策略 0为手动录入，1为自动录入
-		model.setTablePrimaryValue(pk);
-		// 实体类里面的属性 以及get/set 方法
-		model.setModelClassStr(str);
 		// 包名--controller 二级包名+系统简码（全部小写）+每层固定的命名
 		model.setControllerPackName(packname + ".controller");
 		// 包名--service 二级包名+系统简码（全部小写）+每层固定的命名
@@ -72,7 +58,6 @@ public class VelocityGetTemplateData {
 		model.setDaoPackName(packname + ".dao");
 		// 包名--model 二级包名+系统简码（全部小写）+每层固定的命名
 		model.setModelPackName(packname + ".model");
-		
 		// 设置默认的组件属性值
 		model.setButton(dv.getButton());
 		model.setPage(dv.getPage());
@@ -81,8 +66,7 @@ public class VelocityGetTemplateData {
 		model.setAddform(dv.getForm()[0]);
 		model.setUpdform(dv.getForm()[1]);
 		model.setViewform(dv.getForm()[2]);
-		
-		this.setComponentPropertyValue(list);
+		this.setComponentPropertyValue();
 		// vue非默认组件属性值赋值，通过前台页面输入，从数据库获取并做相应的处理
 		model.setInputs(inputs);
 		model.setAddformitem(addformitems);
@@ -91,8 +75,9 @@ public class VelocityGetTemplateData {
 		model.setTablecolumns(tablecolumns);
 		return model;
 	}
+
 	// 解析页面元素标签信息,并将标签中的属性值赋值
-	public void setComponentPropertyValue(List<Element> list) {
+	public void setComponentPropertyValue() {
 		// 字段名称
 		String cname = null;
 		// 字段
@@ -159,9 +144,11 @@ public class VelocityGetTemplateData {
 				if (list.get(i).getTagInfo() == null || "".equals(list.get(i).getTagInfo())) {
 					formitem.setLabel(cname);
 					// 如果字段为主键且主键生成策略为0（手动输入），则设为必输，且有验证提示语
-					if (colcode.equals(ename) && pk.equals("0")) {
-						formitem.setProp(ename);
-						formitem.setRequired("true");
+					for (String colcode : colcodelist) {
+						if (colcode.equals(ename)) {
+							formitem.setProp(ename);
+							formitem.setRequired("true");
+						}
 					}
 					// 新增信息或修改信息表单，现在只支持input输入框,日期,数值
 					if (list.get(i).getDataType().equals("date") || list.get(i).getDataType().equals("datetime")) {
@@ -194,21 +181,27 @@ public class VelocityGetTemplateData {
 						if (formitem.getLabel() == null || formitem.getLabel() == "") {
 							formitem.setLabel(cname);
 						}
-						if (colcode.equals(ename) && pk.equals("0")) {
-							if (formitem.getProp() == null || formitem.getProp() == "") {
-								formitem.setProp(ename);
-							} else {
-								formitem.setProp(ConvertString.convertSomeCharUpper(formitem.getProp().toLowerCase()));
-							}
-							if (formitem.getRequired() == null || formitem.getRequired() == "") {
-								formitem.setRequired("true");
+						for (String colcode : colcodelist) {
+							if (colcode.equals(ename)) {
+								if (formitem.getProp() == null || formitem.getProp() == "") {
+									formitem.setProp(ename);
+								} else {
+									formitem.setProp(
+											ConvertString.convertSomeCharUpper(formitem.getProp().toLowerCase()));
+								}
+								if (formitem.getRequired() == null || formitem.getRequired() == "") {
+									formitem.setRequired("true");
+								}
 							}
 						}
+
 					} else {
 						formitem.setLabel(cname);
-						if (colcode.equals(ename) && pk.equals("0")) {
-							formitem.setProp(ename);
-							formitem.setRequired("true");
+						for (String colcode : colcodelist) {
+							if (colcode.equals(ename)) {
+								formitem.setProp(ename);
+								formitem.setRequired("true");
+							}
 						}
 					}
 					auinput = aumodel.getInput();
@@ -294,5 +287,4 @@ public class VelocityGetTemplateData {
 			}
 		}
 	}
-
 }

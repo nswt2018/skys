@@ -1,5 +1,9 @@
 package com.sky.app.coder.model;
 
+import java.util.Map;
+
+import com.sky.core.util.ReflectHelper;
+
 public class Element {
 	//字段中文
 	private String eleEname;
@@ -25,16 +29,18 @@ public class Element {
 	private String moduTc;
 	//模块数据库表
 	private String relTable;
-	//三级包名
-	private String packName;
-	//视图组件路径
-	private String vuePath;
-	//业务逻辑组件路径
-	private String javaPath;
+	//模块的模型
+	private String moduModel;
+	//模型名称
+	private String modName;
 	//模块数据库表主键字段
 	private String colCode;
 	//模块数据库主键策略值
 	private String pkGen;
+	//多表模型
+	private String relInfo;
+	//传入映射文件参数  多表模型
+	Map variables;
 	public String getEleEname() {
 		return eleEname;
 	}
@@ -95,24 +101,6 @@ public class Element {
 	public void setModuCode(String moduCode) {
 		this.moduCode = moduCode;
 	}
-	public String getPackName() {
-		return packName;
-	}
-	public void setPackName(String packName) {
-		this.packName = packName;
-	}
-	public String getVuePath() {
-		return vuePath;
-	}
-	public void setVuePath(String vuePath) {
-		this.vuePath = vuePath;
-	}
-	public String getJavaPath() {
-		return javaPath;
-	}
-	public void setJavaPath(String javaPath) {
-		this.javaPath = javaPath;
-	}
 	public String getColCode() {
 		return colCode;
 	}
@@ -136,6 +124,30 @@ public class Element {
 	}
 	public void setDataType(String dataType) {
 		this.dataType = dataType;
+	}
+	public String getModuModel() {
+		return moduModel;
+	}
+	public void setModuModel(String moduModel) {
+		this.moduModel = moduModel;
+	}
+	public String getModName() {
+		return modName;
+	}
+	public void setModName(String modName) {
+		this.modName = modName;
+	}
+	public Map getVariables() {
+		return variables;
+	}
+	public void setVariables(Object obj) {
+		this.variables = ReflectHelper.getFieldValues(obj);
+	}
+	public String getRelInfo() {
+		return relInfo;
+	}
+	public void setRelInfo(String relInfo) {
+		this.relInfo = relInfo;
 	}
 	
 

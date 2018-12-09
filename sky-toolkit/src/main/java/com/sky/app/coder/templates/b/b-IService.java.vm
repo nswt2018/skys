@@ -1,0 +1,20 @@
+#set($servicepackname=${models.servicePackName})
+#set($modelpackname=${models.modelPackName})
+#set($model=${models.model})
+#set($convertablename=${models.converTableName})
+package ${servicepackname};
+
+import com.sky.core.base.service.IBaseService;
+#if(${convertablename})
+import ${modelpackname}.${model}${convertablename};
+
+public interface I${model}${convertablename}Service extends IBaseService<${model}${convertablename}> {
+} 
+#else
+import ${modelpackname}.${model};
+
+public interface I${model}Service extends IBaseService<${model}> {
+} 
+#end
+
+  

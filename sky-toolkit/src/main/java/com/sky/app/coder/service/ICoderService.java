@@ -7,8 +7,19 @@ import com.sky.app.coder.model.Systems;
 
 public interface ICoderService{
 	List<Systems> getSystems(String sqlId,String sysKey);
-	List<Element> getTagInfo(String sqlId,String moduCode);
-	Element getElement(String sqlId,String moduCode);
 	Systems getSystemsOne(String sqlId,String upperSys);
+	//判断模型
+	Element getModuleOne(String sqlId,String moduCode);
+	//获得实体类内容
 	String getClassStr(String tablename, String tablepri);
+	//单表模型，取得页面元素字段相关信息
+	List<Element> getTagInfo(String sqlId,String moduCode);
+	//单表模型
+	Element getElement(String sqlId,String moduCode);
+	//多表模型，取得页面元素字段相关信息
+	List<Element> getMultiTagInfo(String sqlId,String moduCode);
+	//多表模型，获得模块关联表主键及主键生成策略
+	Element getMultiFieldOne(String sqlId,String tabCode);
+	//多表模型，获得实体类内容
+	String getMultiClassStr(String[] tablenames);
 }

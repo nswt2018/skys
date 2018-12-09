@@ -1,7 +1,7 @@
 	           <Form #if(${addform.ref})ref="${addform.ref}"#end :model="${addform.model}" #if(${addform.rules}):rules="${addform.rules}"#end #if(${addform.labelWidth}):label-width="${addform.labelWidth}"#end #if(${addform.inline})inline#end>
 #if($addformitems)
 #foreach($formitem in $addformitems)
-#if(((${formitem.input.value}==${tableprimary})&&(${tableprimaryvalue}=="0")) || (${formitem.input.value}!=${tableprimary}))
+#if(((${formitem.input.value}==${tableprimary})&&(${tableprimaryvalue}=="0")) || (${formitem.input.value}!=${tableprimary}||${formitem.inputNumber.value}!=${tableprimary}||${formitem.datepicker.value}!=${tableprimary}))
 	              
 	              <FormItem label="${formitem.label}:" #if(${formitem.prop})prop="${formitem.prop}"#end #if(${formitem.required})required#end #if(${formitem.labelWidth})label-width="${formitem.labelWidth}"#end>
 #if(${formitem.input})
