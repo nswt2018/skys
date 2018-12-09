@@ -18,7 +18,7 @@ public class VelocityGetTemplateMulitData {
 	//存放页面字段标签的相关信息
 	List<Element> list=null;
 	//用于放关联表的主键
-	List<String> colcodelist=null;
+	List<String> colcodelists=new ArrayList<String>();
 	List<Input> inputs = new ArrayList<Input>();
 	List<FormItem> addformitems = new ArrayList<FormItem>();
 	List<FormItem> updformitems = new ArrayList<FormItem>();
@@ -29,7 +29,9 @@ public class VelocityGetTemplateMulitData {
 	ParseJsonString pjs = new ParseJsonString();
 	public VelocityGetTemplateMulitData(List<Element> list,List<String> colcodelist) {
 		this.list=list;
-		this.colcodelist=colcodelist;
+		for(String colcode:colcodelist){
+			this.colcodelists.add(ConvertString.convertSomeCharUpper(colcode.toLowerCase()));
+		}
 	}
 	public Model getModel(Element el, String packname) {
 		Model model = new Model();
@@ -37,9 +39,9 @@ public class VelocityGetTemplateMulitData {
 		model.setTitleName(el.getModuCname());
 		// 设置模块标题图标
 		model.setTitleIconType("compose");
-		// 全部小写，模块数据库表主键字段,有问题待处理
-		if(colcodelist!=null){
-			model.setTablePrimary(colcodelist.get(0));
+		// 模块数据库表主键字段,有问题待处理
+		if(colcodelists!=null){
+			model.setTablePrimary(colcodelists.get(0));
 		}
 		// 前后端共同需要的信息，表名、交易号（映射路径）
 		// 表名 首个字母大写
@@ -48,6 +50,12 @@ public class VelocityGetTemplateMulitData {
 		model.setModuCode(el.getModuCode().toLowerCase());
 		// 模块交易号
 		model.setTid(el.getModuTc());
+		
+		//模块关联表(多表)，以逗号隔开的字符串,多表模型
+		model.setTableNames(el.getRelTable());
+		//多个模块关联表之间的关联关系，多表模型
+		model.setTableInfo(el.getRelInfo());
+		
 		// 包名--controller 二级包名+系统简码（全部小写）+每层固定的命名
 		model.setControllerPackName(packname + ".controller");
 		// 包名--service 二级包名+系统简码（全部小写）+每层固定的命名
@@ -144,7 +152,7 @@ public class VelocityGetTemplateMulitData {
 				if (list.get(i).getTagInfo() == null || "".equals(list.get(i).getTagInfo())) {
 					formitem.setLabel(cname);
 					// 如果字段为主键且主键生成策略为0（手动输入），则设为必输，且有验证提示语
-					for (String colcode : colcodelist) {
+					for (String colcode : colcodelists) {
 						if (colcode.equals(ename)) {
 							formitem.setProp(ename);
 							formitem.setRequired("true");
@@ -181,7 +189,7 @@ public class VelocityGetTemplateMulitData {
 						if (formitem.getLabel() == null || formitem.getLabel() == "") {
 							formitem.setLabel(cname);
 						}
-						for (String colcode : colcodelist) {
+						for (String colcode : colcodelists) {
 							if (colcode.equals(ename)) {
 								if (formitem.getProp() == null || formitem.getProp() == "") {
 									formitem.setProp(ename);
@@ -197,7 +205,7 @@ public class VelocityGetTemplateMulitData {
 
 					} else {
 						formitem.setLabel(cname);
-						for (String colcode : colcodelist) {
+						for (String colcode : colcodelists) {
 							if (colcode.equals(ename)) {
 								formitem.setProp(ename);
 								formitem.setRequired("true");

@@ -96,7 +96,7 @@ public class CoderController {
 							for(int j=0;j<tableArr.length;j++){
 								//根据模块关联表表名，从字段定义表中查询每个表的主键
 								Element muliel = CoderService.getMultiFieldOne("com.sky.app.core.CoderMapper.findBpFieldForOne", tableArr[j]);
-								primlist.add(ConvertString.convertSomeCharUpper(muliel.getColCode().toLowerCase()));
+								primlist.add(muliel.getColCode());
 								converTableArr[j]=ConvertString
 										.convertFirstCharUpper(ConvertString.convertSomeCharUpper(tableArr[j].toLowerCase()));
 							}
@@ -104,12 +104,9 @@ public class CoderController {
 							model=new VelocityGetTemplateMulitData(mulilist,primlist).getModel(element,packName);
 							// 系统简码
 							model.setSysCode(lastSysCode);
-							//模块关联表(多表)，以逗号隔开的字符串
-							model.setTableNames(element.getRelTable());
 							//模块关联表(多表)，放入list集合中
 							model.setTableListName(Arrays.asList(converTableArr));
-							//多个模块关联表之间的关联关系
-							model.setTableInfo(element.getRelInfo());
+							
 							//对模块代码进行处理
 							String cmoduCode=ConvertString.convertFirstCharUpper(moduCode.toLowerCase());
 							List<Object[]> list=new ArrayList<Object[]>();
@@ -134,10 +131,6 @@ public class CoderController {
 									model.setModelClassStr(classstr);
 									vcx.put("models", model);
 									VelocityCoder.velocity(vcx, "com/sky/app/coder/templates/b/b-model.java.vm", javaPath + "/model/" + cmoduCode+ converTableArr[j] + ".java");
-									//清除在生成实体类文件所设置的值
-									model.setConverTableName(null);
-									model.setTableName(null);
-									model.setModelClassStr(null);
 								} else {
 									//根据传入的模块关联表、模块数据库表主键，生成实体类中的内容(属性和get/set方法)
 									classstr=CoderService.getMultiClassStr(tableArr);
