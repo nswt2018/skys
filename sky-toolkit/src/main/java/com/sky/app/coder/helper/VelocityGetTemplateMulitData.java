@@ -94,7 +94,7 @@ public class VelocityGetTemplateMulitData {
 			// 字段名称
 			cname = list.get(i).getEleCname();
 			// 字段，字段全部小写，如果字段中有“_”,则将字段中"_"去掉后第一字母大写
-			ename = ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase());
+			ename = ConvertString.convertSomeCharUpper(ConvertString.replaceStringDot(list.get(i).getEleEname()).toLowerCase());
 			if (list.get(i).getComName().equals("条件搜索")) {
 				Input input = new Input();
 				// 如果搜索框的标签信息没有录入，则设置默认值

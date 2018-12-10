@@ -22,7 +22,7 @@
 				b.data_type 
 			FROM
 				BP_ELEMENT a
-				LEFT JOIN (SELECT DISTINCT(col_code),data_type FROM bp_field  )b ON a.ele_ename = b.col_code 
+				LEFT JOIN (SELECT DISTINCT(col_code),data_type FROM bp_field  )b ON substr(a.ele_ename,locate('.',a.ele_ename)+1) = b.col_code 
 			WHERE
 				1 = 1 
 				AND a.MODU_CODE =#{moduCode}
