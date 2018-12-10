@@ -22,4 +22,6 @@ public interface ICoderService{
 	Element getMultiFieldOne(String sqlId,String tabCode);
 	//多表模型，获得实体类内容
 	String getMultiClassStr(String[] tablenames);
+	//多表模型，获得映射文件mapper中select后字段
+	String getMultiMapperSelectField(String[] tablenames);
 }

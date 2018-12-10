@@ -106,7 +106,8 @@ public class CoderController {
 							model.setSysCode(lastSysCode);
 							//模块关联表(多表)，放入list集合中
 							model.setTableListName(Arrays.asList(converTableArr));
-							
+							//
+							model.setMapperSelectField(CoderService.getMultiMapperSelectField(tableArr));
 							//对模块代码进行处理
 							String cmoduCode=ConvertString.convertFirstCharUpper(moduCode.toLowerCase());
 							List<Object[]> list=new ArrayList<Object[]>();

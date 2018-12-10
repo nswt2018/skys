@@ -38,6 +38,8 @@ public class Model {
 	private String tableInfo;
 	//转换后 的模块关联表  多表模型
 	private String converTableName;
+	//多表模型 ，mapper中查询的字段
+	private String mapperSelectField;
 	
 	//模块数据库表主键字段
 	private String tablePrimary;
@@ -274,6 +276,12 @@ public class Model {
 	}
 	public void setTableListName(List<String> tableListName) {
 		this.tableListName = tableListName;
+	}
+	public String getMapperSelectField() {
+		return mapperSelectField;
+	}
+	public void setMapperSelectField(String mapperSelectField) {
+		this.mapperSelectField = mapperSelectField;
 	}
 	
 }
