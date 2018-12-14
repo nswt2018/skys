@@ -43,4 +43,45 @@
 	<select id="getColName" parameterType="String" resultType="String">
 		SELECT col_code FROM bp_field WHERE tab_code = #{tabCode} ORDER BY col_name
 	</select>
+	
+	<select id="getTreeData" parameterType="String" resultType="BpTransaction">
+		SELECT * FROM bp_transaction WHERE NOD_CODE= #{tranCode}
+	</select>
+	
+	<select id="getTreeChildren" parameterType="String" resultType="BpTransaction">
+		SELECT * FROM bp_transaction WHERE UP_NOD_CODE = #{nodCode}
+	</select>
+	
+	<select id="getNodeInfo" parameterType="String" resultType="BpTransaction">
+		SELECT * FROM bp_transaction WHERE NOD_CODE like concat(#{relInfo}, '%')
+	</select>
+	
+	<select id="getTranCode" parameterType="String" resultType="BpTransaction">
+		SELECT * FROM bp_transaction WHERE LENGTH(NOD_CODE) = 3
+		<if test="nodCode != null and nodCode != ''">
+			AND NOD_CODE != #{nodCode}
+		</if>
+	</select>
+	
+	<select id="getModuTC" parameterType="String" resultType="BpModule">
+		select * from bp_module where 1=1
+		<if test="moduTC != null and moduTC != ''">
+			AND MODU_TC != #{moduTC}
+		</if>
+	</select>
+	
+	<select id="findMax" parameterType="String" resultType="String">
+		SELECT MAX(NOD_CODE) FROM bp_transaction WHERE 1=1
+		<if test="_parameter != null and _parameter != ''">
+			AND UP_NOD_CODE = #{_parameter}
+		</if>
+		<if test="_parameter == null or _parameter == ''">
+			AND UP_NOD_CODE is null or UP_NOD_CODE = ''
+		</if>
+	</select>
+	
+	<delete id="deleteByNodCode" parameterType="hashmap" statementType="STATEMENT">
+		delete from ${tabName} where NOD_CODE like '${code}%'
+	</delete>
+	
 </mapper>

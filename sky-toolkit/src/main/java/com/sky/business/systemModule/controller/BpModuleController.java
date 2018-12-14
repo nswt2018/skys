@@ -3,6 +3,7 @@ package com.sky.business.systemModule.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +32,9 @@ import com.sky.business.modelDefinition.service.IBpModelService;
 import com.sky.business.pageElement.model.BpElement;
 import com.sky.business.pageElement.service.IBpElementService;
 import com.sky.business.systemModule.model.BpModule;
+import com.sky.business.systemModule.model.BpTransaction;
 import com.sky.business.systemModule.service.IBpModuleService;
+import com.sky.business.systemModule.service.IBpTransactionService;
 import com.sky.core.base.controller.BaseController;
 import com.sky.core.exception.BusinessException;
 import com.sky.core.message.Message;
@@ -50,15 +53,17 @@ public class BpModuleController extends BaseController {
 	private final IBpComponetService bpComponetService;
 	private final IBpUnitService bpUnitService;
 	private final IBpElementService bpElementService;
+	private final IBpTransactionService bpTransactionService;
 
 	@Autowired
 	public BpModuleController(final IBpModuleService bpModuleService, final IBpModelService bpModelService, final IBpComponetService bpComponetService,
-			final IBpUnitService bpUnitService, final IBpElementService bpElementService) {
+			final IBpUnitService bpUnitService, final IBpElementService bpElementService, final IBpTransactionService bpTransactionService) {
 		this.bpModuleService = bpModuleService;
 		this.bpModelService = bpModelService;
 		this.bpComponetService = bpComponetService;
 		this.bpUnitService = bpUnitService;
 		this.bpElementService = bpElementService;
+		this.bpTransactionService = bpTransactionService;
 	}
 	
 	@RequestMapping(value="/TK0004L.do")
@@ -171,7 +176,7 @@ public class BpModuleController extends BaseController {
 			return Mono.justOrEmpty(new Message("000002"));
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new BusinessException("000005", e.getMessage());
+			throw new BusinessException("-000000", e.getMessage());
 		}
 	}
 	
@@ -215,7 +220,7 @@ public class BpModuleController extends BaseController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new BusinessException("000006", e.getMessage());
+			throw new BusinessException("-000000", e.getMessage());
 		}
 	}
 	
@@ -239,5 +244,243 @@ public class BpModuleController extends BaseController {
 		List<String> list = bpModuleService.getTabInfo("com.sky.business.systemModule.dao.BpModuleDao.getColName", tabCode);
 		
 		return Mono.justOrEmpty(list);
+	}
+	
+	/**
+	 * 获取树数据
+	 * @param moduTC
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/TK0004L3.do")
+	@ResponseBody
+	public Mono<List<Map<String, Object>>> getTreeData(@RequestParam String relInfo, HttpServletRequest request, HttpServletResponse response) throws Exception {	
+		List<BpTransaction> treeData = bpModuleService.getData("com.sky.business.systemModule.dao.BpModuleDao.getTreeData", relInfo);
+		
+		List<Map<String, Object>> list = this.asTree(treeData);
+		
+		Iterator<Map<String, Object>> iterator = list.iterator();
+		while(iterator.hasNext()){
+			if("1".equals(iterator.next().get("isRoot")))
+				iterator.remove();
+		}
+
+		return Mono.justOrEmpty(list);
+	}
+
+	/**
+	 * 将数据转为树形结构
+	 * @param treeData
+	 * @return
+	 */
+	public List<Map<String, Object>> asTree(List<BpTransaction> treeData) {
+		
+		List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
+		Map<String, Object> tempMap;
+		
+		for(BpTransaction bt: treeData){
+			
+			tempMap = new HashMap<String, Object>();
+			
+			String nodCode = bt.getNodCode();
+			String nodName = bt.getNodName();
+			String upNodCode = bt.getUpNodCode();
+			String tranCode = bt.getTranCode();
+			String isRoot = (upNodCode == null || "".equals(upNodCode)) ? "0" : "1";
+			tempMap.put("nodCode", nodCode);
+			tempMap.put("nodName", nodName);
+			tempMap.put("upNodCode", upNodCode);
+			tempMap.put("isRoot", isRoot);
+			tempMap.put("tranCode", tranCode);
+			
+			List<BpTransaction> cList = bpModuleService.getData("com.sky.business.systemModule.dao.BpModuleDao.getTreeChildren", nodCode);
+			//如果有子节点 递归
+			if(cList != null && cList.size() > 0){
+				tempMap.put("children", asTree(cList));
+			}
+			
+			listMap.add(tempMap);
+		}
+		return listMap;
+	}
+	
+	
+	/**
+	 * 获取节点详细信息
+	 * @param nodCode
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/TK0004L4.do")
+	@ResponseBody
+	public Mono<BpTransaction> getNodeInfo(@RequestParam String nodCode, HttpServletRequest request, HttpServletResponse response) throws Exception {	
+		
+		List<BpTransaction> tList = bpModuleService.getData("com.sky.business.systemModule.dao.BpModuleDao.getNodeInfo", nodCode);
+
+		return Mono.justOrEmpty(tList.get(0));
+	}
+	
+	
+	/**
+	 * 获取根节点编号和模块交易号
+	 * @param nodCode
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/TK0004L5.do")
+	@ResponseBody
+	public Mono<List<Map<String, Object>>> getTranCodeList(@RequestParam("nodCode") String nodCode, @RequestParam("moduTC") String moduTC, HttpServletRequest request, HttpServletResponse response) throws Exception {	
+		
+		List<Map<String, Object>> listMap = new ArrayList<>();
+		Map<String, Object> tempMap = new HashMap<>();
+		Map<String, Object> tempMap1 = new HashMap<>();
+		
+		if(nodCode != null && !("".equals(nodCode)))
+			nodCode = nodCode.substring(0, 3);
+			
+		//根节点编号
+		Map<String, String> map = new HashMap<>();
+		map.put("nodCode", nodCode);
+		List<BpTransaction> tList = bpModuleService.getData("com.sky.business.systemModule.dao.BpModuleDao.getTranCode", map);
+		
+		tempMap.put("value", "nc");
+		tempMap.put("label", "根节点编号");
+		if(tList != null && tList.size() > 0){
+			List<Map<String, Object>> childList = new ArrayList<>();
+			Map<String, Object> childMap;
+			for (BpTransaction bpTransaction : tList) {
+				childMap = new HashMap<>();
+				childMap.put("value", bpTransaction.getNodCode());
+				childMap.put("label", bpTransaction.getNodCode());
+				childList.add(childMap);
+			}
+			
+			tempMap.put("children", childList);
+		}
+		
+		listMap.add(tempMap);
+		
+		//模块交易号
+		tempMap1.put("value", "mc");
+		tempMap1.put("label", "模块交易号");
+		
+		map.clear();
+		map.put("moduTC", moduTC);
+		List<BpModule> mList = bpModuleService.findForList("com.sky.business.systemModule.dao.BpModuleDao.getModuTC", map);
+		if(mList != null && mList.size() > 0){
+			List<Map<String, Object>> childList = new ArrayList<>();
+			Map<String, Object> childMap;
+			for (BpModule bpModule : mList) {
+				childMap = new HashMap<>();
+				childMap.put("value", bpModule.getModuTC());
+				childMap.put("label", bpModule.getModuTC());
+				childList.add(childMap);
+			}
+			
+			tempMap1.put("children", childList);
+		}
+		
+		listMap.add(tempMap1);
+		
+		return Mono.justOrEmpty(listMap);
+	}
+	
+	@RequestMapping("/TK0004U1.do")
+	@ResponseBody
+	public Mono<Message> updTransaction(@RequestBody BpTransaction bpTransaction, HttpServletRequest request, HttpServletResponse response) {
+		try {
+			if(bpTransactionService.update(bpTransaction) > 0){;
+				return Mono.justOrEmpty(new Message("000003"));
+			}else{
+				return Mono.justOrEmpty(new Message("000006"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new BusinessException("-000000", e.getMessage());
+		}
+	}
+	
+	@PutMapping("/TK0004I1.do")
+	@ResponseBody
+	public Mono<Map<String, String>> saveTransaction(@RequestBody BpTransaction bpTransaction, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		Map<String, String> map = new HashMap<>();
+		try {
+			String upNodCode = bpTransaction.getUpNodCode();
+			List<String> findMax = bpModuleService.findMax("com.sky.business.systemModule.dao.BpModuleDao.findMax", upNodCode);
+			
+			String nodCode;
+			if(findMax.get(0) != null && findMax.get(0).length() > 0) {
+				nodCode = getNodCode(findMax.get(0));
+			} else{
+				if(upNodCode != null && !("".equals(upNodCode))){
+					nodCode = upNodCode + "01";
+				}else{
+					nodCode = "r01";
+				}
+			}
+				
+			bpTransaction.setNodCode(nodCode);
+			if(bpTransactionService.save(bpTransaction) > 0){
+				map.put("code", "000001");
+				if(nodCode.length() == 3){
+					map.put("nodCode", nodCode);
+				}
+			}else{
+				map.put("code", "100001");
+				map.put("message", "添加失败！");
+			}
+			return Mono.justOrEmpty(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new BusinessException("-000001", e.getMessage());
+		}
+	}
+
+	public String getNodCode(String nodCode) {
+		
+		nodCode = nodCode.substring(1, nodCode.length());
+		int len = nodCode.length();
+		
+		int code = Integer.parseInt(nodCode) + 1;
+		
+		nodCode = code + "";
+		if(nodCode.length() == len)
+			return "r" + nodCode;
+		else
+			return "r0" + nodCode;
+	}
+	
+	/**
+	 * 根据节点编号删除节点及子节点
+	 * @param nodCode
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@DeleteMapping("/TK0004D1.do")
+	@ResponseBody
+	public Mono<Message> delTrans(@RequestParam String nodCode, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		try {
+			if(nodCode==null || nodCode.length() == 0)
+				throw new BusinessException("000005");
+			
+			//删除节点及子节点
+			Map<String, String> map = new HashMap<>();
+			map.put("tabName", "bp_transaction");
+			map.put("code", nodCode);
+			bpModuleService.delData("com.sky.business.systemModule.dao.BpModuleDao.deleteByNodCode", map);
+			return Mono.justOrEmpty(new Message("000002"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new BusinessException("-000000", e.getMessage());
+		}
 	}
 }
