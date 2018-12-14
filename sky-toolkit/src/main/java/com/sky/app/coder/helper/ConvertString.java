@@ -83,6 +83,9 @@ public class ConvertString {
 	}
 	//替换字符串中的特殊字符如‘@’，‘:’
 	public static String replaceSomeChar(String str){
+		if(str==null){
+			return null;
+		}
 		String temporary;
 		// 存放特殊字符数组的下标
 		for (int i = 0; i < str.length(); i++) {
@@ -128,7 +131,14 @@ public class ConvertString {
 		}*/
 		
 	}
+	//将一个字符串中“.”前面的去掉，放回“.”后面的字符
+	public static String replaceStringDot(String str){
+		if(str==null){
+			return null;
+		}
+		return str.substring(str.indexOf(".")+1);
+	}
 	public static void main(String[] args) {
-		System.out.println("010201".substring(0,2));
+		System.out.println(replaceStringDot("lxstest.test_key"));
 	}
 }

@@ -1,0 +1,25 @@
+#set($modelpackname=${models.modelPackName})
+#set($modelclassstr=${models.modelClassStr})
+#set($tablename=${models.tableName})
+#set($convertablename=${models.converTableName})
+package ${modelpackname};
+
+import java.math.BigDecimal;
+import java.util.Date;
+#if(${convertablename}&&${convertablename}!="")
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import org.apache.ibatis.type.Alias;
+
+@Alias("${model}${convertablename}")
+@Table(name="${tablename}")
+#end
+#if(${convertablename})
+public class ${model}${convertablename}{
+#else
+public class ${model}{
+#end
+$modelclassstr
+}
+

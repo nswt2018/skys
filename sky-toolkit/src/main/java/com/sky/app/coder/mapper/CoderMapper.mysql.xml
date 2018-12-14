@@ -1,7 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sky.app.core.CoderMapper">
-   <select id="findBpForList" parameterType="String" resultType="Element">
+   <select id="findBpModuleForOne" parameterType="String" resultType="Element">
+	       SELECT
+	       		MODU_CODE,
+				MODU_CNAME,
+				MODU_TC,
+				MODU_MODEL,
+				MOD_NAME,
+				REL_TABLE,
+				REL_INFO
+			FROM
+				BP_MODULE 
+			WHERE
+				1 = 1 
+				AND MODU_CODE = #{moduCode}
+  </select>
+   <select id="findBpElementForList" parameterType="String" resultType="Element">
+	       SELECT
+				a.*,
+				b.data_type 
+			FROM
+				BP_ELEMENT a
+				LEFT JOIN (SELECT DISTINCT(col_code),data_type FROM bp_field  )b ON substr(a.ele_ename,locate('.',a.ele_ename)+1) = b.col_code 
+			WHERE
+				1 = 1 
+				AND a.MODU_CODE =#{moduCode}
+	             
+  </select>
+  <select id="findBpFieldForOne" parameterType="String" resultType="Element">
+	       SELECT
+				COL_CODE,
+				PK_GEN 
+			FROM
+				BP_FIELD 
+			WHERE
+				1 = 1 
+				AND TAB_CODE = #{tabCode}
+				AND PK_GEN IS NOT NULL
+  </select>
+  <select id="findBpForList" parameterType="String" resultType="Element">
 	       SELECT
 				a.*,
 				b.col_name,
@@ -14,6 +52,7 @@
 				AND a.MODU_CODE = #{moduCode}
 	             
   </select>
+  
   <select id="findBpForOne" parameterType="String" resultType="Element">
 	       SELECT
 				MODU_CODE,

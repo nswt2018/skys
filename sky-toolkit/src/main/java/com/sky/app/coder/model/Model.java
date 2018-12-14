@@ -27,8 +27,20 @@ public class Model {
 	private String moduCode;
 	//系统简码
 	private String sysCode;
-	//数据库表的名称
+	//模块关联表
 	private String tableName;
+	
+	//多表模型，模块多个关联表,以逗号隔开
+	private String tableNames;
+	//多表模型，模块多个关联表
+	private List<String> tableListName;
+	//多表模型，关联表之间的关联字段
+	private String tableInfo;
+	//转换后 的模块关联表  多表模型
+	private String converTableName;
+	//多表模型 ，mapper中查询的字段
+	private String mapperSelectField;
+	
 	//模块数据库表主键字段
 	private String tablePrimary;
 	//模块数据库表主键策略 0为手动录入，1为自动录入
@@ -240,6 +252,36 @@ public class Model {
 	}
 	public void setSysCode(String sysCode) {
 		this.sysCode = sysCode;
+	}
+	public String getConverTableName() {
+		return converTableName;
+	}
+	public void setConverTableName(String converTableName) {
+		this.converTableName = converTableName;
+	}
+	public String getTableNames() {
+		return tableNames;
+	}
+	public void setTableNames(String tableNames) {
+		this.tableNames = tableNames;
+	}
+	public String getTableInfo() {
+		return tableInfo;
+	}
+	public void setTableInfo(String tableInfo) {
+		this.tableInfo = tableInfo;
+	}
+	public List<String> getTableListName() {
+		return tableListName;
+	}
+	public void setTableListName(List<String> tableListName) {
+		this.tableListName = tableListName;
+	}
+	public String getMapperSelectField() {
+		return mapperSelectField;
+	}
+	public void setMapperSelectField(String mapperSelectField) {
+		this.mapperSelectField = mapperSelectField;
 	}
 	
 }

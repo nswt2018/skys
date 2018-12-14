@@ -6,9 +6,9 @@ import java.util.Map;
 import com.sky.app.coder.model.Element;
 
 public class VelocityGetPutMapParameter {
-	public static Map<String, String> getMap(Element el, String vuePath, String javaPath) {
+	public static Map<String, String> getMap(String moduCode, String vuePath, String javaPath) {
 		// 将模块代码字母全部小写
-		String lModuCode = el.getModuCode().toLowerCase();
+		String lModuCode = moduCode.toLowerCase();
 		// 先小写，模块代码首字母大写
 		String cModuCode = ConvertString.convertFirstCharUpper(lModuCode);
 		// 替换字符串中‘\’为‘/’

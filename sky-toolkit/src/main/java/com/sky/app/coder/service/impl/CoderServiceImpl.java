@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -27,17 +29,23 @@ public class CoderServiceImpl implements ICoderService {
 	private String[] colnames; // 列名数组
 	// 列名类型数组
 	private String[] colTypes;
+	// 用于放加上别名的字段
+	private String[] aliscolnames;
+	// 用于放加上别名前的列名类型数组
+	private String[] scolnames;
+	// 用于存放列名数组重复元素的下标
+	private static List<Integer> lists = new ArrayList<Integer>();
 
 	@Override
 	public List<Systems> getSystems(String sqlId, String sysKey) {
 		return sqlsession.selectList(sqlId, sysKey);
 	}
-	
+
 	@Override
 	public Systems getSystemsOne(String sqlId, String upperSys) {
 		return sqlsession.selectOne(sqlId, upperSys);
 	}
-	
+
 	@Override
 	public List<Element> getTagInfo(String sqlId, String moduCode) {
 		return sqlsession.selectList(sqlId, moduCode);
@@ -48,6 +56,22 @@ public class CoderServiceImpl implements ICoderService {
 		return sqlsession.selectOne(sqlId, moduCode);
 	}
 
+	@Override
+	public Element getModuleOne(String sqlId, String moduCode) {
+		return sqlsession.selectOne(sqlId, moduCode);
+	}
+
+	@Override
+	public List<Element> getMultiTagInfo(String sqlId, String moduCode) {
+		return sqlsession.selectList(sqlId, moduCode);
+	}
+
+	@Override
+	public Element getMultiFieldOne(String sqlId, String tabCode) {
+		return sqlsession.selectOne(sqlId, tabCode);
+	}
+
+	// 单表模型
 	@Override
 	public String getClassStr(String tablename, String tablepri) {
 		// 输出的类字符串
@@ -89,7 +113,8 @@ public class CoderServiceImpl implements ICoderService {
 		// 拼接属性
 		for (int index = 1; index < colnames.length; index++) {
 			if (colnames[index].equals(convertTablePri)) {
-				str.append("    @Id\r\n" + "    @GeneratedValue(generator=\"UUID\")\n" +getAttrbuteString(colnames[index], colTypes[index]));
+				str.append("    @Id\r\n" + "    @GeneratedValue(generator=\"UUID\")\n"
+						+ getAttrbuteString(colnames[index], colTypes[index]));
 			} else {
 				str.append(getAttrbuteString(colnames[index], colTypes[index]));
 			}
@@ -103,12 +128,126 @@ public class CoderServiceImpl implements ICoderService {
 		return str.toString();
 	}
 
+	// 多表模型
+	@Override
+	public String getMultiClassStr(String[] tablenames) {
+		// 用于存放多个表列名数组
+		List<String[]> listnamearr = new ArrayList<String[]>();
+		// 用于存放多个表类型数组
+		List<String[]> listtypearr = new ArrayList<String[]>();
+		// 输出的类字符串
+		StringBuffer str = new StringBuffer("");
+		for (String tablename : tablenames) {
+			try {
+				Connection conn = sqlSessionFactory.openSession().getConnection();
+				String sql = "select * from " + tablename;
+				PreparedStatement statement = conn.prepareStatement(sql);
+				// 获取数据库的元数据
+				ResultSetMetaData metadata = statement.getMetaData();
+				// 数据库的字段个数
+				int len = metadata.getColumnCount();
+				// 字段名称
+				colnames = new String[len];
+				// 字段类型 --->已经转化为java中的类名称了
+				colTypes = new String[len];
+				for (int i = 1; i <= len; i++) {
+					colnames[i - 1] = ConvertString.convertSomeCharUpper(metadata.getColumnName(i).toLowerCase()); // 获取字段名称
+					System.out.println(colnames[i - 1]);
+					colTypes[i - 1] = sqlType2JavaType(metadata.getColumnTypeName(i)); // 获取字段类型
+					System.out.println(colTypes[i - 1]);
+				}
+				listnamearr.add(colnames);
+				listtypearr.add(colTypes);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		// 合并多个表列名数组，并去重
+		if (listnamearr.size() > 0) {
+			colnames = ifRepeat(concatAll(listnamearr));
+		}
+		// 合并多个表列类型数组，并按指定的下标去除
+		if (listtypearr.size() > 0) {
+			String[] concatcolTypes = concatAll(listtypearr);
+			colTypes = replaceArrayByIndex(concatcolTypes, lists);
+			lists.clear();
+		}
+		// 校验
+		if (null == colnames && null == colTypes)
+			return null;
+		// 拼接属性
+		for (int index = 0; index < colnames.length; index++) {
+			str.append(getAttrbuteString(colnames[index], colTypes[index]));
+		}
+		// 拼接get，Set方法
+		for (int index = 0; index < colnames.length; index++) {
+			str.append(getGetMethodString(colnames[index], colTypes[index]));
+			str.append(getSetMethodString(colnames[index], colTypes[index]));
+		}
+		return str.toString();
+	}
+
+	// 多表模型，获得映射文件mapper中select后面的每个表的字段
+	public String getMultiMapperSelectField(String[] tablenames) {
+		// 用于存放多个表列名数组
+		List<String[]> listnamearr = new ArrayList<String[]>();
+		// 用于存放多个表加上别名的列名数组
+		List<String[]> listalisnamearr = new ArrayList<String[]>();
+		StringBuffer str = new StringBuffer("");
+		for (int j = 0; j < tablenames.length; j++) {
+			try {
+				Connection conn = sqlSessionFactory.openSession().getConnection();
+				String sql = "select * from " + tablenames[j];
+				PreparedStatement statement = conn.prepareStatement(sql);
+				// 获取数据库的元数据
+				ResultSetMetaData metadata = statement.getMetaData();
+				// 数据库的字段个数
+				int len = metadata.getColumnCount();
+				// 字段名称
+				scolnames = new String[len];
+				// 加上别名的字段
+				aliscolnames = new String[len];
+				for (int i = 1; i <= len; i++) {
+					scolnames[i - 1] = metadata.getColumnName(i); // 获取字段名称
+					aliscolnames[i - 1] = tablenames[j] + "." + metadata.getColumnName(i);
+				}
+				listnamearr.add(scolnames);
+				listalisnamearr.add(aliscolnames);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		// 合并多个表列名数组,并获得重复元素的下标
+		if (listnamearr.size() > 0) {
+			ifRepeat(concatAll(listnamearr));
+		}
+		// 按指定的数组下标去除元素
+		if (lists.size() > 0) {
+			aliscolnames = concatAll(listalisnamearr);
+			aliscolnames = replaceArrayByIndex(aliscolnames, lists);
+			lists.clear();
+		}
+		// 校验
+		if (null == aliscolnames)
+			return null;
+		// 拼接带有别名的查询字段
+		for (int index = 0; index < aliscolnames.length; index++) {
+			if(index<aliscolnames.length-1){
+				str.append("\r"+(aliscolnames[index])+",");
+			}else{
+				str.append("\r"+(aliscolnames[index]));
+			}
+		}
+		return str.toString();
+
+	}
+
 	/*
 	 * mysql的字段类型转化为java的类型
 	 */
 	private String sqlType2JavaType(String sqlType) {
 
-		if (sqlType.equalsIgnoreCase("bit")||sqlType.equalsIgnoreCase("boolean")) {
+		if (sqlType.equalsIgnoreCase("bit") || sqlType.equalsIgnoreCase("boolean")) {
 			return "boolean";
 		} else if (sqlType.equalsIgnoreCase("tinyint")) {
 			return "byte";
@@ -118,7 +257,7 @@ public class CoderServiceImpl implements ICoderService {
 			return "Integer";
 		} else if (sqlType.equalsIgnoreCase("bigint")) {
 			return "long";
-		} else if (sqlType.equalsIgnoreCase("decimal")|| sqlType.equalsIgnoreCase("numeric")) {
+		} else if (sqlType.equalsIgnoreCase("decimal") || sqlType.equalsIgnoreCase("numeric")) {
 			return "BigDecimal";
 		} else if (sqlType.equalsIgnoreCase("float") || sqlType.equalsIgnoreCase("double")) {
 			return "double";
@@ -207,6 +346,83 @@ public class CoderServiceImpl implements ICoderService {
 		return new StringBuffer(format);
 	}
 
+	/*
+	 * 将多个数组合并，按传入参数的顺序合并
+	 */
+	public static String[] concatAll(List<String[]> listarr) {
+		// 存放最终合并后的数组
+		String[] result = null;
+		if (listarr.size() > 0) {
+			int totalLength = 0;
+			for (String[] array : listarr) {
+				totalLength += array.length;
+			}
+			result = new String[totalLength];
+			int offset = 0;
+			for (String[] array : listarr) {
+				System.arraycopy(array, 0, result, offset, array.length);
+				offset += array.length;
+			}
+			return result;
+		} else {
+			return result;
+		}
 
-	
+	}
+
+	/*
+	 * 传入可能有重复的数组，返回无重复的数组，并将重复的元素下标放入list集合中
+	 */
+	// 需要传入一个Object数组，然后返回去重后的数组
+	public static String[] ifRepeat(String[] arr) {
+		// 用来记录去除重复之后的数组长度和给临时数组作为下标索引
+		int t = 0;
+		// 临时数组
+		String[] tempArr = new String[arr.length];
+		// 遍历原数组
+		for (int i = 0; i < arr.length; i++) {
+			// 声明一个标记，并每次重置
+			boolean isTrue = true;
+			// 内层循环将原数组的元素逐个对比
+			for (int j = i + 1; j < arr.length; j++) {
+				// 如果发现有重复元素，改变标记状态并结束当次内层循环
+				if (arr[i].endsWith(arr[j])) {
+					isTrue = false;
+					// 将重复的元素下标赋给list集合
+					lists.add(i);
+					break;
+				}
+			}
+			// 判断标记是否被改变，如果没被改变就是没有重复元素
+			if (isTrue) {
+				// 没有元素就将原数组的元素赋给临时数组
+				tempArr[t] = arr[i];
+				// 走到这里证明当前元素没有重复，那么记录自增
+				t++;
+			}
+		}
+		// 声明需要返回的数组，这个才是去重后的数组
+		String[] newArr = new String[t];
+		// 用arraycopy方法将刚才去重的数组拷贝到新数组并返回
+		System.arraycopy(tempArr, 0, newArr, 0, t);
+		return newArr;
+	}
+
+	/*
+	 * 将合并后的列类型数组，按指定的下标删除
+	 */
+	public static String[] replaceArrayByIndex(String[] str, List<Integer> lists) {
+		List<String> inpal = Arrays.asList(str);
+		List<String> outPa = new ArrayList<String>();
+		for (int i = 0; i < inpal.size(); i++) {
+			if (lists.contains(i)) {
+
+			} else {
+				outPa.add(inpal.get(i));
+			}
+
+		}
+		return outPa.toArray(new String[outPa.size()]);
+	}
+
 }

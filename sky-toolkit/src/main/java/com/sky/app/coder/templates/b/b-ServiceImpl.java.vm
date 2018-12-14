@@ -1,0 +1,22 @@
+#set($serviceimplpackname=${models.serviceImplPackName})
+#set($servicepackname=${models.servicePackName})
+#set($modelpackname=${models.modelPackName})
+#set($model=${models.model})
+#set($convertablename=${models.converTableName})
+package ${serviceimplpackname};
+
+import com.sky.core.base.service.impl.BaseServiceImpl;
+import org.springframework.stereotype.Service;
+#if(${convertablename})
+import ${modelpackname}.${model}${convertablename};
+import ${servicepackname}.I${model}${convertablename}Service;
+@Service("${model}${convertablename}Service")
+public class ${model}${convertablename}ServiceImpl extends BaseServiceImpl<${model}${convertablename}> implements I${model}${convertablename}Service{
+}
+#else
+import ${modelpackname}.${model};
+import ${servicepackname}.I${model}Service;
+@Service("${model}Service")
+public class ${model}ServiceImpl extends BaseServiceImpl<${model}> implements I${model}Service{
+}
+#end
