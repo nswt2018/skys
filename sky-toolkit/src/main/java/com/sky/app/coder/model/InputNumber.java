@@ -3,6 +3,8 @@ package com.sky.app.coder.model;
 public class InputNumber {
 	//当前值，可以使用 v-model 双向绑定数据
 	private String value;
+	//只读
+	private String readonly;
 	//最大值
 	private int max;
 	//最小值
@@ -55,6 +57,12 @@ public class InputNumber {
 	}
 	public void setDefaultValue(String defaultValue) {
 		this.defaultValue = defaultValue;
+	}
+	public String getReadonly() {
+		return readonly;
+	}
+	public void setReadonly(String readonly) {
+		this.readonly = readonly;
 	}
 	
 	

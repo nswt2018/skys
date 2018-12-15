@@ -6,6 +6,7 @@ package ${modelpackname};
 
 import java.math.BigDecimal;
 import java.util.Date;
+import javax.persistence.Column;
 #if(${convertablename}&&${convertablename}!="")
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;

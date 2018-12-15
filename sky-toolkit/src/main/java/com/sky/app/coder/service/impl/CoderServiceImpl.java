@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.persistence.Column;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -29,10 +30,11 @@ public class CoderServiceImpl implements ICoderService {
 	private String[] colnames; // 列名数组
 	// 列名类型数组
 	private String[] colTypes;
-	// 用于放加上别名的字段
+	// 存放加上表名的列名数组  ->对应实体类的属性名
+	private String[] tablecolnames;
+	// 用于放 加上别名的字段名称
 	private String[] aliscolnames;
-	// 用于放加上别名前的列名类型数组
-	private String[] scolnames;
+	
 	// 用于存放列名数组重复元素的下标
 	private static List<Integer> lists = new ArrayList<Integer>();
 
@@ -128,11 +130,68 @@ public class CoderServiceImpl implements ICoderService {
 		return str.toString();
 	}
 
-	// 多表模型
+	// 多表模型，根据表名和主键字段生成实体类内容
+	public String getMultiClassStrBytable(String tablename, String tablepri) {
+		// 输出的类字符串
+		StringBuffer str = new StringBuffer("");
+		// 获取表类型和表名的字段名
+		try {
+			Connection conn = sqlSessionFactory.openSession().getConnection();
+			String sql = "select * from " + tablename;
+			PreparedStatement statement = conn.prepareStatement(sql);
+			// 获取数据库的元数据
+			ResultSetMetaData metadata = statement.getMetaData();
+			// 数据库的字段个数
+			int len = metadata.getColumnCount();
+			// 字段名称
+			colnames = new String[len];
+			// 加上表名字段名称->对应实体类的属性名
+			tablecolnames = new String[len];
+			// 字段类型 --->已经转化为java中的类名称了
+			colTypes = new String[len];
+			for (int i = 1; i <= len; i++) {
+				// System.out.println(metadata.getColumnName(i)+":"+metadata.getColumnTypeName(i)+":"+sqlType2JavaType(metadata.getColumnTypeName(i).toLowerCase())+":"+metadata.getColumnDisplaySize(i));
+				// metadata.getColumnDisplaySize(i);
+				colnames[i - 1] = metadata.getColumnName(i);
+				tablecolnames[i - 1] = ConvertString.convertSomeCharUpperReplace(tablename+"."+metadata.getColumnName(i));
+				if (colnames[i - 1].equals(tablepri)) {
+					colTypes[i - 1] = "String"; // 如果是主键,则类型全为字符串
+				} else {
+					colTypes[i - 1] = sqlType2JavaType(metadata.getColumnTypeName(i)); // 获取字段类型
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		// 校验
+		if (null == colnames && null == colTypes)
+			return null;
+		// 拼接属性
+		for (int index = 0; index < colnames.length; index++) {
+			if (colnames[index].equals(tablepri)) {
+				str.append("    @Id\r\n" + "    @GeneratedValue(generator=\"UUID\")\n" + "    @Column(name=\""
+						+ colnames[index] + "\")\r\n" + getAttrbuteString(tablecolnames[index], colTypes[index]));
+			} else {
+				str.append("    @Column(name=\"" + colnames[index] + "\")\r\n"
+						+ getAttrbuteString(tablecolnames[index], colTypes[index]));
+			}
+
+		}
+		// 拼接get，Set方法
+		for (int index = 0; index < colnames.length; index++) {
+			str.append(getGetMethodString(tablecolnames[index], colTypes[index]));
+			str.append(getSetMethodString(tablecolnames[index], colTypes[index]));
+		}
+		return str.toString();
+	}
+
+	// 多表模型,通过表名数据生成实体类内容
 	@Override
 	public String getMultiClassStr(String[] tablenames) {
 		// 用于存放多个表列名数组
 		List<String[]> listnamearr = new ArrayList<String[]>();
+		// 用于存放多个表列名(加上表名组合的)数组
+		List<String[]> listtablenamearr = new ArrayList<String[]>();
 		// 用于存放多个表类型数组
 		List<String[]> listtypearr = new ArrayList<String[]>();
 		// 输出的类字符串
@@ -146,43 +205,40 @@ public class CoderServiceImpl implements ICoderService {
 				ResultSetMetaData metadata = statement.getMetaData();
 				// 数据库的字段个数
 				int len = metadata.getColumnCount();
-				// 字段名称
-				colnames = new String[len];
+				// 加上表名的字段名称->对应实体类的属性名
+				tablecolnames = new String[len];
 				// 字段类型 --->已经转化为java中的类名称了
 				colTypes = new String[len];
 				for (int i = 1; i <= len; i++) {
-					colnames[i - 1] = ConvertString.convertSomeCharUpper(metadata.getColumnName(i).toLowerCase()); // 获取字段名称
-					System.out.println(colnames[i - 1]);
+					tablecolnames[i-1]=ConvertString.convertSomeCharUpperReplace(tablename+"."+metadata.getColumnName(i));//获取加上表名字段名称
 					colTypes[i - 1] = sqlType2JavaType(metadata.getColumnTypeName(i)); // 获取字段类型
-					System.out.println(colTypes[i - 1]);
 				}
 				listnamearr.add(colnames);
+				listtablenamearr.add(tablecolnames);
 				listtypearr.add(colTypes);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
-		// 合并多个表列名数组，并去重
-		if (listnamearr.size() > 0) {
-			colnames = ifRepeat(concatAll(listnamearr));
+		//合并
+		if(listtablenamearr.size()>0){
+			tablecolnames = concatAll(listtablenamearr);
 		}
-		// 合并多个表列类型数组，并按指定的下标去除
+		// 合并多个表列类型数组
 		if (listtypearr.size() > 0) {
-			String[] concatcolTypes = concatAll(listtypearr);
-			colTypes = replaceArrayByIndex(concatcolTypes, lists);
-			lists.clear();
+			colTypes = concatAll(listtypearr);
 		}
 		// 校验
-		if (null == colnames && null == colTypes)
+		if (null == tablecolnames && null == colTypes)
 			return null;
 		// 拼接属性
-		for (int index = 0; index < colnames.length; index++) {
-			str.append(getAttrbuteString(colnames[index], colTypes[index]));
+		for (int index = 0; index < tablecolnames.length; index++) {
+			str.append(getAttrbuteString(tablecolnames[index], colTypes[index]));
 		}
 		// 拼接get，Set方法
-		for (int index = 0; index < colnames.length; index++) {
-			str.append(getGetMethodString(colnames[index], colTypes[index]));
-			str.append(getSetMethodString(colnames[index], colTypes[index]));
+		for (int index = 0; index < tablecolnames.length; index++) {
+			str.append(getGetMethodString(tablecolnames[index], colTypes[index]));
+			str.append(getSetMethodString(tablecolnames[index], colTypes[index]));
 		}
 		return str.toString();
 	}
@@ -203,15 +259,15 @@ public class CoderServiceImpl implements ICoderService {
 				ResultSetMetaData metadata = statement.getMetaData();
 				// 数据库的字段个数
 				int len = metadata.getColumnCount();
-				// 字段名称
-				scolnames = new String[len];
-				// 加上别名的字段
+				// 加上表名的字段名称
+				tablecolnames = new String[len];
+				// 加上表名的字段且有别名->对应实体类
 				aliscolnames = new String[len];
 				for (int i = 1; i <= len; i++) {
-					scolnames[i - 1] = metadata.getColumnName(i); // 获取字段名称
-					aliscolnames[i - 1] = tablenames[j] + "." + metadata.getColumnName(i);
+					tablecolnames[i - 1] = tablenames[j] + "." + metadata.getColumnName(i); // 获取表名加上字段组合的字段
+					aliscolnames[i - 1] = ConvertString.convertSomeCharUpperReplace(tablenames[j] + "." + metadata.getColumnName(i));
 				}
-				listnamearr.add(scolnames);
+				listnamearr.add(tablecolnames);
 				listalisnamearr.add(aliscolnames);
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -219,23 +275,20 @@ public class CoderServiceImpl implements ICoderService {
 		}
 		// 合并多个表列名数组,并获得重复元素的下标
 		if (listnamearr.size() > 0) {
-			ifRepeat(concatAll(listnamearr));
+			tablecolnames=concatAll(listnamearr);
 		}
-		// 按指定的数组下标去除元素
-		if (lists.size() > 0) {
-			aliscolnames = concatAll(listalisnamearr);
-			aliscolnames = replaceArrayByIndex(aliscolnames, lists);
-			lists.clear();
+		if(listalisnamearr.size()>0){
+			aliscolnames=concatAll(listalisnamearr);
 		}
 		// 校验
-		if (null == aliscolnames)
+		if (null == tablecolnames)
 			return null;
 		// 拼接带有别名的查询字段
-		for (int index = 0; index < aliscolnames.length; index++) {
-			if(index<aliscolnames.length-1){
-				str.append("\r"+(aliscolnames[index])+",");
-			}else{
-				str.append("\r"+(aliscolnames[index]));
+		for (int index = 0; index < tablecolnames.length; index++) {
+			if (index < tablecolnames.length - 1) {
+				str.append("\r" + (tablecolnames[index]) +"  as  "+aliscolnames[index]+ ",");
+			} else {
+				str.append("\r" + (tablecolnames[index])+"  as "+aliscolnames[index]);
 			}
 		}
 		return str.toString();

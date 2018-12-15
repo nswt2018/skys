@@ -1,0 +1,51 @@
+	           <Form #if(${addform.ref})ref="${addform.ref}"#end :model="${addform.model}" #if(${addform.rules}):rules="${addform.rules}"#end #if(${addform.labelWidth}):label-width="${addform.labelWidth}"#end #if(${addform.inline})inline#end>
+#if($addformitems)
+#foreach($formitem in $addformitems)
+	              
+	              <FormItem label="${formitem.label}:" #if(${formitem.prop})prop="${formitem.prop}"#end #if(${formitem.required})required#end #if(${formitem.labelWidth})label-width="${formitem.labelWidth}"#end>
+#if(${formitem.input})
+	                 <Input #if(${formitem.input.readonly})readonly="true"#end v-model="${addform.model}.${formitem.input.value}" #if(${formitem.input.placeholder})placeholder="${formitem.input.placeholder}"#end />
+#end
+#if(${formitem.inputNumber})	                 
+	                 <InputNumber #if(${formitem.inputNumber.readonly})readonly="true"#end v-model="${addform.model}.${formitem.inputNumber.value}" #if(${formitem.inputNumber.max}):max="${formitem.inputNumber.max}"#end #if(${formitem.inputNumber.min}):min="${formitem.inputNumber.min}"#end #if(${formitem.inputNumber.placeholder})placeholder="${formitem.inputNumber.placeholder}"#end ></InputNumber>
+#end
+#if(${formitem.datepicker})	                 
+	                 <DatePicker #if(${formitem.datepicker.readonly})readonly="true"#end  type="date" v-model="${addform.model}.${formitem.datepicker.value}" #if(${formitem.datepicker.placeholder})placeholder="${formitem.datepicker.placeholder}"#end></DatePicker>
+#end
+#if(${formitem.type}=="select")	                 
+	                 <Select  v-model="${addform.model}.${formitem.value}" placeholder="请输入${formitem.label}" />
+	                 	 <Option value="beijing">New York</Option>
+                	 </Select>
+#end
+#if(${formitem.type}=="radioGroup")	                 
+	                 <RadioGroup v-model="${addform.model}.${formitem.value}">
+                		 <Radio label="male">Male</Radio>
+                		 <Radio label="female">Female</Radio>
+            		 </RadioGroup>
+#end
+#if(${formitem.type}=="checkboxGroup")	                 
+	                 <CheckboxGroup v-model="${addform.model}.${formitem.value}">
+		                 <Checkbox label="Eat"></Checkbox>
+		                 <Checkbox label="Sleep"></Checkbox>
+		                 <Checkbox label="Run"></Checkbox>
+		                 <Checkbox label="Movie"></Checkbox>
+           			 </CheckboxGroup>
+#end
+#if(${formitem.type}=="switch")	                 
+	                 <i-switch v-model="${addform.model}.${formitem.value}" size="large">
+                		 <span slot="open">On</span>
+                		 <span slot="close">Off</span>
+            		 </i-switch>
+#end
+#if(${formitem.type}=="slider")	                 
+	                 <Slider v-model="${addform.model}.${formitem.value}" range></Slider>
+#end
+#if(${formitem.type}=="TimePicker")	                 
+	                 <TimePicker type="time" v-model="${addform.model}.${formitem.value}" placeholder="请输入${formitem.label}" ></TimePicker>
+#end
+	              </FormItem>
+#end
+#end
+        
+	          </Form>
+	        

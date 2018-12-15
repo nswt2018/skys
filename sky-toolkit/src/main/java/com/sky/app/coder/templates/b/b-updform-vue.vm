@@ -1,17 +1,16 @@
 	           <Form #if(${updform.ref})ref="${updform.ref}"#end :model="${updform.model}" #if(${updform.rules}):rules="${updform.rules}"#end #if(${updform.labelWidth}):label-width="${updform.labelWidth}" #if(${addform.inline})inline#end>#end
 #if($updformitems)
 #foreach($formitem in $updformitems)
-#if(${formitem.input.value}!=${tableprimary}||${formitem.inputNumber.value}!=${tableprimary}||${formitem.datepicker.value}!=${tableprimary})
 
-	              <FormItem label="${formitem.label}:" #if(${formitem.prop})prop="${formitem.prop}"#end #if(${formitem.required})required#end #if(${formitem.labelWidth})label-width="${formitem.labelWidth}"#end>
+				  <FormItem label="${formitem.label}:" #if(${formitem.prop})prop="${formitem.prop}"#end #if(${formitem.required})required#end #if(${formitem.labelWidth})label-width="${formitem.labelWidth}"#end>
 #if(${formitem.input})
-	                 <Input v-model="${updform.model}.${formitem.input.value}" placeholder="${formitem.input.placeholder}" />
+	                 <Input #if(${formitem.input.readonly})readonly="true"#end v-model="${updform.model}.${formitem.input.value}" #if(${formitem.input.placeholder})placeholder="${formitem.input.placeholder}"#end />
 #end
 #if(${formitem.inputNumber})	                 
-	                 <InputNumber #if(${formitem.inputNumber.max}):max="${formitem.inputNumber.max}"#end #if(${formitem.inputNumber.min}):min="${formitem.inputNumber.min}"#end v-model="${updform.model}.${formitem.inputNumber.value}"  #if(${formitem.inputNumber.placeholder})placeholder="${formitem.inputNumber.placeholder}"#end ></InputNumber>
+	                 <InputNumber #if(${formitem.inputNumber.readonly})readonly="true"#end v-model="${updform.model}.${formitem.inputNumber.value}" #if(${formitem.inputNumber.max}):max="${formitem.inputNumber.max}"#end #if(${formitem.inputNumber.min}):min="${formitem.inputNumber.min}"#end #if(${formitem.inputNumber.placeholder})placeholder="${formitem.inputNumber.placeholder}"#end ></InputNumber>
 #end
 #if(${formitem.datepicker})	                 
-	                 <DatePicker  type="date" v-model="${updform.model}.${formitem.datepicker.value}" placeholder="${formitem.datepicker.placeholder}"></DatePicker>
+	                 <DatePicker #if(${formitem.datepicker.readonly})readonly="true"#end  type="date" v-model="${updform.model}.${formitem.datepicker.value}" #if(${formitem.datepicker.placeholder})placeholder="${formitem.datepicker.placeholder}"#end></DatePicker>
 #end
 #if(${formitem.type}=="select")	                 
 	                 <Select  v-model="${updform.model}.${formitem.value}" placeholder="请输入${formitem.label}" />
@@ -45,13 +44,7 @@
 	                 <TimePicker type="time" v-model="${updform.model}.${formitem.value}" placeholder="请输入${formitem.label}" ></TimePicker>
 #end	                 
 	              </FormItem>
-#elseif(${tableprimaryvalue}==0)
-	              <FormItem label="${formitem.label}:" #if(${formitem.labelWidth})label-width="${formitem.labelWidth}"#end>
-#if(${formitem.input})
-	                 <Input :readonly="true" v-model="${updform.model}.${formitem.input.value}" />
-#end
-	              </FormItem>
-#end
+
 #end     
 #end    
 	           </Form>

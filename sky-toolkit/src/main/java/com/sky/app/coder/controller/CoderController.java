@@ -88,25 +88,31 @@ public class CoderController {
 						if(modName.equals("多表模型")){
 							// 根据模块代码从页面元素表中取出该模块全部的字段信息，并根据字段关联字段定义表(多个)，获得字段在数据库的类型
 							List<Element> mulilist = CoderService.getMultiTagInfo("com.sky.app.core.CoderMapper.findBpElementForList",moduCode);
+							//存放表的主键字段
 							List<String> primlist=new ArrayList<String>();
+							//存放表的表名加上主键组合的字段
+							List<String> tableprimlist=new ArrayList<String>();
+							//用于放表的主键策略
+							List<String> tableprimpklist=new ArrayList<String>();
 							// 将模块的关联表转放入数组中
 							String[] tableArr = element.getRelTable().split(",");
-							//存放转换后的关联表
+							//存放转换后的关联表，用于dao、service接口、service实现类、实体类类名的组装
 							String[] converTableArr=new String[tableArr.length];
 							for(int j=0;j<tableArr.length;j++){
-								//根据模块关联表表名，从字段定义表中查询每个表的主键
+								//根据模块关联表表名，从字段定义表中查询每个表的主键，放入parmlist集合中
 								Element muliel = CoderService.getMultiFieldOne("com.sky.app.core.CoderMapper.findBpFieldForOne", tableArr[j]);
 								primlist.add(muliel.getColCode());
-								converTableArr[j]=ConvertString
-										.convertFirstCharUpper(ConvertString.convertSomeCharUpper(tableArr[j].toLowerCase()));
+								tableprimpklist.add(muliel.getPkGen());
+								tableprimlist.add(ConvertString.convertSomeCharUpperReplace(tableArr[j]+"."+muliel.getColCode()));
+								converTableArr[j]=ConvertString.convertStringByCombin(tableArr[j]);
 							}
 							// 将字段的一些信息放入model解析,然后取得model
-							model=new VelocityGetTemplateMulitData(mulilist,primlist).getModel(element,packName);
+							model=new VelocityGetTemplateMulitData(mulilist,tableprimlist,tableprimpklist).getModel(element,packName);
 							// 系统简码
 							model.setSysCode(lastSysCode);
 							//模块关联表(多表)，放入list集合中
 							model.setTableListName(Arrays.asList(converTableArr));
-							//
+							//设置mapper映射文件，查询的字段以表加字段作为别名
 							model.setMapperSelectField(CoderService.getMultiMapperSelectField(tableArr));
 							//对模块代码进行处理
 							String cmoduCode=ConvertString.convertFirstCharUpper(moduCode.toLowerCase());
@@ -126,7 +132,7 @@ public class CoderController {
 							for(int j = 0; j < converTableArr.length + 1; j++){
 								if (j < converTableArr.length) {
 									//根据传入的模块关联表名、主键，生成实体类中的内容(属性和get/set方法)
-									classstr=CoderService.getClassStr(tableArr[j],primlist.get(j));
+									classstr=CoderService.getMultiClassStrBytable(tableArr[j],primlist.get(j));
 									model.setConverTableName(converTableArr[j]);
 									model.setTableName(tableArr[j]);
 									model.setModelClassStr(classstr);

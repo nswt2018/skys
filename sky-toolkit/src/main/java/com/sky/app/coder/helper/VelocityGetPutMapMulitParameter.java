@@ -6,6 +6,16 @@ import java.util.List;
 import com.sky.app.coder.model.Model;
 
 public class VelocityGetPutMapMulitParameter {
+	/**
+	 * 
+	 * @param cModuCode
+	 * @param vuePath
+	 * @param javaPath
+	 * @param converTableArr
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
 	public static List<Object[]> getMap(String cModuCode, String vuePath, String javaPath, String[] converTableArr,
 			Model model) throws Exception {
 		// 将模块代码全部小写
@@ -21,7 +31,7 @@ public class VelocityGetPutMapMulitParameter {
 		String[] pathArr = new String[fileNum];
 		// 用于存放实体类model
 		Model[] modelArr = new Model[fileNum];
-		templateArr[0] = "com/sky/app/coder/templates/a-vue.vm";
+		templateArr[0] = "com/sky/app/coder/templates/b/b-vue.vm";
 		templateArr[1] = "com/sky/app/coder/templates/a-js.vm";
 		templateArr[2] = "com/sky/app/coder/templates/b/b-controller.java.vm";
 		templateArr[3] = "com/sky/app/coder/templates/b/b-Mapper.xml.vm";

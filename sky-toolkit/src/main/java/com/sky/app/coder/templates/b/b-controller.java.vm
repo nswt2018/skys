@@ -6,6 +6,7 @@
 #set($tid=${models.tid})
 #set($syscode=${models.sysCode})
 #set($tablelistnames=${models.tableListName})
+#set($changetableinfo=${models.changeTableInfo})
 package ${controllerpackname};
 
 import java.beans.BeanInfo;
@@ -66,6 +67,9 @@ public class ${model}Controller extends BaseController{
 			throws Exception {
 		try {
 			if (${model}!= null) {
+#if(${changetableinfo})
+				${changetableinfo}
+#end
 #if(${tablelistnames})
 #foreach(${tablelistname} in ${tablelistnames})
 				${model}${tablelistname} ${model}${tablelistname}=new ${model}${tablelistname}();
@@ -88,6 +92,9 @@ public class ${model}Controller extends BaseController{
 			throws Exception {
 		try {
 			if (${model} != null) {
+#if(${changetableinfo})
+				${changetableinfo}
+#end
 #if(${tablelistnames})
 #foreach(${tablelistname} in ${tablelistnames})
 				${model}${tablelistname} ${model}${tablelistname}=new ${model}${tablelistname}();

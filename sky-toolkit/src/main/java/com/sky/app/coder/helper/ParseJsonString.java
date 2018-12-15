@@ -13,8 +13,10 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 public class ParseJsonString {
-	/*
+	/**
 	 * 将这种JSON字符串[{"input":{"value":"paraValue"}}]，转为map,并将数据转到model实体类中
+	 * @param tagInfo 字段的标签信息
+	 * @return 返回model对象
 	 */
 	public Model parseJsonTagInfo(String tagInfo) {
 		// JSONObject

@@ -34,12 +34,16 @@ public class Model {
 	private String tableNames;
 	//多表模型，模块多个关联表
 	private List<String> tableListName;
-	//多表模型，关联表之间的关联字段
+	//多表模型，关联表之间的关联关系
 	private String tableInfo;
-	//转换后 的模块关联表  多表模型
+	//多表模型，关联表主键
+	private List<String> tablePrimaryList;
+	//多表模型,转换后 的模块关联表  
 	private String converTableName;
 	//多表模型 ，mapper中查询的字段
 	private String mapperSelectField;
+	//多表模型，为了处理关联字段的赋值问题
+	private String changeTableInfo;
 	
 	//模块数据库表主键字段
 	private String tablePrimary;
@@ -283,5 +287,19 @@ public class Model {
 	public void setMapperSelectField(String mapperSelectField) {
 		this.mapperSelectField = mapperSelectField;
 	}
+	public String getChangeTableInfo() {
+		return changeTableInfo;
+	}
+	public void setChangeTableInfo(String changeTableInfo) {
+		this.changeTableInfo = changeTableInfo;
+	}
+	public List<String> getTablePrimaryList() {
+		return tablePrimaryList;
+	}
+	public void setTablePrimaryList(List<String> tablePrimaryList) {
+		this.tablePrimaryList = tablePrimaryList;
+	}
+	
+	
 	
 }
