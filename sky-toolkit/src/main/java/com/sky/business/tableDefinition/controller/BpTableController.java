@@ -61,7 +61,9 @@ public class BpTableController extends BaseController {
 	public Mono<Message> saveTable(@RequestBody BpTable bpTable, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try {
 			//查询数据库 该表是否存在
-			List<BpTable> list = bpTableService.findForList("com.sky.business.tableDefinition.dao.BpTableDao.findTable", bpTable.getTabCode());
+			Map<String, String> map = new HashMap<>();
+			map.put("tabCode", bpTable.getTabCode());
+			List<BpTable> list = bpTableService.findForList("com.sky.business.tableDefinition.dao.BpTableDao.findTable", map);
 			//存在则报错返回
 			if(list != null && list.size() > 0){
 				return Mono.justOrEmpty(new Message("100001", "该表已经存在"));
@@ -84,22 +86,25 @@ public class BpTableController extends BaseController {
 			if(tabCode==null || tabCode.length == 0)
 				throw new BusinessException("000005");
 			for(String id : tabCode) {
+				//从库里删除
+				//查询数据库 该表是否存在
+				Map<String, String> map = new HashMap<>();
+				map.put("tabCode", id);
+				List<BpTable> tList = bpTableService.findForList("com.sky.business.tableDefinition.dao.BpTableDao.findTable", map);
+				//存在则报错返回
+				if(tList != null && tList.size() > 0 && "1".equals(tList.get(0).getIsExist())){
+					bpTableService.dropTab("com.sky.business.tableDefinition.dao.BpTableDao.dropTable", id);
+				}
+				
 				//删除表定义
 				bpTableService.delete(id);
 				//查询字段定义表,有记录删除,没有返回
 				List<BpField> list = bpFieldService.findForList("com.sky.business.columnDefinition.dao.BpFieldDao.findAllField", id);
 				if(list != null && list.size() > 0){
-					Map<String, String> map = new HashMap<String, String>();
+					map.clear();
 					map.put("tabCode", id);
 					bpFieldService.delField("com.sky.business.columnDefinition.dao.BpFieldDao.deleteById", map);
 				}
-				
-				//查询数据库 该表是否存在,存在则删除
-				List<BpTable> list1 = bpTableService.findForList("com.sky.business.tableDefinition.dao.BpTableDao.findTable", id);
-				if(list1 != null && list1.size() > 0){
-					bpTableService.dropTab("com.sky.business.tableDefinition.dao.BpTableDao.dropTable", id);
-				}
-				
 			}
 			return Mono.justOrEmpty(new Message("000002"));
 		} catch (Exception e) {
@@ -147,6 +152,8 @@ public class BpTableController extends BaseController {
 			
 			for (String code : tabCode) {
 				//查询数据库 该表是否存在
+				Map<String, String> map = new HashMap<>();
+				map.put("tabCode", code);
 				List<BpTable> list = bpTableService.findForList("com.sky.business.tableDefinition.dao.BpTableDao.findTable", code);
 				//存在则报错返回
 				if(list != null && list.size() > 0)
@@ -223,7 +230,9 @@ public class BpTableController extends BaseController {
 	public Mono<Message> findTab(@RequestParam String tabCode, HttpServletRequest request, HttpServletResponse response) throws Exception {	
 		
 		//查询数据库 该表是否存在
-		List<BpTable> list = bpTableService.findForList("com.sky.business.tableDefinition.dao.BpTableDao.findTable", tabCode);
+		Map<String, String> map = new HashMap<>();
+		map.put("tabCode", tabCode);
+		List<BpTable> list = bpTableService.findForList("com.sky.business.tableDefinition.dao.BpTableDao.findTable", map);
 		
 		if(list != null && list.size() > 0)
 			return Mono.justOrEmpty(new Message("000001", tabCode + "表已经存在！"));
@@ -236,7 +245,9 @@ public class BpTableController extends BaseController {
 	public Mono<Message> findTable(@RequestParam String tabCode, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		//查询数据库 该表是否存在
-		List<BpTable> list = bpTableService.findForList("com.sky.business.tableDefinition.dao.BpTableDao.findTable", tabCode);
+		Map<String, String> map = new HashMap<>();
+		map.put("tabCode", tabCode);
+		List<BpTable> list = bpTableService.findForList("com.sky.business.tableDefinition.dao.BpTableDao.findTable", map);
 		//存在则报错返回
 		if(list != null && list.size() > 0){
 			return Mono.justOrEmpty(new Message("100001", "该表已经存在"));

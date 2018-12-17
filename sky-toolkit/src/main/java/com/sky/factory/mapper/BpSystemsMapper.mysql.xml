@@ -33,4 +33,8 @@
 	<select id="findChildren" parameterType="String" resultType="BpSystems">
 		select * from BP_SYSTEMS WHERE sys_key LIKE CONCAT(#{sysKey},'%')
 	</select>
+	
+	<update id="updChildren" parameterType="hashmap">
+		UPDATE BP_SYSTEMS SET UPPER_NAME = #{sysName} WHERE UPPER_SYS = #{sysKey}
+	</update>
 </mapper>

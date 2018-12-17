@@ -28,21 +28,11 @@
 		</if>
 	</delete>
 	
-	<select id="findTable" parameterType="String" resultType="BpField">
-		SELECT 
-			tab_code,
-			col_code,
-			col_name,
-			data_type,
-			data_len,
-			pk_gen
-		FROM 
-			bp_field
-		WHERE 
-			tab_code = #{tabCode}
-	</select>
-	
 	<select id="findField" parameterType="hashmap" resultType="BpField">
 		select * from BP_FIELD where tab_code = #{tabCode} and col_code = #{colCode}
+	</select>
+	
+	<select id="findAllField" parameterType="String" resultType="BpField">
+		select * from BP_FIELD where tab_code = #{tabCode}
 	</select>
 </mapper>

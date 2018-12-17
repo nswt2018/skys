@@ -177,6 +177,13 @@ public class BpSystemsController extends BaseController {
 	public Mono<Message> update(@RequestBody BpSystems bpSystems, HttpServletRequest request, HttpServletResponse response) {
 		try {
 			if (bpSystemsService.update(bpSystems)>0) {
+				//更新子节点上级模块名称
+				String sysName = bpSystems.getSysName();
+				String sysKey = bpSystems.getSysKey();
+				Map<String, String> map = new HashMap<>();
+				map.put("sysName", sysName);
+				map.put("sysKey", sysKey);
+				bpSystemsService.updChildren("com.sky.factory.dao.BpSystemsDao.updChildren", map);
 				return Mono.justOrEmpty(new Message("000003"));
 			} else {
 				return Mono.justOrEmpty(new Message("000006"));

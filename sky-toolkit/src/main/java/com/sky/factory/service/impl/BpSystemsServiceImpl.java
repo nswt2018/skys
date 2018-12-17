@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -35,9 +36,14 @@ public class BpSystemsServiceImpl extends BaseServiceImpl<BpSystems> implements 
 		return sqlSessionTemplate.delete(sqlId, parameter);
 	}
 	
+	@Override
+	public int updChildren(String sqlId, Map<String, String> map) {
+		return sqlSessionTemplate.update(sqlId, map);
+	}
+	
 	public boolean flushRouter(List<BpSystems> sList){
 		
-		File file = new File("C:/Users/zyc11/Desktop/router.js");//定义一个file对象，用来初始化FileInputStream
+		File file = new File("D:/sky-plat/softfactory/sofa/src/router/router.js");//定义一个file对象，用来初始化FileInputStream
 		FileInputStream is = null;
 		BufferedReader bReader = null;
 		InputStreamReader isr = null;
@@ -198,7 +204,6 @@ public class BpSystemsServiceImpl extends BaseServiceImpl<BpSystems> implements 
 		}
 
 	}
-
 	
 }
 
