@@ -173,7 +173,11 @@ public class CoderServiceImpl implements ICoderService {
 				colnames[i - 1] = metadata.getColumnName(i);
 				tablecolnames[i - 1] = ConvertString
 						.convertSomeCharUpperReplace(tablename + "." + metadata.getColumnName(i));
-				colTypes[i - 1] = sqlType2JavaType(metadata.getColumnTypeName(i)); // 获取字段类型
+				if (colnames[i-1].equals(tablepri)) {
+					colTypes[i-1] = "String"; // 如果是主键,则类型全为字符串
+				} else {
+					colTypes[i - 1] = sqlType2JavaType(metadata.getColumnTypeName(i)); // 获取字段类型
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -217,7 +221,7 @@ public class CoderServiceImpl implements ICoderService {
 
 	// 多表模型,通过表名数据生成实体类内容
 	@Override
-	public String getMultiClassStr(String[] tablenames) {
+	public String getMultiClassStr(String[] tablenames,List<String> listss) {
 		// 用于存放多个表列名数组
 		List<String[]> listnamearr = new ArrayList<String[]>();
 		// 用于存放多个表列名(加上表名组合的)数组
@@ -226,10 +230,10 @@ public class CoderServiceImpl implements ICoderService {
 		List<String[]> listtypearr = new ArrayList<String[]>();
 		// 输出的类字符串
 		StringBuffer str = new StringBuffer("");
-		for (String tablename : tablenames) {
+		for (int i=0;i<tablenames.length;i++) {
 			try {
 				conn = sqlSessionFactory.openSession().getConnection();
-				String sql = "select * from " + tablename;
+				String sql = "select * from " + tablenames[i];
 				PreparedStatement statement = conn.prepareStatement(sql);
 				// 获取数据库的元数据
 				ResultSetMetaData metadata = statement.getMetaData();
@@ -239,10 +243,14 @@ public class CoderServiceImpl implements ICoderService {
 				tablecolnames = new String[len];
 				// 字段类型 --->已经转化为java中的类名称了
 				colTypes = new String[len];
-				for (int i = 1; i <= len; i++) {
-					tablecolnames[i - 1] = ConvertString
-							.convertSomeCharUpperReplace(tablename + "." + metadata.getColumnName(i));// 获取加上表名字段名称
-					colTypes[i - 1] = sqlType2JavaType(metadata.getColumnTypeName(i)); // 获取字段类型
+				for (int j = 1; j <= len; j++) {
+					tablecolnames[j - 1] = ConvertString
+							.convertSomeCharUpperReplace(tablenames[i] + "." + metadata.getColumnName(j));// 获取加上表名字段名称
+					if (metadata.getColumnName(j).equals(listss.get(i))) {
+						colTypes[j-1] = "String"; // 如果是主键,则类型全为字符串
+					} else {
+						colTypes[j - 1] = sqlType2JavaType(metadata.getColumnTypeName(j)); // 获取字段类型
+					}
 				}
 				listnamearr.add(colnames);
 				listtablenamearr.add(tablecolnames);

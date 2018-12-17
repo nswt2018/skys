@@ -16,8 +16,8 @@ public class VelocityGetPutMapParameter {
 		String javapath = ConvertString.replace(javaPath);
 		// 将velocity生成文件后面两个参数放入map (包名+模板名称)->value(文件路径+文件名)
 		Map<String, String> cmap = new HashMap<String, String>();
-		cmap.put("com/sky/app/coder/templates/a-vue.vm", vuepath + "/" + "/" + lModuCode + ".vue");
-		cmap.put("com/sky/app/coder/templates/a-js.vm", vuepath + "/" + "/" + lModuCode + "-column.js");
+		cmap.put("com/sky/app/coder/templates/a-vue.vm", vuepath + "/" +  lModuCode + ".vue");
+		cmap.put("com/sky/app/coder/templates/a-js.vm", vuepath + "/" +  lModuCode + "-column.js");
 		cmap.put("com/sky/app/coder/templates/a-controller.java.vm",
 				javapath + "/controller/" + cModuCode + "Controller.java");
 		cmap.put("com/sky/app/coder/templates/a-Mapper.xml.vm", javapath + "/mapper/" + cModuCode + "Mapper.mysql.xml");

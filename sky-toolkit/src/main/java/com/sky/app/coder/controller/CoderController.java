@@ -140,7 +140,7 @@ public class CoderController {
 									VelocityCoder.velocity(vcx, "com/sky/app/coder/templates/b/b-model.java.vm", javaPath + "/model/" + cmoduCode+ converTableArr[j] + ".java");
 								} else {
 									//根据传入的模块关联表、模块数据库表主键，生成实体类中的内容(属性和get/set方法)
-									classstr=CoderService.getMultiClassStr(tableArr);
+									classstr=CoderService.getMultiClassStr(tableArr,primlist);
 									model.setModelClassStr(classstr);
 									model.setConverTableName("");
 									vcx.put("models", model);
