@@ -173,11 +173,7 @@ public class CoderServiceImpl implements ICoderService {
 				colnames[i - 1] = metadata.getColumnName(i);
 				tablecolnames[i - 1] = ConvertString
 						.convertSomeCharUpperReplace(tablename + "." + metadata.getColumnName(i));
-				if (colnames[i - 1].equals(tablepri)) {
-					colTypes[i - 1] = "String"; // 如果是主键,则类型全为字符串
-				} else {
-					colTypes[i - 1] = sqlType2JavaType(metadata.getColumnTypeName(i)); // 获取字段类型
-				}
+				colTypes[i - 1] = sqlType2JavaType(metadata.getColumnTypeName(i)); // 获取字段类型
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
