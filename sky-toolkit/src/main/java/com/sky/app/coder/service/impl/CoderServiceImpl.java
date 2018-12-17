@@ -26,15 +26,18 @@ public class CoderServiceImpl implements ICoderService {
 	private SqlSessionTemplate sqlsession;
 	@javax.annotation.Resource
 	private SqlSessionFactory sqlSessionFactory;
+	// 获取数据库连接对象
+	Connection conn = null;
+	PreparedStatement statement = null;
 	// 数据库的列名称
 	private String[] colnames; // 列名数组
 	// 列名类型数组
 	private String[] colTypes;
-	// 存放加上表名的列名数组  ->对应实体类的属性名
+	// 存放加上表名的列名数组 ->对应实体类的属性名
 	private String[] tablecolnames;
 	// 用于放 加上别名的字段名称
 	private String[] aliscolnames;
-	
+
 	// 用于存放列名数组重复元素的下标
 	private static List<Integer> lists = new ArrayList<Integer>();
 
@@ -82,9 +85,9 @@ public class CoderServiceImpl implements ICoderService {
 		StringBuffer str = new StringBuffer("");
 		// 获取表类型和表名的字段名
 		try {
-			Connection conn = sqlSessionFactory.openSession().getConnection();
+			conn = sqlSessionFactory.openSession().getConnection();
 			String sql = "select * from " + tablename;
-			PreparedStatement statement = conn.prepareStatement(sql);
+			statement = conn.prepareStatement(sql);
 			// 获取数据库的元数据
 			ResultSetMetaData metadata = statement.getMetaData();
 			// 数据库的字段个数
@@ -108,6 +111,21 @@ public class CoderServiceImpl implements ICoderService {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		// 校验
 		if (null == colnames && null == colTypes)
@@ -136,7 +154,7 @@ public class CoderServiceImpl implements ICoderService {
 		StringBuffer str = new StringBuffer("");
 		// 获取表类型和表名的字段名
 		try {
-			Connection conn = sqlSessionFactory.openSession().getConnection();
+			conn = sqlSessionFactory.openSession().getConnection();
 			String sql = "select * from " + tablename;
 			PreparedStatement statement = conn.prepareStatement(sql);
 			// 获取数据库的元数据
@@ -153,7 +171,8 @@ public class CoderServiceImpl implements ICoderService {
 				// System.out.println(metadata.getColumnName(i)+":"+metadata.getColumnTypeName(i)+":"+sqlType2JavaType(metadata.getColumnTypeName(i).toLowerCase())+":"+metadata.getColumnDisplaySize(i));
 				// metadata.getColumnDisplaySize(i);
 				colnames[i - 1] = metadata.getColumnName(i);
-				tablecolnames[i - 1] = ConvertString.convertSomeCharUpperReplace(tablename+"."+metadata.getColumnName(i));
+				tablecolnames[i - 1] = ConvertString
+						.convertSomeCharUpperReplace(tablename + "." + metadata.getColumnName(i));
 				if (colnames[i - 1].equals(tablepri)) {
 					colTypes[i - 1] = "String"; // 如果是主键,则类型全为字符串
 				} else {
@@ -162,6 +181,21 @@ public class CoderServiceImpl implements ICoderService {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		// 校验
 		if (null == colnames && null == colTypes)
@@ -198,7 +232,7 @@ public class CoderServiceImpl implements ICoderService {
 		StringBuffer str = new StringBuffer("");
 		for (String tablename : tablenames) {
 			try {
-				Connection conn = sqlSessionFactory.openSession().getConnection();
+				conn = sqlSessionFactory.openSession().getConnection();
 				String sql = "select * from " + tablename;
 				PreparedStatement statement = conn.prepareStatement(sql);
 				// 获取数据库的元数据
@@ -210,7 +244,8 @@ public class CoderServiceImpl implements ICoderService {
 				// 字段类型 --->已经转化为java中的类名称了
 				colTypes = new String[len];
 				for (int i = 1; i <= len; i++) {
-					tablecolnames[i-1]=ConvertString.convertSomeCharUpperReplace(tablename+"."+metadata.getColumnName(i));//获取加上表名字段名称
+					tablecolnames[i - 1] = ConvertString
+							.convertSomeCharUpperReplace(tablename + "." + metadata.getColumnName(i));// 获取加上表名字段名称
 					colTypes[i - 1] = sqlType2JavaType(metadata.getColumnTypeName(i)); // 获取字段类型
 				}
 				listnamearr.add(colnames);
@@ -218,10 +253,25 @@ public class CoderServiceImpl implements ICoderService {
 				listtypearr.add(colTypes);
 			} catch (SQLException e) {
 				e.printStackTrace();
+			} finally {
+				if (conn != null) {
+					try {
+						conn.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+				if (statement != null) {
+					try {
+						statement.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		}
-		//合并
-		if(listtablenamearr.size()>0){
+		// 合并
+		if (listtablenamearr.size() > 0) {
 			tablecolnames = concatAll(listtablenamearr);
 		}
 		// 合并多个表列类型数组
@@ -265,7 +315,8 @@ public class CoderServiceImpl implements ICoderService {
 				aliscolnames = new String[len];
 				for (int i = 1; i <= len; i++) {
 					tablecolnames[i - 1] = tablenames[j] + "." + metadata.getColumnName(i); // 获取表名加上字段组合的字段
-					aliscolnames[i - 1] = ConvertString.convertSomeCharUpperReplace(tablenames[j] + "." + metadata.getColumnName(i));
+					aliscolnames[i - 1] = ConvertString
+							.convertSomeCharUpperReplace(tablenames[j] + "." + metadata.getColumnName(i));
 				}
 				listnamearr.add(tablecolnames);
 				listalisnamearr.add(aliscolnames);
@@ -275,10 +326,10 @@ public class CoderServiceImpl implements ICoderService {
 		}
 		// 合并多个表列名数组,并获得重复元素的下标
 		if (listnamearr.size() > 0) {
-			tablecolnames=concatAll(listnamearr);
+			tablecolnames = concatAll(listnamearr);
 		}
-		if(listalisnamearr.size()>0){
-			aliscolnames=concatAll(listalisnamearr);
+		if (listalisnamearr.size() > 0) {
+			aliscolnames = concatAll(listalisnamearr);
 		}
 		// 校验
 		if (null == tablecolnames)
@@ -286,9 +337,9 @@ public class CoderServiceImpl implements ICoderService {
 		// 拼接带有别名的查询字段
 		for (int index = 0; index < tablecolnames.length; index++) {
 			if (index < tablecolnames.length - 1) {
-				str.append("\r" + (tablecolnames[index]) +"  as  "+aliscolnames[index]+ ",");
+				str.append("\r" + (tablecolnames[index]) + "  as  " + aliscolnames[index] + ",");
 			} else {
-				str.append("\r" + (tablecolnames[index])+"  as "+aliscolnames[index]);
+				str.append("\r" + (tablecolnames[index]) + "  as " + aliscolnames[index]);
 			}
 		}
 		return str.toString();
