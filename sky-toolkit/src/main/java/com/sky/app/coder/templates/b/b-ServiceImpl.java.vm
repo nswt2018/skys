@@ -3,20 +3,21 @@
 #set($modelpackname=${models.modelPackName})
 #set($model=${models.model})
 #set($convertablename=${models.converTableName})
+#set($syscode=${models.sysCode})
 package ${serviceimplpackname};
 
 import com.sky.core.base.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 #if(${convertablename})
-import ${modelpackname}.${model}${convertablename};
-import ${servicepackname}.I${model}${convertablename}Service;
-@Service("${model}${convertablename}Service")
-public class ${model}${convertablename}ServiceImpl extends BaseServiceImpl<${model}${convertablename}> implements I${model}${convertablename}Service{
+import ${modelpackname}.${syscode}${model}${convertablename};
+import ${servicepackname}.I${syscode}${model}${convertablename}Service;
+@Service("${syscode}${model}${convertablename}Service")
+public class ${syscode}${model}${convertablename}ServiceImpl extends BaseServiceImpl<${syscode}${model}${convertablename}> implements I${syscode}${model}${convertablename}Service{
 }
 #else
-import ${modelpackname}.${model};
-import ${servicepackname}.I${model}Service;
-@Service("${model}Service")
-public class ${model}ServiceImpl extends BaseServiceImpl<${model}> implements I${model}Service{
+import ${modelpackname}.${syscode}${model};
+import ${servicepackname}.I${syscode}${model}Service;
+@Service("${syscode}${model}Service")
+public class ${syscode}${model}ServiceImpl extends BaseServiceImpl<${syscode}${model}> implements I${syscode}${model}Service{
 }
 #end

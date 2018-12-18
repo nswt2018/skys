@@ -1,12 +1,13 @@
 #set($daopackname=${models.daoPackName})
 #set($modelpackname=${models.modelPackName})
 #set($model=${models.model})
+#set($syscode=${models.sysCode})
 package ${daopackname};
 
-import ${modelpackname}.${model};
+import ${modelpackname}.${syscode}${model};
 
 
 import tk.mybatis.mapper.common.Mapper;
 
-public interface ${model}Dao extends Mapper<${model}>{
+public interface ${syscode}${model}Dao extends Mapper<${syscode}${model}>{
 } 

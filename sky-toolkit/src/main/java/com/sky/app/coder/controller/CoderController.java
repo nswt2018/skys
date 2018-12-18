@@ -75,6 +75,8 @@ public class CoderController {
 					javaPath=javaPath+"\\"+packName.replace(".", "\\");
 					//模块代码
 					String moduCode=syslist.get(i).getModCode();
+					//系统简码
+					String uppersyscode=ConvertString.convertFirstCharUpper(lastSysCode.toLowerCase());
 					//放模板所需要的全部变量
 					Model model =null;
 					// 将model里面的变量值放入VelocityContext
@@ -109,7 +111,7 @@ public class CoderController {
 							// 将字段的一些信息放入model解析,然后取得model
 							model=new VelocityGetTemplateMulitData(mulilist,tableprimlist,tableprimpklist).getModel(element,packName);
 							// 系统简码
-							model.setSysCode(lastSysCode);
+							model.setSysCode(uppersyscode);
 							//模块关联表(多表)，放入list集合中
 							model.setTableListName(Arrays.asList(converTableArr));
 							//设置mapper映射文件，查询的字段以表加字段作为别名
@@ -118,7 +120,7 @@ public class CoderController {
 							String cmoduCode=ConvertString.convertFirstCharUpper(moduCode.toLowerCase());
 							List<Object[]> list=new ArrayList<Object[]>();
 							//多表模型， 获得velocity生成文件所需要的三个参数（模板变量值，模板，路径）,放在list集合中
-							list=VelocityGetPutMapMulitParameter.getMap(cmoduCode,vuePath,javaPath,converTableArr,model);
+							list=VelocityGetPutMapMulitParameter.getMap(cmoduCode,vuePath,javaPath,converTableArr,model,uppersyscode);
 							Model[] modelArr = (Model[])list.get(0);
 							String[] templateArr = (String[])list.get(1);
 							String[] pathArr = (String[])list.get(2);
@@ -137,14 +139,14 @@ public class CoderController {
 									model.setTableName(tableArr[j]);
 									model.setModelClassStr(classstr);
 									vcx.put("models", model);
-									VelocityCoder.velocity(vcx, "com/sky/app/coder/templates/b/b-model.java.vm", javaPath + "/model/" + cmoduCode+ converTableArr[j] + ".java");
+									VelocityCoder.velocity(vcx, "com/sky/app/coder/templates/b/b-model.java.vm", javaPath + "/model/" + uppersyscode +cmoduCode+ converTableArr[j] + ".java");
 								} else {
 									//根据传入的模块关联表、模块数据库表主键，生成实体类中的内容(属性和get/set方法)
 									classstr=CoderService.getMultiClassStr(tableArr,primlist);
 									model.setModelClassStr(classstr);
 									model.setConverTableName("");
 									vcx.put("models", model);
-									VelocityCoder.velocity(vcx, "com/sky/app/coder/templates/b/b-model.java.vm", javaPath + "/model/" + cmoduCode + ".java");
+									VelocityCoder.velocity(vcx, "com/sky/app/coder/templates/b/b-model.java.vm", javaPath + "/model/" + uppersyscode +cmoduCode + ".java");
 								}
 							}
 						}else if(modName.equals("单表模型")){
@@ -154,9 +156,9 @@ public class CoderController {
 							//根据传入的模块关联表、模块数据库表主键，生成实体类中的内容(属性和get/set方法)
 							String str=CoderService.getClassStr(el.getRelTable(),el.getColCode());
 							// 将数据库取出来的值放入model解析,然后取得model
-							model = new VelocityGetTemplateData().getModel(list, el,str,packName,lastSysCode);
+							model = new VelocityGetTemplateData().getModel(list, el,str,packName,uppersyscode);
 							// 获得velocity生成文件所需要的两个参数（模板，路径）,放在map中，key(包路径+模板名称)->value(文件路径+文件名)
-							Map<String, String> cmap=VelocityGetPutMapParameter.getMap(moduCode,vuePath,javaPath);
+							Map<String, String> cmap=VelocityGetPutMapParameter.getMap(moduCode,vuePath,javaPath,uppersyscode);
 							vcx.put("models", model);
 							for (String key : cmap.keySet()) {
 								// 根据传入的数据、模板、路径生成相应的文件

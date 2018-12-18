@@ -1,10 +1,11 @@
 #set($servicepackname=${models.servicePackName})
 #set($modelpackname=${models.modelPackName})
 #set($model=${models.model})
+#set($syscode=${models.sysCode})
 package ${servicepackname};
 
 import com.sky.core.base.service.IBaseService;
-import ${modelpackname}.${model};
+import ${modelpackname}.${syscode}${model};
 
-public interface I${model}Service extends IBaseService<${model}> {
+public interface I${syscode}${model}Service extends IBaseService<${syscode}${model}> {
 }   

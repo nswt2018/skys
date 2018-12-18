@@ -6,8 +6,6 @@ import java.beans.PropertyDescriptor;
  
 /**
  * 实现两个实体类属性之间的复制
- * @author shamee-loop
- * 
  */
 public class CopyUtils {
  

@@ -2,18 +2,19 @@
 #set($modelpackname=${models.modelPackName})
 #set($model=${models.model})
 #set($convertablename=${models.converTableName})
+#set($syscode=${models.sysCode})
 package ${servicepackname};
 
 import com.sky.core.base.service.IBaseService;
 #if(${convertablename})
-import ${modelpackname}.${model}${convertablename};
+import ${modelpackname}.${syscode}${model}${convertablename};
 
-public interface I${model}${convertablename}Service extends IBaseService<${model}${convertablename}> {
+public interface I${syscode}${model}${convertablename}Service extends IBaseService<${syscode}${model}${convertablename}> {
 } 
 #else
-import ${modelpackname}.${model};
+import ${modelpackname}.${syscode}${model};
 
-public interface I${model}Service extends IBaseService<${model}> {
+public interface I${syscode}${model}Service extends IBaseService<${syscode}${model}> {
 } 
 #end
 
