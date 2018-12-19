@@ -84,12 +84,10 @@ public class CoderController {
 					//根据模块代码获得该模块的模型，判断单表还是多表
 					Element element = CoderService.getModuleOne("com.sky.app.core.CoderMapper.findBpModuleForOne",moduCode);
 					if(element!=null){
-						//模块模型
-						String modName=element.getModName();
 						//先判断该模块的模型,进行不同的处理
-						if(modName.equals("多表模型")){
-							// 根据模块代码从页面元素表中取出该模块全部的字段信息，并根据字段关联字段定义表(多个)，获得字段在数据库的类型
-							List<Element> mulilist = CoderService.getMultiTagInfo("com.sky.app.core.CoderMapper.findBpElementForList",moduCode);
+						if(element.getModName().equals("多表模型")){
+							//用于存放velocity生成文件所需要的参数数组
+							List<Object[]> list=new ArrayList<Object[]>();
 							//存放表的主键字段
 							List<String> primlist=new ArrayList<String>();
 							//存放表的表名加上主键组合的字段
@@ -103,11 +101,16 @@ public class CoderController {
 							for(int j=0;j<tableArr.length;j++){
 								//根据模块关联表表名，从字段定义表中查询每个表的主键，放入parmlist集合中
 								Element muliel = CoderService.getMultiFieldOne("com.sky.app.core.CoderMapper.findBpFieldForOne", tableArr[j]);
+								//将主键放入集合
 								primlist.add(muliel.getColCode());
+								//将主键生成策略放入集合
 								tableprimpklist.add(muliel.getPkGen());
+								//将表名和主键组合在一起转换后放入集合
 								tableprimlist.add(ConvertString.convertSomeCharUpperReplace(tableArr[j]+"."+muliel.getColCode()));
 								converTableArr[j]=ConvertString.convertStringByCombin(tableArr[j]);
 							}
+							// 根据模块代码从页面元素表中取出该模块全部的字段信息，并根据字段关联字段定义表(多个)，获得字段在数据库的类型
+							List<Element> mulilist = CoderService.getMultiTagInfo("com.sky.app.core.CoderMapper.findBpElementForList",moduCode);
 							// 将字段的一些信息放入model解析,然后取得model
 							model=new VelocityGetTemplateMulitData(mulilist,tableprimlist,tableprimpklist).getModel(element,packName);
 							// 系统简码
@@ -118,7 +121,6 @@ public class CoderController {
 							model.setMapperSelectField(CoderService.getMultiMapperSelectField(tableArr));
 							//对模块代码进行处理
 							String cmoduCode=ConvertString.convertFirstCharUpper(moduCode.toLowerCase());
-							List<Object[]> list=new ArrayList<Object[]>();
 							//多表模型， 获得velocity生成文件所需要的三个参数（模板变量值，模板，路径）,放在list集合中
 							list=VelocityGetPutMapMulitParameter.getMap(cmoduCode,vuePath,javaPath,converTableArr,model,uppersyscode);
 							Model[] modelArr = (Model[])list.get(0);
@@ -149,7 +151,7 @@ public class CoderController {
 									VelocityCoder.velocity(vcx, "com/sky/app/coder/templates/b/b-model.java.vm", javaPath + "/model/" + uppersyscode +cmoduCode + ".java");
 								}
 							}
-						}else if(modName.equals("单表模型")){
+						}else if(element.getModName().equals("单表模型")){
 							// 根据模块代码从页面元素表中取出该模块全部的字段信息，并关联字段定义表，获得字段在数据库的类型
 							List<Element> list = CoderService.getTagInfo("com.sky.app.core.CoderMapper.findBpForList",moduCode);
 							Element el = CoderService.getElement("com.sky.app.core.CoderMapper.findBpForOne", moduCode);

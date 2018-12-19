@@ -10,7 +10,7 @@ public interface ICoderService{
 	Systems getSystemsOne(String sqlId,String upperSys);
 	//判断模型
 	Element getModuleOne(String sqlId,String moduCode);
-	//获得实体类内容
+	//单表模型,获得实体类内容
 	String getClassStr(String tablename, String tablepri);
 	//单表模型，取得页面元素字段相关信息
 	List<Element> getTagInfo(String sqlId,String moduCode);
