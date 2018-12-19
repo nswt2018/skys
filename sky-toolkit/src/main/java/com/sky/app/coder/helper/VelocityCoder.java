@@ -1,7 +1,11 @@
 package com.sky.app.coder.helper;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
-
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -18,7 +22,7 @@ import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
  */
 public class VelocityCoder {
 	// velocity初始化操作公共方法
-	public static void velocity(VelocityContext vcx, String templatename, String path) {
+	public static void velocity(VelocityContext vcx, String templatename, String path) throws IOException {
 		// 初始化模板引擎
 		VelocityEngine ve = new VelocityEngine();
 		ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
@@ -29,16 +33,22 @@ public class VelocityCoder {
 		ve.init();
 		// 获取模板文件
 		Template t = ve.getTemplate(templatename);
-		// 输出
-		StringWriter sw = new StringWriter();
-		t.merge(vcx, sw);
-		if (path.equals("") || path == null) {
-			System.out.println(sw.toString());
-		} else {
-			// 创建文件并写入内容
-			VelocityFileCreateByTemplate vtfc = new VelocityFileCreateByTemplate();
-			vtfc.createFile(path, sw);
+		// 创建文件
+		File saveFile = new File(path);
+		// 获得它的父类文件，如果不存在，就创建
+		if (!saveFile.getParentFile().exists()) {
+			saveFile.getParentFile().mkdirs();
 		}
+		// 创建文件输出流
+		FileOutputStream outStream = new FileOutputStream(saveFile);
+		// 因为模板整合的时候，需要提供一个Writer，所以创建一个Writer
+		OutputStreamWriter writer = new OutputStreamWriter(outStream);
+		// 创建一个缓冲流
+		BufferedWriter bufferWriter = new BufferedWriter(writer);
+		t.merge(vcx, bufferWriter);
+		bufferWriter.flush();// 强制刷新
+		outStream.close();
+		bufferWriter.close();
 	}
 
 }

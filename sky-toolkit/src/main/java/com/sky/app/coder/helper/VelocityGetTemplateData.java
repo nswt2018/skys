@@ -34,8 +34,6 @@ public class VelocityGetTemplateData {
 	List<FormItem> updformitems = new ArrayList<FormItem>();
 	List<FormItem> viewformitems = new ArrayList<FormItem>();
 	List<TableColumn> tablecolumns = new ArrayList<TableColumn>();
-	DefaulteVueComponentPropertyValue dv = new DefaulteVueComponentPropertyValue();
-	ParseJsonString pjs = new ParseJsonString();
 
 	public Model getModel(List<Element> list, Element el, String str, String packname, String lastSysCode) {
 		Model model = new Model();
@@ -74,6 +72,7 @@ public class VelocityGetTemplateData {
 		model.setModelPackName(packname + ".model");
 		
 		// 设置默认的组件属性值
+		DefaulteVueComponentPropertyValue dv = new DefaulteVueComponentPropertyValue();
 		model.setButton(dv.getButton());
 		model.setPage(dv.getPage());
 		model.setTable(dv.getTable());
@@ -93,6 +92,8 @@ public class VelocityGetTemplateData {
 	}
 	// 解析页面元素标签信息,并将标签中的属性值赋值
 	public void setComponentPropertyValue(List<Element> list) {
+		//获得解析json字符串的实例化
+		ParseJsonString pjs = new ParseJsonString();
 		// 字段名称
 		String cname = null;
 		// 字段

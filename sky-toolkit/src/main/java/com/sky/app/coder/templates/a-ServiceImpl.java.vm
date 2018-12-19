@@ -2,14 +2,15 @@
 #set($servicepackname=${models.servicePackName})
 #set($modelpackname=${models.modelPackName})
 #set($model=${models.model})
+#set($syscode=${models.sysCode})
 package ${serviceimplpackname};
 
 import com.sky.core.base.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
-import ${modelpackname}.${model};
-import ${servicepackname}.I${model}Service;
+import ${modelpackname}.${syscode}${model};
+import ${servicepackname}.I${syscode}${model}Service;
 
-@Service("${model}Service")
-public class ${model}ServiceImpl extends BaseServiceImpl<${model}> implements I${model}Service{
+@Service("${syscode}${model}Service")
+public class ${syscode}${model}ServiceImpl extends BaseServiceImpl<${syscode}${model}> implements I${syscode}${model}Service{
 }
 

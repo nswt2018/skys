@@ -2,6 +2,7 @@
 #set($modelclassstr=${models.modelClassStr})
 #set($tablename=${models.tableName})
 #set($convertablename=${models.converTableName})
+#set($syscode=${models.sysCode})
 package ${modelpackname};
 
 import java.math.BigDecimal;
@@ -13,13 +14,13 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import org.apache.ibatis.type.Alias;
 
-@Alias("${model}${convertablename}")
+@Alias("${syscode}${model}${convertablename}")
 @Table(name="${tablename}")
 #end
 #if(${convertablename})
-public class ${model}${convertablename}{
+public class ${syscode}${model}${convertablename}{
 #else
-public class ${model}{
+public class ${syscode}${model}{
 #end
 $modelclassstr
 }

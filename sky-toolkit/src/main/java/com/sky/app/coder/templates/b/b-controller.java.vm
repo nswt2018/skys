@@ -27,12 +27,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sky.core.base.controller.BaseController;
-import ${modelpackname}.${model};
-import ${servicepackname}.I${model}Service;
+import ${modelpackname}.${syscode}${model};
+import ${servicepackname}.I${syscode}${model}Service;
 #if(${tablelistnames})
 #foreach(${tablelistname} in ${tablelistnames})
-import ${modelpackname}.${model}${tablelistname};
-import ${servicepackname}.I${model}${tablelistname}Service;
+import ${modelpackname}.${syscode}${model}${tablelistname};
+import ${servicepackname}.I${syscode}${model}${tablelistname}Service;
 #end
 #end
 import com.sky.core.exception.BusinessException;
@@ -42,28 +42,28 @@ import com.sky.core.page.Page;
 import reactor.core.publisher.Mono;
 
 @RestController
-public class ${model}Controller extends BaseController{
-	@Resource(name = "${model}Service")
-	private I${model}Service ${model}Service;
+public class ${syscode}${model}Controller extends BaseController{
+	@Resource(name = "${syscode}${model}Service")
+	private I${syscode}${model}Service ${syscode}${model}Service;
 #if(${tablelistnames})
 #foreach(${tablelistname} in ${tablelistnames})
-	@Resource(name = "${model}${tablelistname}Service")
-	private I${model}${tablelistname}Service ${model}${tablelistname}Service;
+	@Resource(name = "${syscode}${model}${tablelistname}Service")
+	private I${syscode}${model}${tablelistname}Service ${syscode}${model}${tablelistname}Service;
 #end
 #end
-	@RequestMapping(value = "/${syscode}/${tid}L.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/${syscode}${tid}L.do", method = RequestMethod.POST)
 	@ResponseBody
-	public Mono<Page<${model}>> get${model}PageList(@RequestBody Page<${model}> page, HttpServletRequest request,
+	public Mono<Page<${syscode}${model}>> get${syscode}${model}PageList(@RequestBody Page<${syscode}${model}> page, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		page.setRequest(request);
-		${model}Service.findForPageList("com.sky.app.mapper.${model}Mapper.findForPageList", page);
+		${syscode}${model}Service.findForPageList("com.sky.app.mapper.${syscode}${model}Mapper.findForPageList", page);
 		page.setRequest(null);
 		return Mono.justOrEmpty(page);
 	}
 
-	@PutMapping(value = "/${syscode}/${tid}I.do")
+	@PutMapping(value = "/${syscode}${tid}I.do")
 	@ResponseBody
-	public Mono<Message> insert${model}(@RequestBody ${model} ${model}, HttpServletRequest request, HttpServletResponse response)
+	public Mono<Message> insert${syscode}${model}(@RequestBody ${syscode}${model} ${model}, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		try {
 			if (${model}!= null) {
@@ -72,9 +72,9 @@ public class ${model}Controller extends BaseController{
 #end
 #if(${tablelistnames})
 #foreach(${tablelistname} in ${tablelistnames})
-				${model}${tablelistname} ${model}${tablelistname}=new ${model}${tablelistname}();
+				${syscode}${model}${tablelistname} ${model}${tablelistname}=new ${syscode}${model}${tablelistname}();
 				Copy(${model},${model}${tablelistname});
-			    ${model}${tablelistname}Service.save(${model}${tablelistname});
+			    ${syscode}${model}${tablelistname}Service.save(${model}${tablelistname});
 #end
 #end
 				return Mono.justOrEmpty(new Message("000001"));
@@ -86,9 +86,9 @@ public class ${model}Controller extends BaseController{
 			throw new BusinessException("-000000", e.getMessage());
 		}
 	}
-	@PutMapping(value = "/${syscode}/${tid}U.do")
+	@PutMapping(value = "/${syscode}${tid}U.do")
 	@ResponseBody
-	public Mono<Message> update${model}(@RequestBody ${model} ${model}, HttpServletRequest request, HttpServletResponse response)
+	public Mono<Message> update${syscode}${model}(@RequestBody ${syscode}${model} ${model}, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		try {
 			if (${model} != null) {
@@ -97,9 +97,9 @@ public class ${model}Controller extends BaseController{
 #end
 #if(${tablelistnames})
 #foreach(${tablelistname} in ${tablelistnames})
-				${model}${tablelistname} ${model}${tablelistname}=new ${model}${tablelistname}();
+				${syscode}${model}${tablelistname} ${model}${tablelistname}=new ${syscode}${model}${tablelistname}();
 				Copy(${model},${model}${tablelistname});
-			    ${model}${tablelistname}Service.update(${model}${tablelistname});
+			    ${syscode}${model}${tablelistname}Service.update(${model}${tablelistname});
 #end
 #end
 				return Mono.justOrEmpty(new Message("000003"));
@@ -111,9 +111,9 @@ public class ${model}Controller extends BaseController{
 			throw new BusinessException("-000000", e.getMessage());
 		}
 	}
-	@DeleteMapping("/${syscode}/${tid}D.do")
+	@DeleteMapping("/${syscode}${tid}D.do")
 	@ResponseBody
-	public Mono<Message> delete${model}(@RequestParam String[] delKeys, HttpServletRequest request,
+	public Mono<Message> delete${syscode}${model}(@RequestParam String[] delKeys, HttpServletRequest request,
 			HttpServletResponse response) {
 		try {
 			if (delKeys == null || delKeys.length == 0)
@@ -121,7 +121,7 @@ public class ${model}Controller extends BaseController{
 			for (String delKey : delKeys) {
 #if(${tablelistnames})
 #foreach(${tablelistname} in ${tablelistnames})
-			${model}${tablelistname}Service.delete(delKey);
+			${syscode}${model}${tablelistname}Service.delete(delKey);
 #end
 #end
 			}

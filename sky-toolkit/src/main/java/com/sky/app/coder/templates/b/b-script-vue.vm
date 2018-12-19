@@ -8,10 +8,10 @@ export default {
     name: '${moducode}-info',
     data () {
         return {
-        	listurl: '/${syscode}/${tid}L.do', 
-        	saveurl: '/${syscode}/${tid}I.do',
-        	deleteurl: '/${syscode}/${tid}D.do',
-        	updateurl: '/${syscode}/${tid}U.do',
+        	listurl: '/${syscode}${tid}L.do', 
+        	saveurl: '/${syscode}${tid}I.do',
+        	deleteurl: '/${syscode}${tid}D.do',
+        	updateurl: '/${syscode}${tid}U.do',
 #if($inputs)
 #foreach($input in $inputs) 
 #if(${input.defaultValue})
@@ -36,6 +36,8 @@ export default {
 #end
 #if(${formitem.inputNumber}&&${formitem.inputNumber.defaultValue})
 				"${formitem.inputNumber.value}":"${formitem.inputNumber.defaultValue}",
+#elseif(${formitem.inputNumber})
+				${formitem.inputNumber.value}:1,
 #end
 #if(${formitem.datepicker}&&${formitem.datepicker.defaultValue})
 				"${formitem.datepicker.value}":"${formitem.datepicker.defaultValue}",

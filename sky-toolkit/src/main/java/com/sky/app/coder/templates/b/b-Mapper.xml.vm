@@ -3,11 +3,12 @@
 #set($inputs=${models.inputs})
 #set($tableinfo=${models.tableInfo})
 #set($mapperselectfield=${models.mapperSelectField})
+#set($syscode=${models.sysCode})
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.sky.app.mapper.${model}Mapper">
+<mapper namespace="com.sky.app.mapper.${syscode}${model}Mapper">
  
- 	 <select id="findForPageList" parameterType="Page" resultType="${model}">
+ 	 <select id="findForPageList" parameterType="Page" resultType="${syscode}${model}">
 	       select 
 ${mapperselectfield} 
 	       from 

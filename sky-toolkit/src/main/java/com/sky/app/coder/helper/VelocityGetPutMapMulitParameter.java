@@ -17,7 +17,7 @@ public class VelocityGetPutMapMulitParameter {
 	 * @throws Exception
 	 */
 	public static List<Object[]> getMap(String cModuCode, String vuePath, String javaPath, String[] converTableArr,
-			Model model) throws Exception {
+			Model model,String uppersyscode) throws Exception {
 		// 将模块代码全部小写
 		String lModuCode =cModuCode.toLowerCase();
 		// 替换字符串中‘\’为‘/’
@@ -38,13 +38,13 @@ public class VelocityGetPutMapMulitParameter {
 		templateArr[4] = "com/sky/app/coder/templates/b/b-IService.java.vm";
 		templateArr[5] = "com/sky/app/coder/templates/b/b-ServiceImpl.java.vm";
 		templateArr[6] = "com/sky/app/coder/templates/b/b-dao.java.vm";
-		pathArr[0] = vuepath + "/" + "/" + lModuCode + ".vue";
-		pathArr[1] = vuepath + "/" + "/" + lModuCode + "-column.js";
-		pathArr[2] = javapath + "/controller/" + cModuCode + "Controller.java";
-		pathArr[3] = javapath + "/mapper/" + cModuCode + "Mapper.mysql.xml";
-		pathArr[4] = javapath + "/service/I" + cModuCode + "Service.java";
-		pathArr[5] = javapath + "/service/impl/" + cModuCode + "ServiceImpl.java";
-		pathArr[6] = javapath + "/dao/" + cModuCode + "Dao.java";
+		pathArr[0] = vuepath + "/" + lModuCode + ".vue";
+		pathArr[1] = vuepath + "/" + lModuCode + "-column.js";
+		pathArr[2] = javapath + "/controller/" + uppersyscode +cModuCode + "Controller.java";
+		pathArr[3] = javapath + "/mapper/" + uppersyscode +cModuCode + "Mapper.mysql.xml";
+		pathArr[4] = javapath + "/service/I" + uppersyscode +cModuCode + "Service.java";
+		pathArr[5] = javapath + "/service/impl/" + uppersyscode +cModuCode + "ServiceImpl.java";
+		pathArr[6] = javapath + "/dao/" + uppersyscode +cModuCode + "Dao.java";
 		for (int j = 0; j < fileNum; j++) {
 			modelArr[j] = model;
 		}
@@ -54,15 +54,15 @@ public class VelocityGetPutMapMulitParameter {
 			cmodel.setConverTableName(converTableArr[i]);
 			// service接口
 			templateArr[7 + i*3] = "com/sky/app/coder/templates/b/b-IService.java.vm";
-			pathArr[7 + i*3] = javapath + "/service/I" + cModuCode + converTableArr[i] + "Service.java";
+			pathArr[7 + i*3] = javapath + "/service/I" + uppersyscode +cModuCode + converTableArr[i] + "Service.java";
 			modelArr[7 + i*3] = cmodel;
 			// service实现类
 			templateArr[8 + i*3] = "com/sky/app/coder/templates/b/b-ServiceImpl.java.vm";
-			pathArr[8 + i*3] = javapath + "/service/impl/" + cModuCode + converTableArr[i] + "ServiceImpl.java";
+			pathArr[8 + i*3] = javapath + "/service/impl/" + uppersyscode +cModuCode + converTableArr[i] + "ServiceImpl.java";
 			modelArr[8 + i*3] = cmodel;
 			// dao接口
 			templateArr[9 + i*3] = "com/sky/app/coder/templates/b/b-dao.java.vm";
-			pathArr[9 + i*3] = javapath + "/dao/" + cModuCode + converTableArr[i] + "Dao.java";
+			pathArr[9 + i*3] = javapath + "/dao/" + uppersyscode +cModuCode + converTableArr[i] + "Dao.java";
 			modelArr[9 + i*3] = cmodel;
 		}
 		List<Object[]> list = new ArrayList<Object[]>();

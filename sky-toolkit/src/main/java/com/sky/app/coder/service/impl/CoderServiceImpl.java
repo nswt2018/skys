@@ -38,9 +38,6 @@ public class CoderServiceImpl implements ICoderService {
 	// 用于放 加上别名的字段名称
 	private String[] aliscolnames;
 
-	// 用于存放列名数组重复元素的下标
-	private static List<Integer> lists = new ArrayList<Integer>();
-
 	@Override
 	public List<Systems> getSystems(String sqlId, String sysKey) {
 		return sqlsession.selectList(sqlId, sysKey);
@@ -173,7 +170,11 @@ public class CoderServiceImpl implements ICoderService {
 				colnames[i - 1] = metadata.getColumnName(i);
 				tablecolnames[i - 1] = ConvertString
 						.convertSomeCharUpperReplace(tablename + "." + metadata.getColumnName(i));
-				colTypes[i - 1] = sqlType2JavaType(metadata.getColumnTypeName(i)); // 获取字段类型
+				if (colnames[i-1].equals(tablepri)) {
+					colTypes[i-1] = "String"; // 如果是主键,则类型全为字符串
+				} else {
+					colTypes[i - 1] = sqlType2JavaType(metadata.getColumnTypeName(i)); // 获取字段类型
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -217,7 +218,7 @@ public class CoderServiceImpl implements ICoderService {
 
 	// 多表模型,通过表名数据生成实体类内容
 	@Override
-	public String getMultiClassStr(String[] tablenames) {
+	public String getMultiClassStr(String[] tablenames,List<String> listss) {
 		// 用于存放多个表列名数组
 		List<String[]> listnamearr = new ArrayList<String[]>();
 		// 用于存放多个表列名(加上表名组合的)数组
@@ -226,10 +227,10 @@ public class CoderServiceImpl implements ICoderService {
 		List<String[]> listtypearr = new ArrayList<String[]>();
 		// 输出的类字符串
 		StringBuffer str = new StringBuffer("");
-		for (String tablename : tablenames) {
+		for (int i=0;i<tablenames.length;i++) {
 			try {
 				conn = sqlSessionFactory.openSession().getConnection();
-				String sql = "select * from " + tablename;
+				String sql = "select * from " + tablenames[i];
 				PreparedStatement statement = conn.prepareStatement(sql);
 				// 获取数据库的元数据
 				ResultSetMetaData metadata = statement.getMetaData();
@@ -239,10 +240,14 @@ public class CoderServiceImpl implements ICoderService {
 				tablecolnames = new String[len];
 				// 字段类型 --->已经转化为java中的类名称了
 				colTypes = new String[len];
-				for (int i = 1; i <= len; i++) {
-					tablecolnames[i - 1] = ConvertString
-							.convertSomeCharUpperReplace(tablename + "." + metadata.getColumnName(i));// 获取加上表名字段名称
-					colTypes[i - 1] = sqlType2JavaType(metadata.getColumnTypeName(i)); // 获取字段类型
+				for (int j = 1; j <= len; j++) {
+					tablecolnames[j - 1] = ConvertString
+							.convertSomeCharUpperReplace(tablenames[i] + "." + metadata.getColumnName(j));// 获取加上表名字段名称
+					if (metadata.getColumnName(j).equals(listss.get(i))) {
+						colTypes[j-1] = "String"; // 如果是主键,则类型全为字符串
+					} else {
+						colTypes[j - 1] = sqlType2JavaType(metadata.getColumnTypeName(j)); // 获取字段类型
+					}
 				}
 				listnamearr.add(colnames);
 				listtablenamearr.add(tablecolnames);
@@ -468,61 +473,6 @@ public class CoderServiceImpl implements ICoderService {
 			return result;
 		}
 
-	}
-
-	/*
-	 * 传入可能有重复的数组，返回无重复的数组，并将重复的元素下标放入list集合中
-	 */
-	// 需要传入一个Object数组，然后返回去重后的数组
-	public static String[] ifRepeat(String[] arr) {
-		// 用来记录去除重复之后的数组长度和给临时数组作为下标索引
-		int t = 0;
-		// 临时数组
-		String[] tempArr = new String[arr.length];
-		// 遍历原数组
-		for (int i = 0; i < arr.length; i++) {
-			// 声明一个标记，并每次重置
-			boolean isTrue = true;
-			// 内层循环将原数组的元素逐个对比
-			for (int j = i + 1; j < arr.length; j++) {
-				// 如果发现有重复元素，改变标记状态并结束当次内层循环
-				if (arr[i].endsWith(arr[j])) {
-					isTrue = false;
-					// 将重复的元素下标赋给list集合
-					lists.add(i);
-					break;
-				}
-			}
-			// 判断标记是否被改变，如果没被改变就是没有重复元素
-			if (isTrue) {
-				// 没有元素就将原数组的元素赋给临时数组
-				tempArr[t] = arr[i];
-				// 走到这里证明当前元素没有重复，那么记录自增
-				t++;
-			}
-		}
-		// 声明需要返回的数组，这个才是去重后的数组
-		String[] newArr = new String[t];
-		// 用arraycopy方法将刚才去重的数组拷贝到新数组并返回
-		System.arraycopy(tempArr, 0, newArr, 0, t);
-		return newArr;
-	}
-
-	/*
-	 * 将合并后的列类型数组，按指定的下标删除
-	 */
-	public static String[] replaceArrayByIndex(String[] str, List<Integer> lists) {
-		List<String> inpal = Arrays.asList(str);
-		List<String> outPa = new ArrayList<String>();
-		for (int i = 0; i < inpal.size(); i++) {
-			if (lists.contains(i)) {
-
-			} else {
-				outPa.add(inpal.get(i));
-			}
-
-		}
-		return outPa.toArray(new String[outPa.size()]);
 	}
 
 }

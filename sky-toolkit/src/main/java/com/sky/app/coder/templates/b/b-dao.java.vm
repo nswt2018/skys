@@ -2,19 +2,20 @@
 #set($modelpackname=${models.modelPackName})
 #set($model=${models.model})
 #set($convertablename=${models.converTableName})
+#set($syscode=${models.sysCode})
 package ${daopackname};
 
 #if(${convertablename})
-import ${modelpackname}.${model}${convertablename};
+import ${modelpackname}.${syscode}${model}${convertablename};
 #else
-import ${modelpackname}.${model};
+import ${modelpackname}.${syscode}${model};
 #end
 import tk.mybatis.mapper.common.Mapper;
 #if(${convertablename})
-public interface ${model}${convertablename}Dao extends Mapper<${model}${convertablename}>{
+public interface ${syscode}${model}${convertablename}Dao extends Mapper<${syscode}${model}${convertablename}>{
 }
 #else
-public interface ${model}Dao extends Mapper<${model}>{
+public interface ${syscode}${model}Dao extends Mapper<${syscode}${model}>{
 }
 #end
  

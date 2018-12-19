@@ -1,6 +1,7 @@
 #set($modelpackname=${models.modelPackName})
 #set($modelclassstr=${models.modelClassStr})
 #set($tablename=${models.tableName})
+#set($syscode=${models.sysCode})
 package ${modelpackname};
 
 import java.math.BigDecimal;
@@ -10,9 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import org.apache.ibatis.type.Alias;
 
-@Alias("${model}")
+@Alias("${syscode}${model}")
 @Table(name="${tablename}")
-public class ${model} {
+public class ${syscode}${model} {
 $modelclassstr
 }
 
