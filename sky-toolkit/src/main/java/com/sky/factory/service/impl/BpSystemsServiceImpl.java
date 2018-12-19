@@ -137,11 +137,11 @@ public class BpSystemsServiceImpl extends BaseServiceImpl<BpSystems> implements 
 																+ bpSystems3.getSysCode().toLowerCase() + "/" + bpSystems5.getSysCode().toLowerCase() +"/" + bpSystems5.getModCode() + ".vue') },\n");
 														}
 													}
+													
+													menu.append("\t\t\t\t\t\t]\n");
+													menu.append("\t\t\t\t\t},\n");
+													break;
 												}
-												
-												menu.append("\t\t\t\t\t\t]\n");
-												menu.append("\t\t\t\t\t},\n");
-												break;
 											}
 										}
 									}

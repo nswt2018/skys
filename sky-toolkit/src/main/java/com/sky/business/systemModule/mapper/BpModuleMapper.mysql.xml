@@ -83,5 +83,4 @@
 	<delete id="deleteByNodCode" parameterType="hashmap" statementType="STATEMENT">
 		delete from ${tabName} where NOD_CODE like '${code}%'
 	</delete>
-	
 </mapper>

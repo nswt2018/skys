@@ -1,6 +1,8 @@
 package com.sky.business.modelDefinition.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sky.business.modelDefinition.model.BpModel;
 import com.sky.business.modelDefinition.service.IBpModelService;
+import com.sky.business.systemModule.model.BpModule;
 import com.sky.core.base.controller.BaseController;
 import com.sky.core.exception.BusinessException;
 import com.sky.core.message.Message;
@@ -37,6 +40,7 @@ public class BpModelController extends BaseController {
 	@Autowired
 	public BpModelController(final IBpModelService bpModelService) {
 		this.bpModelService = bpModelService;
+		
 	}
 	
 	@RequestMapping(value="/TK0001L.do")
@@ -101,5 +105,41 @@ public class BpModelController extends BaseController {
 	public Mono<List<BpModel>> getModelList1(HttpServletRequest request, HttpServletResponse response) throws Exception {	
 		List<BpModel> list = bpModelService.findForList("com.sky.business.modelDefinition.dao.BpModelDao.findAllModel", "");
 		return Mono.justOrEmpty(list);
+	}
+	
+	
+	@RequestMapping(value="/TK0001L1.do")
+	@ResponseBody
+	public Mono<Map<String, Object>> getModuDataList(@RequestParam String[] modCode, @RequestParam Integer currentPage, @RequestParam Integer pageSize,
+			@RequestParam String sModelCode, @RequestParam String sModuCode, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	
+		if(modCode.length == 0){
+			modCode = new String[]{"-1"}; //如果传入的modCode数组为空,则赋值,保证查询不到结果
+		}
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("arr", modCode);
+		map.put("sModelCode", sModelCode);
+		map.put("sModuCode", sModuCode);
+        
+		//查询总笔数
+		int totalCount = bpModelService.countModu("com.sky.business.modelDefinition.dao.BpModelDao.countModu", map);
+		
+		//计算总页数
+		int totalPage = (totalCount + pageSize - 1) / pageSize;
+		
+		
+		//查询分页记录
+		map.put("limit", (currentPage-1)*10);
+		map.put("page", pageSize);
+		List<BpModule> mlist = bpModelService.findModuForPageList("com.sky.business.modelDefinition.dao.BpModelDao.findModu", map);
+		
+		
+		Map<String, Object> rMap = new HashMap<>();
+		rMap.put("totalCount", totalCount);
+		rMap.put("totalPage", totalPage);
+		rMap.put("rows", mlist);
+		
+		return Mono.justOrEmpty(rMap);
 	}
 }
