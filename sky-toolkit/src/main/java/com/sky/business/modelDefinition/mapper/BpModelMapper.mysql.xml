@@ -29,46 +29,4 @@
 		select * from bp_model where MOD_CODE = #{modCode}
 	</select>
 	
-	<!-- 分页 -->
-	<select id="findModu" parameterType="hashmap" resultType="BpModule">
-		SELECT  
-		*
-		FROM 
-		bp_module
-		WHERE 1=1
-	 	<if test="arr != null and arr.length > 0">
-	        AND MODU_MODEL IN
-	        <foreach item="item" index="index" collection="arr" open="("  close=")" separator=",">
-	        	#{item}   
-	        </foreach>
-	    </if>
-	    <if test="sModelCode != null and sModelCode != ''">
-	       AND MODU_CODE LIKE CONCAT('%',#{sModelCode},'%')
-	    </if>
-	    <if test="sModuCode != null and sModuCode != ''">
-	        AND MODU_MODEL LIKE CONCAT('%',#{sModuCode},'%')
-	    </if>
-	    LIMIT #{limit},#{page}
-	</select>
-	
-	<!-- count -->
-	<select id="countModu" parameterType="hashmap" resultType="Integer">
-		SELECT  
-		COUNT(*)
-		FROM 
-		bp_module
-		WHERE 1=1
-	 	<if test="arr != null and arr.length > 0">
-	        AND MODU_MODEL IN
-	        <foreach item="item" index="index" collection="arr" open="("  close=")" separator=",">
-	        	#{item}   
-	        </foreach>
-	    </if>
-	    <if test="sModelCode != null and sModelCode != ''">
-	       AND MODU_CODE LIKE CONCAT('%',#{sModelCode},'%')
-	    </if>
-	    <if test="sModuCode != null and sModuCode != ''">
-	        AND MODU_MODEL LIKE CONCAT('%',#{sModuCode},'%')
-	    </if>
-	</select>
 </mapper>

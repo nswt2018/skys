@@ -9,10 +9,13 @@
 		*
 		FROM 
 		bp_element
-		WHERE 1=1 AND UNIT_CODE = #{variables.unitCode}
-			<if test="variables.eleCode != null and variables.eleCode != ''">
-				AND ELE_CODE LIKE CONCAT('%',#{variables.eleCode},'%')
-			</if>
+		WHERE 1=1
+			<if test="variables.codeList != null and variables.codeList != ''">
+		        AND UNIT_CODE IN
+		        <foreach item="item" index="index" collection="variables.codeList" open="("  close=")" separator=",">
+		        	${item}
+		        </foreach>
+		    </if>
 			<if test="variables.eleCName != null and variables.eleCName != ''">
 				AND ELE_CNAME LIKE CONCAT('%',#{variables.eleCName},'%')
 			</if>	
@@ -20,7 +23,7 @@
 				AND ELE_ENAME LIKE CONCAT('%',#{variables.eleEName},'%')
 			</if>	
 			<if test="orderBy != null and orderBy != ''">
-				 order by ${orderBy}
+				order by ${orderBy}
 			</if>	
 	</select>
 	

@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.apache.ibatis.type.Alias;
 
@@ -52,7 +53,17 @@ public class BpElement implements Serializable{
 	@Column(name="UNIT_NAME")
     private String unitName;
 
+	@Transient
+	private Integer[] codeList;
 	
+	public Integer[] getCodeList() {
+		return codeList;
+	}
+
+	public void setCodeList(Integer[] codeList) {
+		this.codeList = codeList;
+	}
+
 	public Integer getEleCode() {
 		return eleCode;
 	}

@@ -1,8 +1,6 @@
 package com.sky.business.modelDefinition.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sky.business.modelDefinition.model.BpModel;
 import com.sky.business.modelDefinition.service.IBpModelService;
 import com.sky.business.systemModule.model.BpModule;
+import com.sky.business.systemModule.service.IBpModuleService;
 import com.sky.core.base.controller.BaseController;
 import com.sky.core.exception.BusinessException;
 import com.sky.core.message.Message;
@@ -36,10 +35,12 @@ import reactor.core.publisher.Mono;
 public class BpModelController extends BaseController {
 	Log logger = LogFactory.getLog(BpModelController.class);
 	private final IBpModelService bpModelService;
+	private final IBpModuleService bpModuleService;
 
 	@Autowired
-	public BpModelController(final IBpModelService bpModelService) {
+	public BpModelController(final IBpModelService bpModelService, final IBpModuleService bpModuleService) {
 		this.bpModelService = bpModelService;
+		this.bpModuleService = bpModuleService;
 		
 	}
 	
@@ -110,36 +111,11 @@ public class BpModelController extends BaseController {
 	
 	@RequestMapping(value="/TK0001L1.do")
 	@ResponseBody
-	public Mono<Map<String, Object>> getModuDataList(@RequestParam String[] modCode, @RequestParam Integer currentPage, @RequestParam Integer pageSize,
-			@RequestParam String sModelCode, @RequestParam String sModuCode, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public Mono<Page<BpModule>> getModuDataList(@RequestBody Page<BpModule> page, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	
-		if(modCode.length == 0){
-			modCode = new String[]{"-1"}; //如果传入的modCode数组为空,则赋值,保证查询不到结果
-		}
-		
-		Map<String, Object> map = new HashMap<>();
-		map.put("arr", modCode);
-		map.put("sModelCode", sModelCode);
-		map.put("sModuCode", sModuCode);
-        
-		//查询总笔数
-		int totalCount = bpModelService.countModu("com.sky.business.modelDefinition.dao.BpModelDao.countModu", map);
-		
-		//计算总页数
-		int totalPage = (totalCount + pageSize - 1) / pageSize;
-		
-		
-		//查询分页记录
-		map.put("limit", (currentPage-1)*10);
-		map.put("page", pageSize);
-		List<BpModule> mlist = bpModelService.findModuForPageList("com.sky.business.modelDefinition.dao.BpModelDao.findModu", map);
-		
-		
-		Map<String, Object> rMap = new HashMap<>();
-		rMap.put("totalCount", totalCount);
-		rMap.put("totalPage", totalPage);
-		rMap.put("rows", mlist);
-		
-		return Mono.justOrEmpty(rMap);
+		page.setRequest(request);
+		bpModuleService.findForPageList("com.sky.business.systemModule.dao.BpModuleDao.findModuPageList", page);
+		page.setRequest(null);
+		return Mono.justOrEmpty(page);
 	}
 }

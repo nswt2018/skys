@@ -29,7 +29,7 @@
 	</select>
 	
 	<select id="getTabName" parameterType="String" resultType="String">
-		SELECT tab_code from bp_tables
+		SELECT tab_code from bp_tables where ISEXIST = '1'
 	</select>
 	
 	<select id="getColumnName" parameterType="String" resultType="String">
@@ -83,4 +83,29 @@
 	<delete id="deleteByNodCode" parameterType="hashmap" statementType="STATEMENT">
 		delete from ${tabName} where NOD_CODE like '${code}%'
 	</delete>
+	
+	
+	<!-- 分页 -->
+	<select id="findModuPageList" parameterType="Page" resultType="BpModule">
+		SELECT  
+		*
+		FROM 
+		bp_module
+		WHERE 1=1
+	 	<if test="variables.moduModel != null and variables.moduModel != ''">
+	        AND MODU_MODEL IN
+	        <foreach item="item" index="index" collection="variables.moduModel.split(',')" open="("  close=")" separator=",">
+	        	'${item}'
+	        </foreach>
+	    </if>
+	    <if test="variables.moduEName != null and variables.moduEName != ''">
+	       AND MODU_ENAME LIKE CONCAT('%',#{variables.moduEName},'%')
+	    </if>
+	    <if test="variables.moduCName != null and variables.moduCName != ''">
+	        AND MODU_CNAME LIKE CONCAT('%',#{variables.moduCName},'%')
+	    </if>
+	    <if test="orderBy != null and orderBy != ''">
+		 	order by ${orderBy}
+		</if>
+	</select>
 </mapper>
