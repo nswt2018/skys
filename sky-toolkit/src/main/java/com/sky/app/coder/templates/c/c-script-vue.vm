@@ -19,7 +19,7 @@ export default {
         	msdeleteurl: '/Ms${syscode}${tid}D.do',
         	msupdateurl: '/Ms${syscode}${tid}U.do',
         	reledeleteurl: '/Rele${syscode}${tid}D.do',
-        	releupdateurl: '/ReleMtMS001U.do',
+        	releupdateurl: '/Rele${syscode}${tid}U.do',
 #if($inputs)
 #foreach($input in $inputs) 
 #if(${input.defaultValue})
