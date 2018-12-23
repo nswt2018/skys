@@ -1,4 +1,4 @@
-	           <Form #if(${viewform.ref})ref="${viewform.ref}"#end :model="${viewform.model}" #if(${viewform.labelWidth}):label-width="${viewform.labelWidth}"#end #if(${addform.inline})inline#end>
+	           <Form #if(${viewform.ref})ref="${viewform.ref}"#end :model="${viewform.model}" #if(${viewform.labelWidth}):label-width="${viewform.labelWidth}"#end #if(${viewform.inline})inline#end>
 #if($viewformitems)
 #foreach($formitem in $viewformitems)
 

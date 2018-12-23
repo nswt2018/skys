@@ -2,7 +2,6 @@ package com.sky.app.coder.helper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ConvertString {
 	// 判断字符串中是否有大写字母
@@ -163,13 +162,19 @@ public class ConvertString {
 		}
 		return str.substring(str.indexOf(".") + 1);
 	}
-
+	// 将一个字符串中“.”前面的去掉，放回“.”后面的字符
+	public static String replaceStringDotBack(String str) {
+		if (str == null) {
+			return null;
+		}
+		return str.substring(0,str.indexOf("."));
+	}
 	// 将字符串全部小写，然后将字符串中一个或多个“_”去掉，并将之后的一个字符转为大写,字符串首字母大写
 	public static String convertStringByCombin(String str) {
 		return ConvertString.convertFirstCharUpper(ConvertString.convertSomeCharUpper(str.toLowerCase()));
 	}
 
 	public static void main(String[] args) {
-		System.out.println(replaceStringDot("lxstest.test_key"));
+		System.out.println(replaceStringDotBack("lxstest.test_key"));
 	}
 }

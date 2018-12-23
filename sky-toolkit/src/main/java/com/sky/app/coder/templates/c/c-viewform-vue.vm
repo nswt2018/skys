@@ -1,0 +1,19 @@
+	           <Form #if(${msviewform.ref})ref="${msviewform.ref}"#end :model="${msviewform.model}" #if(${msviewform.labelWidth}):label-width="${msviewform.labelWidth}"#end #if(${msviewform.inline})inline#end>
+#if($msviewformitems)
+#foreach($formitem in $msviewformitems)
+
+	              <FormItem label="${formitem.label}:" #if(${formitem.labelWidth})label-width="${formitem.labelWidth}"#end>
+#if(${formitem.input})
+	                 <Input :readonly="true" v-model="${msviewform.model}.${formitem.input.value}"/>
+#end
+#if(${formitem.inputNumber})	                 
+	                 <InputNumber :readonly="true" v-model="${msviewform.model}.${formitem.inputNumber.value}"></InputNumber>
+#end
+#if(${formitem.datepicker})	                 
+	                 <DatePicker :readonly="true"  type="date" v-model="${msviewform.model}.${formitem.datepicker.value}"></DatePicker>
+#end
+	              </FormItem>
+#end
+#end         
+	        </Form>
+	        

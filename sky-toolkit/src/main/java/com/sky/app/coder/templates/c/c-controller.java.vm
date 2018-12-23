@@ -1,0 +1,135 @@
+#set($controllerpackname=${models.controllerPackName})
+#set($modelpackname=${models.modelPackName})
+#set($servicepackname=${models.servicePackName})
+#set($model=${models.model})
+#set($moducode=${models.moduCode})
+#set($tid=${models.tid})
+#set($syscode=${models.sysCode})
+package ${controllerpackname};
+
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.sky.core.base.controller.BaseController;
+import ${modelpackname}.Ms${syscode}${model};
+import ${servicepackname}.IMs${syscode}${model}Service;
+import com.sky.core.exception.BusinessException;
+import com.sky.core.message.Message;
+import com.sky.core.page.Page;
+
+import reactor.core.publisher.Mono;
+
+@RestController
+public class Ms${syscode}${model}Controller extends BaseController{
+	@Resource(name = "Ms${syscode}${model}Service")
+	private IMs${syscode}${model}Service ms${syscode}${model}Service;
+	@RequestMapping(value = "/Ms${syscode}${tid}L.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Mono<Page<Ms${syscode}${model}>> getMs${syscode}${model}PageList(@RequestBody Page<Ms${syscode}${model}> page, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		page.setRequest(request);
+		ms${syscode}${model}Service.findForPageList("com.sky.app.mapper.Ms${syscode}${model}Mapper.findForPageList", page);
+		page.setRequest(null);
+		return Mono.justOrEmpty(page);
+	}
+
+	@PutMapping(value = "/Ms${syscode}${tid}I.do")
+	@ResponseBody
+	public Mono<Message> insertMs${syscode}${model}(@RequestBody Ms${syscode}${model} ${model}, HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		try {
+			if (${model}!= null) {
+				int insertrows = ms${syscode}${model}Service.save(${model});
+				if (insertrows > 0) {
+					return Mono.justOrEmpty(new Message("000001"));
+				} else {
+					return Mono.justOrEmpty(new Message("000004"));
+				}
+			} else {
+				return Mono.justOrEmpty(new Message("000004"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new BusinessException("-000000", e.getMessage());
+		}
+	}
+	@PutMapping(value = "/Ms${syscode}${tid}U.do")
+	@ResponseBody
+	public Mono<Message> updateMs${syscode}${model}(@RequestBody Ms${syscode}${model} ${model}, HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		try {
+			if (${model} != null) {
+				int updaterows = ms${syscode}${model}Service.update(${model});
+				if (updaterows > 0) {
+					return Mono.justOrEmpty(new Message("000003"));
+				} else {
+					return Mono.justOrEmpty(new Message("000006"));
+				}
+			} else {
+				return Mono.justOrEmpty(new Message("000006"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new BusinessException("-000000", e.getMessage());
+		}
+	}
+	@PutMapping(value = "/Rele${syscode}${tid}U.do")
+	@ResponseBody
+	public Mono<Message> updateSMtMstest(@RequestParam String[] updFields, HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		try {
+			if (updFields == null || updFields.length == 0)
+				return Mono.justOrEmpty(new Message("000006"));
+			for (String updField : updFields) {
+				ms${syscode}${model}Service.update("com.sky.app.mapper.Ms${syscode}${model}Mapper.updateSleveData",updField);
+			}
+			return Mono.justOrEmpty(new Message("000003"));		
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new BusinessException("-000000", e.getMessage());
+		}
+	}
+	@DeleteMapping("/Ms${syscode}${tid}D.do")
+	@ResponseBody
+	public Mono<Message> deleteMs${syscode}${model}(@RequestParam String[] delKeys, HttpServletRequest request,
+			HttpServletResponse response) {
+		try {
+			if (delKeys == null || delKeys.length == 0)
+				throw new BusinessException("000005");
+			for (String delKey : delKeys) {
+				ms${syscode}${model}Service.delete(delKey);
+			}
+			return Mono.justOrEmpty(new Message("000002"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new BusinessException("-000000", e.getMessage());
+		}
+	}
+	@DeleteMapping("/Rele${syscode}${tid}D.do")
+	@ResponseBody
+	public Mono<Message> deleteSMtMstest(@RequestParam String[] delFields, HttpServletRequest request,
+			HttpServletResponse response) {
+		try {
+			if (delFields == null || delFields.length == 0)
+				throw new BusinessException("000005");
+			for (String delField : delFields) {
+				ms${syscode}${model}Service.delete("com.sky.app.mapper.Ms${syscode}${model}Mapper.deleteSleveData",delField);
+			}
+			return Mono.justOrEmpty(new Message("000002"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new BusinessException("-000000", e.getMessage());
+		}
+	}
+}

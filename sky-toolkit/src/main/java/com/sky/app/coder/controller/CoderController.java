@@ -26,6 +26,8 @@ import com.sky.app.coder.model.Element;
 import com.sky.app.coder.model.Model;
 import com.sky.app.coder.model.Systems;
 import com.sky.app.coder.service.ICoderService;
+import com.sky.app.coder.velocity.VelocityGetMsTemplateData;
+import com.sky.app.coder.velocity.VelocityGetPutMapMsParameter;
 
 @RestController
 @RequestMapping(value = "/business")
@@ -45,7 +47,7 @@ public class CoderController {
 		try {
 			List<Systems> syslist=CoderService.getSystems("com.sky.app.core.CoderMapper.findBpSystemsList", sysKey.substring(0, 2));
 			for(int i=0;i<syslist.size();i++){
-				if(!syslist.get(i).getModCode().equals(null)&&!syslist.get(i).getModCode().equals("")){
+				if(!syslist.get(i).getModCode().isEmpty()){
 					List<String> upperSysList=ConvertString.subString(syslist.get(i).getSysKey());
 					String vuePath=null;
 					String javaPath=null;
@@ -161,6 +163,45 @@ public class CoderController {
 							model = new VelocityGetTemplateData().getModel(list, el,str,packName,uppersyscode);
 							// 获得velocity生成文件所需要的两个参数（模板，路径）,放在map中，key(包路径+模板名称)->value(文件路径+文件名)
 							Map<String, String> cmap=VelocityGetPutMapParameter.getMap(moduCode,vuePath,javaPath,uppersyscode);
+							vcx.put("models", model);
+							for (String key : cmap.keySet()) {
+								// 根据传入的数据、模板、路径生成相应的文件
+								VelocityCoder.velocity(vcx, key, cmap.get(key));
+							}
+						}else if(element.getModName().equals("主从模型")){
+							// 将模块的关联表转放入数组中
+							String[] mstableArr = element.getRelTable().split(",");
+							//存放表的表名加上主键组合的字段
+							String[] mstableprimarr=new String[mstableArr.length];
+							//用于放表的主键策略
+							String[] mstableprimpkarr=new String[mstableArr.length];
+							//用于放生成的实体类内容
+							String[] msclassstrarr=new String[mstableArr.length];
+							//主从表的关联字段
+							String[] relationfieldarr=element.getRelInfo().split("=");
+							for(int j=0;j<mstableArr.length;j++){
+								//根据模块关联表表名，从字段定义表中查询每个表的主键，放入parmlist集合中
+								Element muliel = CoderService.getMultiFieldOne("com.sky.app.core.CoderMapper.findBpFieldForOne", mstableArr[j]);
+								msclassstrarr[j]=CoderService.getMultiClassStrBytable(mstableArr[j],muliel.getColCode());
+								//将主键生成策略放入数组
+								mstableprimpkarr[j]=muliel.getPkGen();
+								//将表名和主键组合在一起转换后放入数组
+								mstableprimarr[j]=ConvertString.convertSomeCharUpperReplace(mstableArr[j]+"."+muliel.getColCode());
+							}
+							// 根据模块代码从页面元素表中取出该模块全部的字段信息，并根据字段关联字段定义表(多个)，获得字段在数据库的类型
+							List<Element> mslist = CoderService.getMultiTagInfo("com.sky.app.core.CoderMapper.findBpElementForList",moduCode);
+							model = new VelocityGetMsTemplateData(mstableArr,mstableprimarr,mstableprimpkarr).getModel(mslist,msclassstrarr,element,packName,uppersyscode);
+							//设置mapper映射文件，查询的字段以表加字段作为别名
+							String[] mtablenamearr={mstableArr[0]};
+							model.setMapperSelectField(CoderService.getMultiMapperSelectField(mtablenamearr));
+							mtablenamearr[0]=mstableArr[1];
+							model.setMsmapperSelectField(CoderService.getMultiMapperSelectField(mtablenamearr));
+							//主表关联字段
+							model.setRelationField(ConvertString.convertSomeCharUpperReplace(relationfieldarr[0].trim()));
+							//从表关联字段
+							model.setMsrelationField(relationfieldarr[1].trim());
+							// 获得velocity生成文件所需要的两个参数（模板，路径）,放在map中，key(包路径+模板名称)->value(文件路径+文件名)
+							Map<String, String> cmap=VelocityGetPutMapMsParameter.getMap(moduCode,vuePath,javaPath,uppersyscode);
 							vcx.put("models", model);
 							for (String key : cmap.keySet()) {
 								// 根据传入的数据、模板、路径生成相应的文件

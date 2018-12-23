@@ -1,0 +1,20 @@
+	           <Form #if(${msaddform.ref})ref="${msaddform.ref}"#end :model="${msaddform.model}" #if(${msaddform.rules}):rules="${msaddform.rules}"#end #if(${msaddform.labelWidth}):label-width="${msaddform.labelWidth}"#end #if(${msaddform.inline})inline#end>
+#if($msaddformitems)
+#foreach($formitem in $msaddformitems)
+	              
+	              <FormItem label="${formitem.label}:" #if(${formitem.prop})prop="${formitem.prop}"#end #if(${formitem.required})required#end #if(${formitem.labelWidth})label-width="${formitem.labelWidth}"#end>
+#if(${formitem.input})
+	                 <Input v-model="${msaddform.model}.${formitem.input.value}" placeholder="${formitem.input.placeholder}" />
+#end
+#if(${formitem.inputNumber})	                 
+	                 <InputNumber #if(${formitem.inputNumber.max}):max="${formitem.inputNumber.max}"#end #if(${formitem.inputNumber.min}):min="${formitem.inputNumber.min}"#end v-model="${msaddform.model}.${formitem.inputNumber.value}"  #if(${formitem.inputNumber.placeholder})placeholder="${formitem.inputNumber.placeholder}"#end ></InputNumber>
+#end
+#if(${formitem.datepicker})	                 
+	                 <DatePicker  type="date" v-model="${msaddform.model}.${formitem.datepicker.value}" placeholder="${formitem.datepicker.placeholder}"></DatePicker>
+#end
+	              </FormItem>
+#end
+#end
+        
+	          </Form>
+	        

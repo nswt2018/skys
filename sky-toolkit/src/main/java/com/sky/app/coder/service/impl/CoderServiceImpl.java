@@ -325,7 +325,7 @@ public class CoderServiceImpl implements ICoderService {
 				e.printStackTrace();
 			}
 		}
-		// 合并多个表列名数组,并获得重复元素的下标
+		// 合并多个表列名数组
 		if (listnamearr.size() > 0) {
 			tablecolnames = concatAll(listnamearr);
 		}

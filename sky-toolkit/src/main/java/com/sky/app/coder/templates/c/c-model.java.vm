@@ -1,0 +1,31 @@
+#set($modelpackname=${models.modelPackName})
+#set($msmodelclassstr=${models.msmodelClassStr})
+#set($mstablename=${models.mstableName})
+#set($syscode=${models.sysCode})
+#set($relationfield=${models.relationField})
+package ${modelpackname};
+
+import java.math.BigDecimal;
+import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import org.apache.ibatis.type.Alias;
+
+@Alias("Ms${syscode}${model}")
+@Table(name="${mstablename}")
+public class Ms${syscode}${model} {
+${msmodelclassstr}
+#if(${relationfield})
+			private String[] msRelationshipFields;
+		
+			public String[] getMsRelationshipFields() {
+				return msRelationshipFields;
+			}
+			public void setMsRelationshipFields(String[] msRelationshipFields) {
+				this.msRelationshipFields = msRelationshipFields;
+			}
+#end
+}
+

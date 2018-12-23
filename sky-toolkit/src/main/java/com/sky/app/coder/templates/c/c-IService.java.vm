@@ -1,0 +1,13 @@
+#set($servicepackname=${models.servicePackName})
+#set($modelpackname=${models.modelPackName})
+#set($model=${models.model})
+#set($syscode=${models.sysCode})
+package ${servicepackname};
+
+import com.sky.core.base.service.IBaseService;
+import ${modelpackname}.Ms${syscode}${model};
+
+public interface IMs${syscode}${model}Service extends IBaseService<Ms${syscode}${model}> {
+	int delete(String sqlId,String delField);
+	int update(String sqlId,String updField);
+}   

@@ -2,13 +2,18 @@
 #set($tablename=${models.tableName})
 #set($inputs=${models.inputs})
 #set($syscode=${models.sysCode})
+#set($mapperselectfield=${models.mapperSelectField})
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sky.app.mapper.${syscode}${model}Mapper">
  
  	 <select id="findForPageList" parameterType="Page" resultType="${syscode}${model}">
-	       select 
+	       select
+#if(${mapperselectfield})
+			  ${mapperselectfield}			
+#else
 	          * 
+#end	        
 	       from 
 	         ${tablename}
 	       where 1=1

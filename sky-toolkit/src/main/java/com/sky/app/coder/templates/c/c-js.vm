@@ -1,0 +1,35 @@
+#set($mstablecolumns=${models.mstablecolumns})
+#set($moducode=${models.moduCode})
+#set($mstable=${models.mstable})
+import Vue from 'vue';
+import iView from 'iview';
+import datetool from '@/libs/datetool';
+
+let ms${moducode}Column = {};
+
+ms${moducode}Column.getColumns = function() {
+	return [
+#if(${mstable.isSelectAll}=="true")				
+		   {
+			 type: 'selection',
+			 width: 60,
+			 align: 'center'
+		    },
+#end
+#if(${mstable})
+#if($mstablecolumns)
+#foreach($tablecolumn in $mstablecolumns)
+		  
+		  {
+			title: '${tablecolumn.label}',
+			key: '${tablecolumn.value}',
+			align: 'center'
+		  }#if($foreach.hasNext),#end
+#end			    
+#end 
+#end
+			    
+	]
+};
+
+export default ms${moducode}Column;
