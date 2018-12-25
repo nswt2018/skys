@@ -47,14 +47,14 @@ public class CoderController {
 		try {
 			List<Systems> syslist=CoderService.getSystems("com.sky.app.core.CoderMapper.findBpSystemsList", sysKey.substring(0, 2));
 			for(int i=0;i<syslist.size();i++){
-				if(!syslist.get(i).getModCode().isEmpty()){
+				if(syslist.get(i).getModCode()!=null&&syslist.get(i).getModCode()!=""){
 					List<String> upperSysList=ConvertString.subString(syslist.get(i).getSysKey());
 					String vuePath=null;
 					String javaPath=null;
+					String lastSysCode=null;
+					String packName=null;
 					String sysCode="";
 					String tempSysCode=null;
-					String packName=null;
-					String lastSysCode=null;
 					for(int j=0;j<upperSysList.size();j++){
 						Systems system=CoderService.getSystemsOne("com.sky.app.core.CoderMapper.findBpSystemsOne", upperSysList.get(j));
 						if(!system.getVuePath().equals("") && !system.getJavaPath().equals("")){
