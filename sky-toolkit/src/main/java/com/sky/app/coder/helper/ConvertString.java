@@ -51,9 +51,8 @@ public class ConvertString {
 		if (str == null) {
 			return null;
 		}
+		str=str.trim();
 		String temporary;
-		// 存放大写字符数组的下标
-		int index = 0;
 		for (int i = 0; i < str.length(); i++) {
 			temporary = String.valueOf(str.charAt(i));
 			if ("_".equals(temporary)) {
@@ -68,10 +67,8 @@ public class ConvertString {
 		if (str == null) {
 			return null;
 		}
-		str=str.toLowerCase();
+		str=str.toLowerCase().trim();
 		String temporary;
-		// 存放大写字符数组的下标
-		int index = 0;
 		for (int i = 0; i < str.length(); i++) {
 			temporary = String.valueOf(str.charAt(i));
 			if ("_".equals(temporary)||".".equals(temporary)) {

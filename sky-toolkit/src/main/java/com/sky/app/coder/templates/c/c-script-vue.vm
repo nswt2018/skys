@@ -263,7 +263,7 @@ export default {
         getMsSearch() {
     		let menuCode = Cookies.get('menucode');
         	return {'menuCode':menuCode,'pageSize': this.mspageSize, 'currentPage': this.mscurrentPage
-        	#if($msinputs),'valObj':{#foreach($input in $msinputs)'${input.value}': this.${input.value}#if($foreach.hasNext),#end#end,'msRelationshipFields':this.msRelationshipFields}#end
+        	,'valObj':{#if($msinputs)#foreach($input in $msinputs)'${input.value}': this.${input.value}#if($foreach.hasNext),#end#end,#end'msRelationshipFields':this.msRelationshipFields}
         	};
         },  
         init () {
@@ -305,6 +305,7 @@ export default {
         	pagepublictool.choice(selection, row);
         	this.deleteKey.push(row.${tableprimary});
         	this.msRelationshipFields.push(row.${relationfield});
+        	this.msaddForm.${msconvertrelationrield}=this.msRelationshipFields[0];
         	mspagepublictool.page(this.getMsSearch());
         },
         mschoicing(selection, row) {
@@ -319,6 +320,7 @@ export default {
         	}else{
         		this.msRelationshipFields=[];
         	}
+        	this.msaddForm.${msconvertrelationrield}=[];
         	mspagepublictool.page(this.getMsSearch());
         },
         mscancing(selection, row){
@@ -349,6 +351,7 @@ export default {
         	if(this.selectedLines==0){
         		this.deleteKey=[];
         		this.msRelationshipFields=[];
+        		this.msaddForm.${msconvertrelationrield}=[];
         	}
         	mspagepublictool.page(this.getMsSearch());
         },

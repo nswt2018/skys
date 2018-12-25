@@ -7,6 +7,7 @@
 #set($tableprimary=${models.tablePrimary})
 #set($mstableprimary=${models.mstablePrimary})
 #set($relationfield=${models.relationField})
+#set($msconvertrelationrield=${models.msconvertRelationField})
 #set($inputs=${models.inputs})
 #set($msinputs=${models.msinputs})
 #set($button=${models.button})

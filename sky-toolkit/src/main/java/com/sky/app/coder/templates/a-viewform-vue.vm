@@ -6,6 +6,12 @@
 #if(${formitem.input})
 	                 <Input :readonly="true" v-model="${viewform.model}.${formitem.input.value}"/>
 #end
+#if(${formitem.inputNumber})	                 
+	                 <InputNumber :readonly="true" v-model="${viewform.model}.${formitem.inputNumber.value}"></InputNumber>
+#end
+#if(${formitem.datepicker})	                 
+	                 <DatePicker :readonly="true"  type="date" v-model="${viewform.model}.${formitem.datepicker.value}"></DatePicker>
+#end
 #if(${formitem.type}=="select")	                 
 	                 <Select  v-model="${viewform.model}.${formitem.value}" />
 	                 	 <Option value="beijing">New York</Option>

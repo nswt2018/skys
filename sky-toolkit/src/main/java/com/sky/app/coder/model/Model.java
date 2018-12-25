@@ -64,6 +64,8 @@ public class Model {
 	private String relationField;
 	//从表模型，从表关联的字段
 	private String msrelationField;
+	//从表模型，从表转换后关联的字段
+	private String msconvertRelationField;
 	
 	//交易号
 	private String tid;
@@ -436,6 +438,12 @@ public class Model {
 	}
 	public void setMsrelationField(String msrelationField) {
 		this.msrelationField = msrelationField;
+	}
+	public String getMsconvertRelationField() {
+		return msconvertRelationField;
+	}
+	public void setMsconvertRelationField(String msconvertRelationField) {
+		this.msconvertRelationField = msconvertRelationField;
 	}
 	
 	

@@ -169,7 +169,8 @@ public class CoderController {
 								VelocityCoder.velocity(vcx, key, cmap.get(key));
 							}
 						}else if(element.getModName().equals("主从模型")){
-							// 将模块的关联表转放入数组中
+							//主从模型只有两张表，主表和从表
+							// 将模块的关联表转放入数组中，默认第一张表为主表，第二张表为从表
 							String[] mstableArr = element.getRelTable().split(",");
 							//存放表的表名加上主键组合的字段
 							String[] mstableprimarr=new String[mstableArr.length];
@@ -177,11 +178,10 @@ public class CoderController {
 							String[] mstableprimpkarr=new String[mstableArr.length];
 							//用于放生成的实体类内容
 							String[] msclassstrarr=new String[mstableArr.length];
-							//主从表的关联字段
-							String[] relationfieldarr=element.getRelInfo().split("=");
 							for(int j=0;j<mstableArr.length;j++){
 								//根据模块关联表表名，从字段定义表中查询每个表的主键，放入parmlist集合中
 								Element muliel = CoderService.getMultiFieldOne("com.sky.app.core.CoderMapper.findBpFieldForOne", mstableArr[j]);
+								//主从表实体类中的属性以及get/set方法
 								msclassstrarr[j]=CoderService.getMultiClassStrBytable(mstableArr[j],muliel.getColCode());
 								//将主键生成策略放入数组
 								mstableprimpkarr[j]=muliel.getPkGen();
@@ -196,10 +196,6 @@ public class CoderController {
 							model.setMapperSelectField(CoderService.getMultiMapperSelectField(mtablenamearr));
 							mtablenamearr[0]=mstableArr[1];
 							model.setMsmapperSelectField(CoderService.getMultiMapperSelectField(mtablenamearr));
-							//主表关联字段
-							model.setRelationField(ConvertString.convertSomeCharUpperReplace(relationfieldarr[0].trim()));
-							//从表关联字段
-							model.setMsrelationField(relationfieldarr[1].trim());
 							// 获得velocity生成文件所需要的两个参数（模板，路径）,放在map中，key(包路径+模板名称)->value(文件路径+文件名)
 							Map<String, String> cmap=VelocityGetPutMapMsParameter.getMap(moduCode,vuePath,javaPath,uppersyscode);
 							vcx.put("models", model);

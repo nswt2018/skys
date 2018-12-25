@@ -18,7 +18,7 @@ import com.sky.app.coder.model.TableColumn;
  * 主从模型，将模板中所需要的数据都封装在Model实体类中
  */
 public class VelocityGetMsTemplateData {
-	//数据库表
+	// 数据库表
 	private String[] tablenamearr;
 	// 主键字段
 	private String[] colcodearr = null;
@@ -36,13 +36,12 @@ public class VelocityGetMsTemplateData {
 	List<TableColumn> mstablecolumns = new ArrayList<TableColumn>();
 
 	public VelocityGetMsTemplateData(String[] tablenamearr, String[] colcodearr, String[] pkarr) {
-		this.tablenamearr=tablenamearr;
+		this.tablenamearr = tablenamearr;
 		this.colcodearr = colcodearr;
 		this.pkarr = pkarr;
 	}
 
-	public Model getModel(List<Element> list, String[] classstrarr, Element el, String packname,
-			String lastSysCode) {
+	public Model getModel(List<Element> list, String[] classstrarr, Element el, String packname, String lastSysCode) {
 		Model model = new Model();
 		// 设置模块标题名称
 		model.setTitleName(el.getModuCname());
@@ -61,7 +60,15 @@ public class VelocityGetMsTemplateData {
 		model.setTableName(tablenamearr[0]);
 		// 从表模型，从表数据库表名
 		model.setMstableName(tablenamearr[1]);
-				
+		// 从表模型，主从表的关联字段
+		String[] relationfieldarr = el.getRelInfo().split("=");
+		// 从表模型，主表关联字段
+		model.setRelationField(ConvertString.convertSomeCharUpperReplace(relationfieldarr[0]));
+		// 从表模型，从表关联字段
+		model.setMsrelationField(relationfieldarr[1].trim());
+		// 从表模型，从表转换后的关联字段
+		model.setMsconvertRelationField(ConvertString.convertSomeCharUpperReplace(relationfieldarr[1]));
+
 		// 全部小写，模块数据库表主键字段
 		model.setTablePrimary(colcodearr[0]);
 		// 从表模型，数据库表加字段组合字段
@@ -134,7 +141,7 @@ public class VelocityGetMsTemplateData {
 			// 字段，字段全部小写，如果字段中有“_”或“.”,则将字符串中"_"或“.”去掉，后面的第一字母大写
 			ename = ConvertString.convertSomeCharUpperReplace(list.get(i).getEleEname());
 			for (int j = 0; j < colcodearr.length; j++) {
-				if (list.get(i).getEleEname().equalsIgnoreCase(colcodearr[j]) && pkarr[j].equals("1")) {
+				if (ename.equalsIgnoreCase(colcodearr[j]) && pkarr[j].equals("1")) {
 					flag = false;
 				}
 			}
@@ -180,7 +187,7 @@ public class VelocityGetMsTemplateData {
 							input.setOnChange("true");
 						}
 					}
-					if (enametable.endsWith(tablenamearr[0])) {
+					if (enametable.equalsIgnoreCase(tablenamearr[0])) {
 						// 主表输入框
 						inputs.add(input);
 					} else {
@@ -194,7 +201,7 @@ public class VelocityGetMsTemplateData {
 					tablecolumn.setLabel(cname);
 					// 字段
 					tablecolumn.setValue(ename);
-					if (enametable.endsWith(tablenamearr[0])) {
+					if (enametable.equalsIgnoreCase(tablenamearr[0])) {
 						// 主表列表
 						tablecolumns.add(tablecolumn);
 					} else {
@@ -206,14 +213,19 @@ public class VelocityGetMsTemplateData {
 					DatePicker dp = null;
 					InputNumber in = null;
 					Input auinput = null;
+					//判断该字段是否为主键字段
+					Boolean isPrimField=false;
+					for (int j = 0; j < colcodearr.length; j++) {
+						if (colcodearr[j].equals(ename)) {
+							isPrimField=true;
+						}
+					}
 					// 如果新增信息或修改信息标签信息没有录入，则设置默认值
 					if (list.get(i).getTagInfo() == null || "".equals(list.get(i).getTagInfo())) {
 						formitem.setLabel(cname);
-						for (int j = 0; j < colcodearr.length; j++) {
-							if (colcodearr[j].equals(ename)) {
-								formitem.setProp(ename);
-								formitem.setRequired("true");
-							}
+						if(isPrimField){
+							formitem.setProp(ename);
+							formitem.setRequired("true");
 						}
 						// 新增信息或修改信息表单，现在只支持input输入框,日期,数值
 						if (list.get(i).getDataType().equals("date") || list.get(i).getDataType().equals("datetime")) {
@@ -247,26 +259,19 @@ public class VelocityGetMsTemplateData {
 							if (formitem.getLabel() == null || formitem.getLabel() == "") {
 								formitem.setLabel(cname);
 							}
-							for (int j = 0; j < colcodearr.length; j++) {
-								if (colcodearr[j].equals(ename)) {
-									if (formitem.getProp() == null || formitem.getProp() == "") {
-										formitem.setProp(ename);
-									} else {
-										formitem.setProp(
-												ConvertString.convertSomeCharUpper(formitem.getProp().toLowerCase()));
-									}
-									if (formitem.getRequired() == null || formitem.getRequired() == "") {
-										formitem.setRequired("true");
-									}
+							if(isPrimField){
+								formitem.setProp(ename);
+								formitem.setRequired("true");
+							}else{
+								if (formitem.getProp() != null || formitem.getProp() != "") {
+									formitem.setProp(ename);
 								}
 							}
 						} else {
 							formitem.setLabel(cname);
-							for (int j = 0; j < colcodearr.length; j++) {
-								if (colcodearr[j].equals(ename)) {
-									formitem.setProp(ename);
-									formitem.setRequired("true");
-								}
+							if(isPrimField){
+								formitem.setProp(ename);
+								formitem.setRequired("true");
 							}
 						}
 						auinput = aumodel.getInput();
@@ -305,7 +310,7 @@ public class VelocityGetMsTemplateData {
 						formitem.setDatepicker(aumodel.getDatepicker());
 						formitem.setInputNumber(aumodel.getInputnumber());
 					}
-					if (enametable.endsWith(tablenamearr[0])) {
+					if (enametable.equalsIgnoreCase(tablenamearr[0])) {
 						// 主表新增修改对话框
 						if (list.get(i).getComName().equals("新增信息")) {
 							addformitems.add(formitem);
@@ -322,14 +327,30 @@ public class VelocityGetMsTemplateData {
 					}
 				} else if (list.get(i).getComName().equals("查看信息")) {
 					FormItem viewformitem = new FormItem();
+					DatePicker dp = null;
+					InputNumber in = null;
+					Input vinput = null;
 					// 如果查看信息的标签信息没有录入，则设置默认值
 					if (list.get(i).getTagInfo() == null || "".equals(list.get(i).getTagInfo())) {
-						// 字段名称
+						// 查看信息，现在只支持input输入框,日期,数值
+						if (list.get(i).getDataType().equals("date") || list.get(i).getDataType().equals("datetime")) {
+							dp = new DatePicker();
+							dp.setValue(ename);
+						} else if (list.get(i).getDataType().equals("decimal")
+								|| list.get(i).getDataType().equals("numeric")
+								|| list.get(i).getDataType().equals("double")
+								|| list.get(i).getDataType().equals("float") || list.get(i).getDataType().equals("int")
+								|| list.get(i).getDataType().equals("bigint")) {
+							in = new InputNumber();
+							in.setValue(ename);
+						} else {
+							vinput = new Input();
+							vinput.setValue(ename);
+						}
 						viewformitem.setLabel(cname);
-						Input vinput = new Input();
-						// 字段
-						vinput.setValue(ename);
 						viewformitem.setInput(vinput);
+						viewformitem.setDatepicker(dp);
+						viewformitem.setInputNumber(in);
 					} else {
 						Model vmodel = new Model();
 						// 将数据库中取出的JSON字符串，去除字符串中的‘@’、‘：’放入FormItem实体类中
@@ -345,9 +366,15 @@ public class VelocityGetMsTemplateData {
 						if (vmodel.getInput() != null) {
 							vmodel.getInput().setValue(ename);
 						}
+						if (vmodel.getDatepicker() != null) {
+							vmodel.getDatepicker().setValue(ename);
+						}
+						if (vmodel.getInputnumber() != null) {
+							vmodel.getInputnumber().setValue(ename);
+						}
 						viewformitem.setInput(vmodel.getInput());
 					}
-					if (enametable.endsWith(tablenamearr[0])) {
+					if (enametable.equalsIgnoreCase(tablenamearr[0])) {
 						// 主表查看对话框
 						viewformitems.add(viewformitem);
 					} else {
@@ -357,7 +384,6 @@ public class VelocityGetMsTemplateData {
 
 				}
 			}
-
 		}
 	}
 }
