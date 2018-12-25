@@ -72,7 +72,42 @@ public class CoderServiceImpl implements ICoderService {
 	public Element getMultiFieldOne(String sqlId, String tabCode) {
 		return sqlsession.selectOne(sqlId, tabCode);
 	}
-
+	
+	@Override
+	public List<String> getSystemsInfo(List<String> sysKeyList) {
+		String vuePath=null;
+		String javaPath=null;
+		String lastSysCode=null;
+		String packName=null;
+		String sysCode="";
+		String tempSysCode=null;
+		for(int j=0;j<sysKeyList.size();j++){
+			Systems system=this.getSystemsOne("com.sky.app.core.CoderMapper.findBpSystemsOne", sysKeyList.get(j));
+			if(!system.getVuePath().equals("") && !system.getJavaPath().equals("")){
+				vuePath=system.getVuePath();
+				javaPath=system.getJavaPath();
+				packName=system.getPackName();
+			}
+			tempSysCode=system.getSysCode().toLowerCase();
+			packName+="."+tempSysCode;
+			if(sysCode.equals("")){
+				sysCode="\\"+tempSysCode;
+			}else{
+				sysCode+="\\"+tempSysCode;
+			}
+			if(j==sysKeyList.size()-1){
+				lastSysCode=system.getSysCode().toLowerCase();
+			}
+		}
+		vuePath=vuePath+sysCode;
+		javaPath=javaPath+"\\"+packName.replace(".", "\\");
+		List<String> list=new ArrayList<String>();
+		list.add(vuePath);
+		list.add(javaPath);
+		list.add(lastSysCode);
+		list.add(packName);
+		return list;
+	}
 	// 单表模型
 	@Override
 	public String getClassStr(String tablename, String tablepri) {
@@ -474,5 +509,6 @@ public class CoderServiceImpl implements ICoderService {
 		}
 
 	}
+
 
 }

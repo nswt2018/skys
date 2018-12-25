@@ -47,38 +47,21 @@ public class CoderController {
 		try {
 			List<Systems> syslist=CoderService.getSystems("com.sky.app.core.CoderMapper.findBpSystemsList", sysKey.substring(0, 2));
 			for(int i=0;i<syslist.size();i++){
+				//判断是否为末级模块
 				if(syslist.get(i).getModCode()!=null&&syslist.get(i).getModCode()!=""){
+					//该模块全部的上级系统编号及本编号
 					List<String> upperSysList=ConvertString.subString(syslist.get(i).getSysKey());
-					String vuePath=null;
-					String javaPath=null;
-					String lastSysCode=null;
-					String packName=null;
-					String sysCode="";
-					String tempSysCode=null;
-					for(int j=0;j<upperSysList.size();j++){
-						Systems system=CoderService.getSystemsOne("com.sky.app.core.CoderMapper.findBpSystemsOne", upperSysList.get(j));
-						if(!system.getVuePath().equals("") && !system.getJavaPath().equals("")){
-							vuePath=system.getVuePath();
-							javaPath=system.getJavaPath();
-							packName=system.getPackName();
-						}
-						tempSysCode=system.getSysCode().toLowerCase();
-						packName+="."+tempSysCode;
-						if(sysCode.equals("")){
-							sysCode="\\"+tempSysCode;
-						}else{
-							sysCode+="\\"+tempSysCode;
-						}
-						if(j==upperSysList.size()-1){
-							lastSysCode=system.getSysCode().toLowerCase();
-						}
-					}
-					vuePath=vuePath+sysCode;
-					javaPath=javaPath+"\\"+packName.replace(".", "\\");
+					List<String> fourlist=CoderService.getSystemsInfo(upperSysList);
+					//前端页面路径
+					String vuePath=fourlist.get(0);
+					//后台代码路径
+					String javaPath=fourlist.get(1);
+					//包名
+					String packName=fourlist.get(3);
+					//系统简码
+					String uppersyscode=ConvertString.convertFirstCharUpper(fourlist.get(2).toLowerCase());
 					//模块代码
 					String moduCode=syslist.get(i).getModCode();
-					//系统简码
-					String uppersyscode=ConvertString.convertFirstCharUpper(lastSysCode.toLowerCase());
 					//放模板所需要的全部变量
 					Model model =null;
 					// 将model里面的变量值放入VelocityContext
