@@ -72,13 +72,12 @@ public class BpModelController extends BaseController {
 	
 	@DeleteMapping("/TK0001D.do")
 	@ResponseBody
-	public Mono<Message> deleteByModCode(@RequestParam String[] modCode, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public Mono<Message> deleteByModCode(@RequestParam String modCode, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try {
-			if(modCode==null || modCode.length == 0)
+			if(modCode==null || modCode.length() == 0)
 				throw new BusinessException("000005");
-			for(String id : modCode) {
-				bpModelService.delete(id);
-			}
+			
+			bpModelService.delete(modCode);
 			return Mono.justOrEmpty(new Message("000002"));
 		} catch (Exception e) {
 			e.printStackTrace();

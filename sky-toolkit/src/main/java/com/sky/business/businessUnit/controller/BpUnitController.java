@@ -230,13 +230,6 @@ public class BpUnitController extends BaseController {
 		return listMap;
 	} 
 	
-	@RequestMapping(value="/TK0005S.do")
-	@ResponseBody
-	public Mono<List<BpComponet>> getComponet(HttpServletRequest request, HttpServletResponse response) throws Exception {	
-		List<BpComponet> list = bpComponetService.findForList("com.sky.business.componetDefinition.dao.BpComponetDao.findAllComponet", "");
-		return Mono.justOrEmpty(list);
-	}
-	
 	/**
 	 * 获取所有字段
 	 * @param relTable

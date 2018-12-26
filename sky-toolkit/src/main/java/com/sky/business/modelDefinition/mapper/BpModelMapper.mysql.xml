@@ -29,4 +29,13 @@
 		select * from bp_model where MOD_CODE = #{modCode}
 	</select>
 	
+	<select id="findModList" parameterType="hashmap" resultType="BpModel">
+		select * from bp_model where 1 = 1 
+			<if test="modCode != null and modCode != ''">
+		        AND MOD_CODE IN
+		        <foreach item="item" index="index" collection="modCode.split(',')" open="("  close=")" separator=",">
+		        	'${item}'
+		        </foreach>
+		    </if>
+	</select>
 </mapper>

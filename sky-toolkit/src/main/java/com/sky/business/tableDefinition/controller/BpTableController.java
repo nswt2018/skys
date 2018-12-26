@@ -81,31 +81,29 @@ public class BpTableController extends BaseController {
 	
 	@DeleteMapping("/TK0007D.do")
 	@ResponseBody
-	public Mono<Message> deleteByTabCode(@RequestParam String[] tabCode, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public Mono<Message> deleteByTabCode(@RequestParam String tabCode, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try {
-			if(tabCode==null || tabCode.length == 0)
+			if(tabCode==null || tabCode.length() == 0)
 				throw new BusinessException("000005");
-			for(String id : tabCode) {
 				//从库里删除
 				//查询数据库 该表是否存在
 				Map<String, String> map = new HashMap<>();
-				map.put("tabCode", id);
+				map.put("tabCode", tabCode);
 				List<BpTable> tList = bpTableService.findForList("com.sky.business.tableDefinition.dao.BpTableDao.findTable", map);
 				//存在则报错返回
 				if(tList != null && tList.size() > 0 && "1".equals(tList.get(0).getIsExist())){
-					bpTableService.dropTab("com.sky.business.tableDefinition.dao.BpTableDao.dropTable", id);
+					bpTableService.dropTab("com.sky.business.tableDefinition.dao.BpTableDao.dropTable", tabCode);
 				}
 				
 				//删除表定义
-				bpTableService.delete(id);
+				bpTableService.delete(tabCode);
 				//查询字段定义表,有记录删除,没有返回
-				List<BpField> list = bpFieldService.findForList("com.sky.business.columnDefinition.dao.BpFieldDao.findAllField", id);
+				List<BpField> list = bpFieldService.findForList("com.sky.business.columnDefinition.dao.BpFieldDao.findAllField", tabCode);
 				if(list != null && list.size() > 0){
 					map.clear();
-					map.put("tabCode", id);
+					map.put("tabCode", tabCode);
 					bpFieldService.delField("com.sky.business.columnDefinition.dao.BpFieldDao.deleteById", map);
 				}
-			}
 			return Mono.justOrEmpty(new Message("000002"));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -144,33 +142,32 @@ public class BpTableController extends BaseController {
 	
 	@RequestMapping("/TK0007G.do")
 	@ResponseBody
-	public Mono<Message> createTab(@RequestParam String[] tabCode, HttpServletRequest request, HttpServletResponse response) {
+	public Mono<Message> createTab(@RequestParam String tabCode, HttpServletRequest request, HttpServletResponse response) {
 		
 		try {
-			if(tabCode==null || tabCode.length == 0)
+			if(tabCode==null || tabCode.length() == 0)
 				return Mono.justOrEmpty(new Message("100002", "必须选中一条记录！"));
 			
-			for (String code : tabCode) {
 				//查询数据库 该表是否存在
 				Map<String, String> map = new HashMap<>();
-				map.put("tabCode", code);
-				List<BpTable> list = bpTableService.findForList("com.sky.business.tableDefinition.dao.BpTableDao.findTable", code);
+				map.put("tabCode", tabCode);
+				List<BpTable> list = bpTableService.findForList("com.sky.business.tableDefinition.dao.BpTableDao.findTable", tabCode);
 				//存在则报错返回
 				if(list != null && list.size() > 0)
-					return Mono.justOrEmpty(new Message("100002", code + "表已经存在！"));
+					return Mono.justOrEmpty(new Message("100002", tabCode + "表已经存在！"));
 				
 				//查询字段定义表 
-				List<BpField> list1 = bpFieldService.findForList("com.sky.business.columnDefinition.dao.BpFieldDao.findAllField", code);
+				List<BpField> list1 = bpFieldService.findForList("com.sky.business.columnDefinition.dao.BpFieldDao.findAllField", tabCode);
 				//没有记录则返回
 				if(list1 == null || list1.size() == 0)
-					return Mono.justOrEmpty(new Message("100002", code + "表还未录入字段！"));
+					return Mono.justOrEmpty(new Message("100002", tabCode + "表还未录入字段！"));
 				
 				//建表
 				this.tabFactory(list1);
 				
 				//修改bp_tables表字段
-				bpTableService.updTab("com.sky.business.tableDefinition.dao.BpTableDao.updTab", code);
-			}
+				bpTableService.updTab("com.sky.business.tableDefinition.dao.BpTableDao.updTab", tabCode);
+				
 			return Mono.justOrEmpty(new Message("000001", "成功"));
 		} catch (Exception e) {
 			throw new BusinessException("100001", e.getMessage());

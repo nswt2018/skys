@@ -16,8 +16,8 @@
 			<if test="variables.moduCName != null and variables.moduCName != ''">
 				AND MODU_CNAME LIKE CONCAT('%',#{variables.moduCName},'%')
 			</if>
-			<if test="variables.moduEName != null and variables.moduEName != ''">
-				AND MODU_ENAME LIKE CONCAT('%',#{variables.moduEName},'%')
+			<if test="variables.moduModel != null and variables.moduModel != ''">
+				AND MODU_MODEL LIKE CONCAT('%',#{variables.moduModel},'%')
 			</if>
 			<if test="orderBy != null and orderBy != ''">
 				 order by ${orderBy}

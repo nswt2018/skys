@@ -35,7 +35,7 @@
 			bp_tables 
 		WHERE 
 			ISEXIST = '1'
-			AND tab_name = #{tabCode}
+			AND tab_code = #{tabCode}
 	</select>
 	
 	<insert id="creatTable" parameterType="hashmap" statementType="STATEMENT">

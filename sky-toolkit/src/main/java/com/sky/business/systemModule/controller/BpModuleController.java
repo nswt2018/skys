@@ -102,7 +102,9 @@ public class BpModuleController extends BaseController {
 	 */
 	private void setData(BpModule bpModule) {
 		//取组件类型
-		List<BpComponet> componetList = bpComponetService.findForList("com.sky.business.componetDefinition.dao.BpComponetDao.findAllComponet", "");
+		Map<String, String> map = new HashMap<>();
+		map.put("modCode", bpModule.getModuModel());
+		List<BpComponet> componetList = bpComponetService.findForList("com.sky.business.componetDefinition.dao.BpComponetDao.findComponetByModCode", map);
 		//取关联表所有字段名
 		String relTable = bpModule.getRelTable();
 		List<String> eNameList = new ArrayList<String>();

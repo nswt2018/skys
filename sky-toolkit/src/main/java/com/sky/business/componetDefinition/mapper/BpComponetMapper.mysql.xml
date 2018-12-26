@@ -11,8 +11,8 @@
 		bp_componet
 		WHERE 1=1
 			<if test="variables.modCode != null and variables.modCode != ''">
-				AND MOD_CODE = #{variables.modCode}
-			</if>
+		        AND MOD_CODE = #{variables.modCode}
+		    </if>
 			<if test="variables.comCode != null and variables.comCode != ''">
 				AND COM_CODE LIKE CONCAT('%',#{variables.comCode},'%')
 			</if>
@@ -24,8 +24,8 @@
 			</if>	
 	</select>
 	
-	<select id="findAllComponet" parameterType="String" resultType="BpComponet">
-		select * from BP_COMPONET
+	<select id="findComponetByModCode" parameterType="String" resultType="BpComponet">
+		select * from BP_COMPONET where MOD_CODE = #{modCode}
 	</select>
 	
 	<select id="findComponet" parameterType="String" resultType="BpComponet">
