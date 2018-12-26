@@ -2,12 +2,12 @@
 #if($viewformitems)
 #foreach($formitem in $viewformitems)
 
-	              <FormItem label="${formitem.label}:" #if(${formitem.labelWidth})label-width="${formitem.labelWidth}"#end>
+	              <FormItem label="${formitem.label}:" #if(${formitem.labelWidth})label-width="${formitem.labelWidth}"#end style="width:300px">
 #if(${formitem.input})
 	                 <Input :readonly="true" v-model="${viewform.model}.${formitem.input.value}"/>
 #end
 #if(${formitem.inputNumber})	                 
-	                 <InputNumber :readonly="true" v-model="${viewform.model}.${formitem.inputNumber.value}"></InputNumber>
+	                 <InputNumber :readonly="true" v-model="${viewform.model}.${formitem.inputNumber.value}" style="width:200px"></InputNumber>
 #end
 #if(${formitem.datepicker})	                 
 	                 <DatePicker :readonly="true"  type="date" v-model="${viewform.model}.${formitem.datepicker.value}"></DatePicker>
