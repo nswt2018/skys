@@ -1,0 +1,7 @@
+#if(${modal.form}=="msaddForm")
+#parse("com/sky/app/coder/templates/c/c-addform-vue.vm")             
+#elseif(${modal.form}=="msupdForm")
+#parse("com/sky/app/coder/templates/c/c-updform-vue.vm")
+#elseif(${modal.form}=="msviewForm")
+#parse("com/sky/app/coder/templates/c/c-viewform-vue.vm")
+#end

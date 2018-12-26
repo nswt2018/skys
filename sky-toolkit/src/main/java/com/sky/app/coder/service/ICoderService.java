@@ -8,6 +8,8 @@ import com.sky.app.coder.model.Systems;
 public interface ICoderService{
 	List<Systems> getSystems(String sqlId,String sysKey);
 	Systems getSystemsOne(String sqlId,String upperSys);
+	//获得按系统生成的前端页面路径、后台路径、包和系统简码
+	List<String> getSystemsInfo(List<String> sysKeyList);
 	//判断模型
 	Element getModuleOne(String sqlId,String moduCode);
 	//单表模型,获得实体类内容

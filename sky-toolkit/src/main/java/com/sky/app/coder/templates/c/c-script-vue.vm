@@ -1,0 +1,400 @@
+#set($store="\$store")
+import datetool from '@/libs/datetool';
+import pagepublictool from '@/libs/pagepublictool';
+import mspagepublictool from '@/libs/mspagepublictool';
+import Cookies from 'js-cookie';
+import ${moducode}Column from './${moducode}-column.js';
+import ms${moducode}Column from './ms${moducode}-column.js';
+
+export default {
+    name: '${moducode}-info',
+    data () {
+        return {
+        	listurl: '/${syscode}${tid}L.do', 
+        	saveurl: '/${syscode}${tid}I.do',
+        	deleteurl: '/${syscode}${tid}D.do',
+        	updateurl: '/${syscode}${tid}U.do',
+        	mslisturl: '/Ms${syscode}${tid}L.do', 
+        	mssaveurl: '/Ms${syscode}${tid}I.do',
+        	msdeleteurl: '/Ms${syscode}${tid}D.do',
+        	msupdateurl: '/Ms${syscode}${tid}U.do',
+        	reledeleteurl: '/Rele${syscode}${tid}D.do',
+        	releupdateurl: '/Rele${syscode}${tid}U.do',
+#if($inputs)
+#foreach($input in $inputs) 
+#if(${input.defaultValue})
+			${input.value}:'${input.defaultValue}',
+#else     	
+        	${input.value}:'',
+#end
+#end
+#end
+#if($msinputs)
+#foreach($input in $msinputs) 
+#if(${input.defaultValue})
+			${input.value}:'${input.defaultValue}',
+#else     	
+        	${input.value}:'',
+#end
+#end
+#end
+#if($modals) 
+#foreach($modal in $modals) 
+#if(${modal.value})     	
+        	${modal.value}:false,
+#end
+#if(${modal.form})         	
+        	${modal.form}:{
+#if(${modal.form}=="addForm")
+#if($addformitems)
+#foreach($formitem in $addformitems)
+#if(${formitem.input}&&${formitem.input.defaultValue})
+				"${formitem.input.value}":"${formitem.input.defaultValue}",
+#end
+#if(${formitem.inputNumber}&&${formitem.inputNumber.defaultValue})
+				"${formitem.inputNumber.value}":"${formitem.inputNumber.defaultValue}",
+#elseif(${formitem.inputNumber})
+				${formitem.inputNumber.value}:1,
+#end
+#if(${formitem.datepicker}&&${formitem.datepicker.defaultValue})
+				"${formitem.datepicker.value}":"${formitem.datepicker.defaultValue}",
+#end
+#end
+#end
+#end
+             },
+#if(${modal.loading})        	
+        	${modal.loading}:true,
+#end        	
+#end        	
+#end 
+#end
+#if($msmodals) 
+#foreach($modal in $msmodals) 
+#if(${modal.value})     	
+        	${modal.value}:false,
+#end
+#if(${modal.form})         	
+        	${modal.form}:{
+#if(${modal.form}=="msaddForm")
+#if($addformitems)
+#foreach($formitem in $msaddformitems)
+#if(${formitem.input}&&${formitem.input.defaultValue})
+				"${formitem.input.value}":"${formitem.input.defaultValue}",
+#end
+#if(${formitem.inputNumber}&&${formitem.inputNumber.defaultValue})
+				"${formitem.inputNumber.value}":"${formitem.inputNumber.defaultValue}",
+#elseif(${formitem.inputNumber})
+				${formitem.inputNumber.value}:1,
+#end
+#if(${formitem.datepicker}&&${formitem.datepicker.defaultValue})
+				"${formitem.datepicker.value}":"${formitem.datepicker.defaultValue}",
+#end
+#end
+#end
+#end
+             },
+#if(${modal.loading})        	
+        	${modal.loading}:true,
+#end        	
+#end        	
+#end 
+#end        	
+        	selectedLines: 0,
+        	msselectedLines:0,
+#if(${table})
+        	#if(${table.data})${table.data}:[],#end
+        	
+        	#if(${table.columns})${table.columns}:[],#end
+#end
+#if(${mstable})
+
+        	#if(${mstable.data})${mstable.data}:[],#end
+        	
+        	#if(${mstable.columns})${mstable.columns}:[],#end
+        	
+#end
+#if(${page})
+        	pageSize: 10,
+            currentPage: 1,
+            totalPage: 0,
+            totalCount: 0,
+#end
+#if(${mspage})
+        	mspageSize: 10,
+            mscurrentPage: 1,
+            mstotalPage: 0,
+            mstotalCount: 0,
+            msRelationshipFields:[],
+#end
+        	buttonInfos:[
+        		{title:'查看',
+		        code:'100101',
+		        icon:'info',
+		        href:'view'
+		        },
+		        {title:'新增',
+		        code:'100102',
+		        icon:'primary',
+		        href:'add'
+		        },
+		        {title:'修改',
+		        code:'100103',
+		        icon:'warning',
+		        href:'upd'
+		        },
+		        {title:'删除',
+		        code:'100104',
+		        icon:'error',
+		        href:'del'
+        		} 	   
+        	],          
+#if(${addform.rules})
+        	${addform.rules}:{
+#if($addformitems)
+#foreach($addformitem in $addformitems)        	
+#if(${addformitem.prop} && ${addformitem.required} && ${addformitem.label})
+#if(${addformitem.input})
+        	    ${addformitem.input.value}: [
+                   	 {required: true, message: '${addformitem.label}不可为空', trigger: 'blur' }
+                   ],
+#end
+#if(${addformitem.datepicker})
+        	    ${addformitem.datepicker.value}: [
+                   	 {required: true,type:'date', message: '${addformitem.label}不可为空', trigger: 'blur' }
+                   ],
+#end
+#if(${addformitem.inputNumber})
+        	    ${addformitem.inputNumber.value}: [
+                   	 {required: true,type:'number', message: '${addformitem.label}不可为空', trigger: 'blur' }
+                   ],
+#end                                
+#end
+#end
+#end
+        	},
+#end
+#if(${msaddform.rules})
+        	${msaddform.rules}:{
+#if($msaddformitems)
+#foreach($addformitem in $msaddformitems)        	
+#if(${addformitem.prop} && ${addformitem.required} && ${addformitem.label})
+#if(${addformitem.input})
+        	    ${addformitem.input.value}: [
+                   	 {required: true, message: '${addformitem.label}不可为空', trigger: 'blur' }
+                   ],
+#end
+#if(${addformitem.datepicker})
+        	    ${addformitem.datepicker.value}: [
+                   	 {required: true,type:'date', message: '${addformitem.label}不可为空', trigger: 'blur' }
+                   ],
+#end
+#if(${addformitem.inputNumber})
+        	    ${addformitem.inputNumber.value}: [
+                   	 {required: true,type:'number', message: '${addformitem.label}不可为空', trigger: 'blur' }
+                   ],
+#end                                
+#end
+#end
+#end
+        	},
+#end
+#if(${updform.rules})
+        	${updform.rules}:{
+#if($updformitems)
+#foreach($updformitem in $updformitems)        	
+#if(${updformitem.prop} && ${updformitem.required} && ${updformitem.label})
+#if(${updformitem.input})
+        	    ${updformitem.input.value}: [
+                   	 {required: true, message: '${updformitem.label}不可为空', trigger: 'blur' }
+                   ],
+#end
+#if(${updformitem.datepicker})
+        	    ${updformitem.datepicker.value}: [
+                   	 {required: true,type:'date', message: '${updformitem.label}不可为空', trigger: 'blur' }
+                   ],
+#end
+#if(${updformitem.inputNumber})
+        	    ${updformitem.inputNumber.value}: [
+                   	 {required: true,type:'number', message: '${updformitem.label}不可为空', trigger: 'blur' }
+                   ],
+#end
+#end
+#end
+#end
+        	},
+#end
+#if(${msupdform.rules})
+        	${msupdform.rules}:{
+#if($msupdformitems)
+#foreach($updformitem in $msupdformitems)        	
+#if(${updformitem.prop} && ${updformitem.required} && ${updformitem.label})
+#if(${updformitem.input})
+        	    ${updformitem.input.value}: [
+                   	 {required: true, message: '${updformitem.label}不可为空', trigger: 'blur' }
+                   ],
+#end
+#if(${updformitem.datepicker})
+        	    ${updformitem.datepicker.value}: [
+                   	 {required: true,type:'date', message: '${updformitem.label}不可为空', trigger: 'blur' }
+                   ],
+#end
+#if(${updformitem.inputNumber})
+        	    ${updformitem.inputNumber.value}: [
+                   	 {required: true,type:'number', message: '${updformitem.label}不可为空', trigger: 'blur' }
+                   ],
+#end
+#end
+#end
+#end
+        	},
+#end 
+       	    deleteKey:[],
+       	    msdeleteKey:[]
+        };
+    },
+    methods: {
+    	getSearch() {
+    		let menuCode = Cookies.get('menucode');
+        	return {'menuCode':menuCode,'pageSize': this.pageSize, 'currentPage': this.currentPage
+        	#if($inputs!='null'),'valObj':{#foreach($input in $inputs)'${input.value}': this.${input.value}#if($foreach.hasNext),#end#end}#end
+        	};
+        },
+        getMsSearch() {
+    		let menuCode = Cookies.get('menucode');
+        	return {'menuCode':menuCode,'pageSize': this.mspageSize, 'currentPage': this.mscurrentPage
+        	,'valObj':{#if($msinputs!='null')#foreach($input in $msinputs)'${input.value}': this.${input.value}#if($foreach.hasNext),#end#end,#end'msRelationshipFields':this.msRelationshipFields}
+        	};
+        },  
+        init () {
+       		pagepublictool.setPage(this);
+        	pagepublictool.page(this.getSearch());
+        	//pagepublictool.getButtons();
+        	this.${table.columns}=${moducode}Column.getColumns();
+        	mspagepublictool.setPage(this);
+        	this.${mstable.columns}=ms${moducode}Column.getColumns();
+        },
+        searching () {
+    		pagepublictool.page(this.getSearch());
+        },
+        mssearching () {
+    		mspagepublictool.page(this.getMsSearch());
+        },
+        onClicking(type){
+         	if(type==='VIEW' || type==='view') pagepublictool.view();
+        	else if(type==='ADD'  || type==='add') pagepublictool.add();
+        	else if(type==='UPD' || type==='upd') pagepublictool.update();
+        	else if(type==='DEL' || type==='del') pagepublictool.mdelete(this.deleteurl+"?delKeys="+this.deleteKey.join(','));
+        },
+        onMsClicking(type){
+         	if(type==='VIEW' || type==='view') mspagepublictool.view();
+        	else if(type==='ADD'  || type==='add') mspagepublictool.add();
+        	else if(type==='UPD' || type==='upd') mspagepublictool.update();
+        	else if(type==='DEL' || type==='del') mspagepublictool.delete(this.msdeleteurl+"?delKeys="+this.msdeleteKey.join(','));
+        },
+        saving(refValue){
+         	pagepublictool.msave(refValue);
+        },
+        mssaving(refValue){
+         	mspagepublictool.save(refValue);
+        },
+        reseting (refValue) {
+ 			pagepublictool.reset(refValue);
+        },
+        choicing(selection, row) {
+        	pagepublictool.choice(selection, row);
+        	this.deleteKey.push(row.${tableprimary});
+        	this.msRelationshipFields.push(row.${relationfield});
+        	this.msaddForm.${msconvertrelationrield}=this.msRelationshipFields[0];
+        	mspagepublictool.page(this.getMsSearch());
+        },
+        mschoicing(selection, row) {
+        	mspagepublictool.choice(selection, row);
+        	this.msdeleteKey.push(row.${mstableprimary});
+        },
+        cancing(selection, row){
+        	pagepublictool.cancel(selection, row);
+        	if(this.selectedLines>0){
+        		this.deleteKey.splice(this.deleteKey.indexOf(row.${tableprimary}), 1);
+        		this.msRelationshipFields.splice(this.msRelationshipFields.indexOf(row.${relationfield}),1);
+        	}else{
+        		this.msRelationshipFields=[];
+        	}
+        	this.msaddForm.${msconvertrelationrield}=[];
+        	mspagepublictool.page(this.getMsSearch());
+        },
+        mscancing(selection, row){
+        	mspagepublictool.cancel(selection, row);
+        	if(this.msselectedLines>0){
+        		this.msdeleteKey.splice(this.msdeleteKey.indexOf(row.${mstableprimary}), 1);
+        	}
+        },
+        choicingAll(selection){
+        	this.selectedLines=selection.length;
+        	this.deleteKey=[];
+        	this.msRelationshipFields=[];
+        	for(var i=0;i<this.selectedLines;i++){
+        		this.deleteKey.push(selection[i].${tableprimary})
+        		this.msRelationshipFields.push(selection[i].${relationfield});
+        	}
+        	mspagepublictool.page(this.getMsSearch());
+        },
+        mschoicingAll(selection){
+        	this.msselectedLines=selection.length;
+        	this.msdeleteKey=[];
+        	for(var i=0;i<this.msselectedLines;i++){
+        		this.msdeleteKey.push(selection[i].${mstableprimary})
+        	}
+        },
+        cancingAll(selection){
+        	this.selectedLines=selection.length;
+        	if(this.selectedLines==0){
+        		this.deleteKey=[];
+        		this.msRelationshipFields=[];
+        		this.msaddForm.${msconvertrelationrield}=[];
+        	}
+        	mspagepublictool.page(this.getMsSearch());
+        },
+        mscancingAll(selection){
+        	this.msselectedLines=selection.length;
+        	if(this.msselectedLines==0){
+        		this.msdeleteKey=[];
+        	}
+        },
+        changePage (page) {
+        	let cond = this.getSearch();
+        	cond.currentPage = page;
+        	pagepublictool.page(cond);
+        },
+        changePageMs (page) {
+        	let cond = this.getMsSearch();
+        	cond.mscurrentPage = page;
+        	mspagepublictool.page(cond);
+        },
+        changePageSize (_pageSize) {
+        	let cond = this.getSearch();
+        	cond.pageSize = _pageSize;
+        	pagepublictool.page(cond);        	
+        },
+        changePageSizeMs (_pageSize) {
+        	let cond = this.getMsSearch();
+        	cond.mspageSize = _pageSize;
+        	mspagepublictool.page(cond);        	
+        },
+    },
+    created() {
+    	this.init();
+    },
+    computed:{
+			getSizeValue(){
+			 	//个性化设置，设置字体大小
+				const sizeValue=Cookies.get("sizeValue");
+				const size=this.$store.state.app.sizeFont;
+				if(!sizeValue){
+					return size;
+				}else{
+					return sizeValue;
+				}
+	    	}
+    }  
+};

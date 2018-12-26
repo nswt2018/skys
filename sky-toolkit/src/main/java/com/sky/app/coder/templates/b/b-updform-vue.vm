@@ -1,4 +1,4 @@
-	           <Form #if(${updform.ref})ref="${updform.ref}"#end :model="${updform.model}" #if(${updform.rules}):rules="${updform.rules}"#end #if(${updform.labelWidth}):label-width="${updform.labelWidth}" #if(${addform.inline})inline#end>#end
+	           <Form #if(${updform.ref})ref="${updform.ref}"#end :model="${updform.model}" #if(${updform.rules}):rules="${updform.rules}"#end #if(${updform.labelWidth}):label-width="${updform.labelWidth}" #if(${updform.inline})inline#end>#end
 #if($updformitems)
 #foreach($formitem in $updformitems)
 

@@ -1,0 +1,4 @@
+#if($button) 
+	        <Button style="margin: 2px;" v-for="(item,index) in buttonInfos" :type="item.icon"  
+ 					:key="item.code" @click="onMsClicking(item.href)"#if(${button.size}) :size="getSizeValue"#end#if(${button.icon}) icon="${button.icon}"#end>{{item.title }}</Button>   
+#end 

@@ -1,0 +1,46 @@
+#set($model=${models.model})
+#set($tablename=${models.tableName})
+#set($msinputs=${models.msinputs})
+#set($syscode=${models.sysCode})
+#set($msmapperselectfield=${models.msmapperSelectField})
+#set($mstablename=${models.mstableName})
+#set($msrelationfield=${models.msrelationField})
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sky.app.mapper.Ms${syscode}${model}Mapper">
+ 
+ 	 <select id="findForPageList" parameterType="Page" resultType="Ms${syscode}${model}">
+ 	 	<if test="variables.msRelationshipFields != null and variables.msRelationshipFields != ''">
+	       select 
+	          ${msmapperselectfield} 
+	       from 
+	         ${mstablename}
+	       where 1=1 and ${msrelationfield} IN
+			     <foreach item="item" index="index" collection="variables.msRelationshipFields" open="("  close=")" separator=",">
+			        	'${item}'
+			     </foreach>
+#if(${msinputs})	
+#foreach($input in $msinputs)       
+	             <if test="variables.${input.value} !=null and variables.${input.value} !=''">
+	             		and ${input.convertValue}=#{variables.${input.value}}
+	             </if>
+#end
+#end
+		</if>	 
+	 </select>
+	 <delete id="deleteSleveData">
+	 	DELETE 
+		FROM
+			${mstablename} 
+		WHERE
+			${msrelationfield}=#{delField}
+	 </delete>
+	 <update id="updateSleveData">
+	 	update 
+	 		${mstablename}
+	 	set 
+	 		${msrelationfield}=#{updField}
+	 	where 
+	 		${msrelationfield}=#{updField}
+	 </update>
+</mapper>  

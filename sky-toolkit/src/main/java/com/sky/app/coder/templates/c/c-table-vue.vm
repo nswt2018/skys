@@ -1,0 +1,8 @@
+#if($mstable) 
+       	   <Table #if(${mstable.columns}):columns="${mstable.columns}"#end #if(${mstable.data}):data="${mstable.data}"#end #if(${mstable.height})height="${mstable.height}"#end highlight-row
+       	        #if(${mstable.border}) border#end
+#if(${mstable.size}) :size="getSizeValue"#end
+#if(${mstable.stripe}) :stripe="true"#end
+#if(${mstable.onSelect}) @on-select="mschoicing"#end
+#if(${mstable.onSelectCancel}) @on-select-cancel="mscancing"#end#if(${mstable.onSelectAll}) @on-select-all="mschoicingAll"#end#if(${mstable.onSelectionChange}) @on-selection-change="mscancingAll"#end></Table>	
+#end 

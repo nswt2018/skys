@@ -1,0 +1,8 @@
+#if($page) 
+	 	  <div style="float: right;">
+               <Page  :total="mstotalCount" :current="1" :page-size="mspageSize" 
+               	      #if(${page.transfer}):transfer="true"#end#if(${page.size}) @size="getSizeValue"#end
+#if(${page.onChange}) @on-change="changePageMs"#end #if(${page.onPageSizeChange})@on-page-size-change="changePageSizeMs"#end
+#if(${page.showTotal}) show-total#end #if(${page.showElevator})show-elevator#end #if(${page.showSizer})show-sizer#end></Page> 	
+          </div> 
+#end

@@ -1,0 +1,30 @@
+#set($serviceimplpackname=${models.serviceImplPackName})
+#set($servicepackname=${models.servicePackName})
+#set($modelpackname=${models.modelPackName})
+#set($model=${models.model})
+#set($syscode=${models.sysCode})
+package ${serviceimplpackname};
+
+import com.sky.core.base.service.impl.BaseServiceImpl;
+
+import javax.annotation.Resource;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.stereotype.Service;
+import ${modelpackname}.Ms${syscode}${model};
+import ${servicepackname}.IMs${syscode}${model}Service;
+
+@Service("Ms${syscode}${model}Service")
+public class Ms${syscode}${model}ServiceImpl extends BaseServiceImpl<Ms${syscode}${model}> implements IMs${syscode}${model}Service{
+	@Resource(name = "sqlSessionTemplate")
+	private SqlSessionTemplate sqlsession;
+	@Override
+	public int delete(String sqlId, String delField) {
+		return sqlsession.delete(sqlId, delField);
+	}
+	@Override
+	public int update(String sqlId, String updField) {
+		return sqlsession.update(sqlId, updField);
+	}
+}
+

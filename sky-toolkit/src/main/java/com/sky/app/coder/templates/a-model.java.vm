@@ -2,10 +2,12 @@
 #set($modelclassstr=${models.modelClassStr})
 #set($tablename=${models.tableName})
 #set($syscode=${models.sysCode})
+#set($model=${models.model})
 package ${modelpackname};
 
 import java.math.BigDecimal;
 import java.util.Date;
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;

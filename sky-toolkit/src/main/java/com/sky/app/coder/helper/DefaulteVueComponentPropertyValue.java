@@ -18,6 +18,8 @@ public class DefaulteVueComponentPropertyValue {
 
 	public Table getTable() {
 		Table table = new Table();
+		table.setColumns("columns");
+		table.setData("data_list");
 		table.setIsSelectAll("true");
 		table.setHeight("410");
 		table.setBorder("true");
@@ -30,7 +32,23 @@ public class DefaulteVueComponentPropertyValue {
 		table.setOnSelectionChange("true");
 		return table;
 	}
-
+	//主从模型
+	public Table getMsTable() {
+		Table table = new Table();
+		table.setColumns("mscolumns");
+		table.setData("msdata_list");
+		table.setIsSelectAll("true");
+		table.setHeight("410");
+		table.setBorder("true");
+		table.setSize("true");
+		table.setStripe("true");
+		table.setRef("true");
+		table.setOnSelect("true");
+		table.setOnSelectCancel("true");
+		table.setOnSelectAll("true");
+		table.setOnSelectionChange("true");
+		return table;
+	}
 	public Page1 getPage() {
 		Page1 page = new Page1();
 		page.setOnChange("true");
@@ -77,7 +95,41 @@ public class DefaulteVueComponentPropertyValue {
 		list.add(modal3);
 		return list;
 	}
-
+	//主从模型
+	public List<Modal> getMsModal() {
+		Modal modal1 = new Modal();
+		modal1.setWidth("700");
+		modal1.setTitle("信息查看");
+		modal1.setValue("msviewModal");
+		modal1.setForm("msviewForm");
+		Modal modal2 = new Modal();
+		modal2.setWidth("700");
+		modal2.setTitle("信息新增");
+		modal2.setValue("msaddModal");
+		modal2.setCancelText("关闭");
+		modal2.setOkText("保存");
+		modal2.setLoading("msaddloading");
+		modal2.setMaskClosable("false");
+		modal2.setOnOk("");
+		modal2.setOnCancel("");
+		modal2.setForm("msaddForm");
+		Modal modal3 = new Modal();
+		modal3.setWidth("700");
+		modal3.setTitle("信息修改");
+		modal3.setValue("msupdModal");
+		modal3.setCancelText("关闭");
+		modal3.setOkText("保存");
+		modal3.setLoading("msupdloading");
+		modal3.setMaskClosable("false");
+		modal3.setOnOk("");
+		modal3.setOnCancel("");
+		modal3.setForm("msupdForm");
+		List<Modal> list = new ArrayList<Modal>();
+		list.add(modal1);
+		list.add(modal2);
+		list.add(modal3);
+		return list;
+	}
 	public Form[] getForm() {
 		Form addform = new Form();
 		addform.setRef("addFormRef");
@@ -90,10 +142,37 @@ public class DefaulteVueComponentPropertyValue {
 		updform.setModel("updForm");
 		updform.setRules("updRules");
 		updform.setLabelWidth("100");
+		updform.setInline("true");
 		Form viewform = new Form();
 		viewform.setRef("viewFormRef");
 		viewform.setModel("viewForm");
 		viewform.setLabelWidth("100");
+		viewform.setInline("true");
+		Form[] form = new Form[3];
+		form[0] = addform;
+		form[1] = updform;
+		form[2] = viewform;
+		return form;
+	}
+	//主从模型
+	public Form[] getMsForm() {
+		Form addform = new Form();
+		addform.setRef("msaddFormRef");
+		addform.setModel("msaddForm");
+		addform.setRules("msaddRules");
+		addform.setLabelWidth("100");
+		addform.setInline("true");
+		Form updform = new Form();
+		updform.setRef("msupdFormRef");
+		updform.setModel("msupdForm");
+		updform.setRules("msupdRules");
+		updform.setLabelWidth("100");
+		updform.setInline("true");
+		Form viewform = new Form();
+		viewform.setRef("msviewFormRef");
+		viewform.setModel("msviewForm");
+		viewform.setLabelWidth("100");
+		viewform.setInline("true");
 		Form[] form = new Form[3];
 		form[0] = addform;
 		form[1] = updform;

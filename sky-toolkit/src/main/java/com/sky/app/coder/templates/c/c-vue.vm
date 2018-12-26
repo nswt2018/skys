@@ -1,0 +1,74 @@
+#set($titleIconType=${models.titleIconType})
+#set($titleName=${models.titleName})
+#set($model=${models.model})
+#set($moducode=${models.moduCode})
+#set($tid=${models.tid})
+#set($syscode=${models.sysCode})
+#set($tableprimary=${models.tablePrimary})
+#set($mstableprimary=${models.mstablePrimary})
+#set($relationfield=${models.relationField})
+#set($msconvertrelationrield=${models.msconvertRelationField})
+#set($inputs=${models.inputs})
+#set($msinputs=${models.msinputs})
+#set($button=${models.button})
+#set($table=${models.table})
+#set($mstable=${models.mstable})
+#set($page=${models.page})
+#set($mspage=${models.mspage})
+#set($modals=${models.modals})
+#set($msmodals=${models.msmodals})
+#set($addform=${models.addform})
+#set($msaddform=${models.msaddform})
+#set($addformitems=${models.addformitem})
+#set($msaddformitems=${models.msaddformitems})
+#set($updform=${models.updform})
+#set($msupdform=${models.msupdform})
+#set($updformitems=${models.updformitem})
+#set($msupdformitems=${models.msupdformitems})
+#set($viewform=${models.viewform})
+#set($msviewform=${models.msviewform})
+#set($viewformitems=${models.viewformitem})
+#set($msviewformitems=${models.msviewformitems})
+<style>
+</style>
+<template>
+   <Row>
+	  <Col span="12">
+		<Card>
+		   <p slot="title"><Icon type="$titleIconType"></Icon>$titleName</p>
+		 <Row>
+	          <p>
+#parse("com/sky/app/coder/templates/a-input-vue.vm")          
+#parse("com/sky/app/coder/templates/a-button-vue.vm")          
+	          </p>	
+	     </Row>
+	     <Row>
+#parse("com/sky/app/coder/templates/a-table-vue.vm")
+#parse("com/sky/app/coder/templates/a-page-vue.vm")
+	     </Row>
+#parse("com/sky/app/coder/templates/a-modal-vue.vm")     
+		</Card>
+	  </Col>
+	  <Col span="12">
+		<Card>
+		   <p slot="title"><Icon type="$titleIconType"></Icon>$titleName</p>
+		 <Row>
+	          <p>
+#parse("com/sky/app/coder/templates/c/c-input-vue.vm")          
+#parse("com/sky/app/coder/templates/c/c-button-vue.vm")          
+	          </p>	
+	     </Row>
+	     <Row>
+#parse("com/sky/app/coder/templates/c/c-table-vue.vm")
+#parse("com/sky/app/coder/templates/c/c-page-vue.vm")
+	     </Row>
+#parse("com/sky/app/coder/templates/c/c-modal-vue.vm")     
+		</Card>
+	  </Col>	  
+   </Row>
+</template>
+<script>
+#parse("com/sky/app/coder/templates/c/c-script-vue.vm") 
+
+</script>
+ 

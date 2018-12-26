@@ -51,6 +51,22 @@ public class Model {
 	private String tablePrimaryValue;
 	//model实体类里面的属性 get/set 方法
 	private String modelClassStr;
+	
+	//从表模块，模块关联表
+	private String mstableName;
+	//从表模型，主键字段
+	private String mstablePrimary;
+	//从表模型model实体类里面的属性 get/set 方法
+	private String msmodelClassStr;
+	//多表模型 ，从表mapper中查询的字段
+	private String msmapperSelectField;
+	//从表模型，主表和从表关联的字段
+	private String relationField;
+	//从表模型，从表关联的字段
+	private String msrelationField;
+	//从表模型，从表转换后关联的字段
+	private String msconvertRelationField;
+	
 	//交易号
 	private String tid;
 	//用于标签信息解析
@@ -71,6 +87,28 @@ public class Model {
 	private List<FormItem> updformitem;
 	private List<FormItem> viewformitem;
 	private List<TableColumn> tablecolumns;
+	//主从模型，从表输入框
+	private List<Input> msinputs;
+	//主从模型，从表列表
+	private Table mstable;
+	//从表模型，从表分页
+	private Page1 mspage;
+	//从表模型，从表对话框
+	private List<Modal> msmodals;
+	//从表模型，从表新增表单
+	private Form msaddform;
+	//从表模型，从表修改表单
+	private Form msupdform;
+	//从表模型，从表查看表单
+	private Form msviewform;
+	//从表模型，从表新增字段
+	private List<FormItem> msaddformitems;
+	//从表模型，从表修改字段
+	private List<FormItem> msupdformitems;
+	//从表模型，从表查看字段
+	private List<FormItem> msviewformitems;
+	//从表模型，
+	private List<TableColumn> mstablecolumns;
 	public String getTitleName() {
 		return titleName;
 	}
@@ -299,7 +337,114 @@ public class Model {
 	public void setTablePrimaryList(List<String> tablePrimaryList) {
 		this.tablePrimaryList = tablePrimaryList;
 	}
-	
+	public List<Input> getMsinputs() {
+		return msinputs;
+	}
+	public void setMsinputs(List<Input> msinputs) {
+		this.msinputs = msinputs;
+	}
+	public Table getMstable() {
+		return mstable;
+	}
+	public void setMstable(Table mstable) {
+		this.mstable = mstable;
+	}
+	public Page1 getMspage() {
+		return mspage;
+	}
+	public void setMspage(Page1 mspage) {
+		this.mspage = mspage;
+	}
+	public List<Modal> getMsmodals() {
+		return msmodals;
+	}
+	public void setMsmodals(List<Modal> msmodals) {
+		this.msmodals = msmodals;
+	}
+	public Form getMsaddform() {
+		return msaddform;
+	}
+	public void setMsaddform(Form msaddform) {
+		this.msaddform = msaddform;
+	}
+	public Form getMsupdform() {
+		return msupdform;
+	}
+	public void setMsupdform(Form msupdform) {
+		this.msupdform = msupdform;
+	}
+	public Form getMsviewform() {
+		return msviewform;
+	}
+	public void setMsviewform(Form msviewform) {
+		this.msviewform = msviewform;
+	}
+	public List<FormItem> getMsaddformitems() {
+		return msaddformitems;
+	}
+	public void setMsaddformitems(List<FormItem> msaddformitems) {
+		this.msaddformitems = msaddformitems;
+	}
+	public List<FormItem> getMsupdformitems() {
+		return msupdformitems;
+	}
+	public void setMsupdformitems(List<FormItem> msupdformitems) {
+		this.msupdformitems = msupdformitems;
+	}
+	public List<FormItem> getMsviewformitems() {
+		return msviewformitems;
+	}
+	public void setMsviewformitems(List<FormItem> msviewformitems) {
+		this.msviewformitems = msviewformitems;
+	}
+	public List<TableColumn> getMstablecolumns() {
+		return mstablecolumns;
+	}
+	public void setMstablecolumns(List<TableColumn> mstablecolumns) {
+		this.mstablecolumns = mstablecolumns;
+	}
+	public String getMstablePrimary() {
+		return mstablePrimary;
+	}
+	public void setMstablePrimary(String mstablePrimary) {
+		this.mstablePrimary = mstablePrimary;
+	}
+	public String getMsmodelClassStr() {
+		return msmodelClassStr;
+	}
+	public void setMsmodelClassStr(String msmodelClassStr) {
+		this.msmodelClassStr = msmodelClassStr;
+	}
+	public String getMstableName() {
+		return mstableName;
+	}
+	public void setMstableName(String mstableName) {
+		this.mstableName = mstableName;
+	}
+	public String getMsmapperSelectField() {
+		return msmapperSelectField;
+	}
+	public void setMsmapperSelectField(String msmapperSelectField) {
+		this.msmapperSelectField = msmapperSelectField;
+	}
+	public String getRelationField() {
+		return relationField;
+	}
+	public void setRelationField(String relationField) {
+		this.relationField = relationField;
+	}
+	public String getMsrelationField() {
+		return msrelationField;
+	}
+	public void setMsrelationField(String msrelationField) {
+		this.msrelationField = msrelationField;
+	}
+	public String getMsconvertRelationField() {
+		return msconvertRelationField;
+	}
+	public void setMsconvertRelationField(String msconvertRelationField) {
+		this.msconvertRelationField = msconvertRelationField;
+	}
 	
 	
 }
