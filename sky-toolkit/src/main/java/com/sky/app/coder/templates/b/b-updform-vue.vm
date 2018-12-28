@@ -2,12 +2,12 @@
 #if($updformitems)
 #foreach($formitem in $updformitems)
 
-				  <FormItem label="${formitem.label}:" #if(${formitem.prop})prop="${formitem.prop}"#end #if(${formitem.required})required#end #if(${formitem.labelWidth})label-width="${formitem.labelWidth}"#end>
+				  <FormItem label="${formitem.label}:" #if(${formitem.prop})prop="${formitem.prop}"#end #if(${formitem.required})required#end #if(${formitem.labelWidth})label-width="${formitem.labelWidth}"#end style="width:300px">
 #if(${formitem.input})
 	                 <Input #if(${formitem.input.readonly})readonly="true"#end v-model="${updform.model}.${formitem.input.value}" #if(${formitem.input.placeholder})placeholder="${formitem.input.placeholder}"#end />
 #end
 #if(${formitem.inputNumber})	                 
-	                 <InputNumber #if(${formitem.inputNumber.readonly})readonly="true"#end v-model="${updform.model}.${formitem.inputNumber.value}" #if(${formitem.inputNumber.max}):max="${formitem.inputNumber.max}"#end #if(${formitem.inputNumber.min}):min="${formitem.inputNumber.min}"#end #if(${formitem.inputNumber.placeholder})placeholder="${formitem.inputNumber.placeholder}"#end ></InputNumber>
+	                 <InputNumber #if(${formitem.inputNumber.readonly})readonly="true"#end v-model="${updform.model}.${formitem.inputNumber.value}" #if(${formitem.inputNumber.max}):max="${formitem.inputNumber.max}"#end #if(${formitem.inputNumber.min}):min="${formitem.inputNumber.min}"#end #if(${formitem.inputNumber.placeholder})placeholder="${formitem.inputNumber.placeholder}"#end style="width:200px"></InputNumber>
 #end
 #if(${formitem.datepicker})	                 
 	                 <DatePicker #if(${formitem.datepicker.readonly})readonly="true"#end  type="date" v-model="${updform.model}.${formitem.datepicker.value}" #if(${formitem.datepicker.placeholder})placeholder="${formitem.datepicker.placeholder}"#end></DatePicker>

@@ -263,7 +263,7 @@ export default {
         getMsSearch() {
     		let menuCode = Cookies.get('menucode');
         	return {'menuCode':menuCode,'pageSize': this.mspageSize, 'currentPage': this.mscurrentPage
-        	,'valObj':{#if($msinputs!='null')#foreach($input in $msinputs)'${input.value}': this.${input.value}#if($foreach.hasNext),#end#end,#end'msRelationshipFields':this.msRelationshipFields}
+        	,'valObj':{#if(${msinputs})#foreach($input in $msinputs)'${input.value}': this.${input.value},#end#end'msRelationshipFields':this.msRelationshipFields}
         	};
         },  
         init () {

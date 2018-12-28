@@ -70,7 +70,7 @@ public class CoderController {
 					Element element = CoderService.getModuleOne("com.sky.app.core.CoderMapper.findBpModuleForOne",moduCode);
 					if(element!=null){
 						//先判断该模块的模型,进行不同的处理
-						if(element.getModName().equals("多表模型")){
+						if("多表模型".equals(element.getModName())){
 							//用于存放velocity生成文件所需要的参数数组
 							List<Object[]> list=new ArrayList<Object[]>();
 							//存放表的主键字段
@@ -136,7 +136,7 @@ public class CoderController {
 									VelocityCoder.velocity(vcx, "com/sky/app/coder/templates/b/b-model.java.vm", javaPath + "/model/" + uppersyscode +cmoduCode + ".java");
 								}
 							}
-						}else if(element.getModName().equals("单表模型")){
+						}else if("单表模型".equals(element.getModName())){
 							// 根据模块代码从页面元素表中取出该模块全部的字段信息，并关联字段定义表，获得字段在数据库的类型
 							List<Element> list = CoderService.getTagInfo("com.sky.app.core.CoderMapper.findBpForList",moduCode);
 							Element el = CoderService.getElement("com.sky.app.core.CoderMapper.findBpForOne", moduCode);
@@ -151,7 +151,7 @@ public class CoderController {
 								// 根据传入的数据、模板、路径生成相应的文件
 								VelocityCoder.velocity(vcx, key, cmap.get(key));
 							}
-						}else if(element.getModName().equals("主从模型")){
+						}else if("主从模型".equals(element.getModName())){
 							//主从模型只有两张表，主表和从表
 							// 将模块的关联表转放入数组中，默认第一张表为主表，第二张表为从表
 							String[] mstableArr = element.getRelTable().split(",");
