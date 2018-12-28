@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sky.business.commonfield.dao.BpCommonfieldDao">
+ 
+ <select id="findForPageList" parameterType="Page" resultType="BpCommonfield">
+    select
+		*
+    from 
+		BP_COMMONFIELD
+    where 1=1
+        <if test="variables.colName !=null and variables.colName !=''">
+       		and COL_NAME=#{variables.colName}
+        </if>
+        <if test="variables.colCode !=null and variables.colCode !=''">
+       		and COL_CODE=#{variables.colCode}
+        </if>
+	</select>
+
+	<select id="findColByTabCode" parameterType="hashmap" resultType="BpField">
+		SELECT  
+		*
+		FROM 
+		BP_COMMONFIELD
+		WHERE 1=1
+			<if test="colCode != null and colCode != ''">
+		        AND COL_CODE IN
+		        <foreach item="item" index="index" collection="colCode" open="("  close=")" separator=",">
+		        	'${item}'
+		        </foreach>
+		    </if>
+	</select>
+</mapper>  

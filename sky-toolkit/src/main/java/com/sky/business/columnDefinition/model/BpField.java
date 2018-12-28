@@ -37,6 +37,24 @@ public class BpField implements Serializable{
 	@Column(name="PK_GEN")
 	private String pkGen;
 	
+	@Column(name="JOIN_TAB_CODE")
+	private String joinTabCode;
+	
+	@Column(name="JOIN_COL_CODE")
+	private String joinColCode;
+	
+	@Column(name="JOIN_WHERE")
+	private String joinWhere;
+	
+	@Column(name="UI_TYPE")
+	private String uiType;
+	
+	@Column(name="UI_ORDER")
+	private Integer uiOrder;
+	
+	@Column(name="VAL_BETWEEN")
+	private String valBetween;
+	
 	@Column(name="CRT_DATE")
 	private Date crtDate;
 	
@@ -105,6 +123,54 @@ public class BpField implements Serializable{
 
 	public void setUpdDate(Date updDate) {
 		this.updDate = updDate;
+	}
+	
+	public String getJoinTabCode() {
+		return joinTabCode;
+	}
+
+	public void setJoinTabCode(String joinTabCode) {
+		this.joinTabCode = joinTabCode;
+	}
+
+	public String getJoinColCode() {
+		return joinColCode;
+	}
+
+	public void setJoinColCode(String joinColCode) {
+		this.joinColCode = joinColCode;
+	}
+
+	public String getJoinWhere() {
+		return joinWhere;
+	}
+
+	public void setJoinWhere(String joinWhere) {
+		this.joinWhere = joinWhere;
+	}
+
+	public String getUiType() {
+		return uiType;
+	}
+
+	public void setUiType(String uiType) {
+		this.uiType = uiType;
+	}
+
+	public Integer getUiOrder() {
+		return uiOrder;
+	}
+
+	public void setUiOrder(Integer uiOrder) {
+		this.uiOrder = uiOrder;
+	}
+
+	public String getValBetween() {
+		return valBetween;
+	}
+
+	public void setValBetween(String valBetween) {
+		this.valBetween = valBetween;
 	}
 
 	public static long getSerialversionuid() {

@@ -21,7 +21,6 @@ public class BpTag implements Serializable{
 
 	//主键
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="TAG_KEY")
 	private String tagKey;
 	
