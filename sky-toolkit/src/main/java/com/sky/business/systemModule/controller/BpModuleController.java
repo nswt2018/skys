@@ -380,8 +380,8 @@ public class BpModuleController extends BaseController {
 			Map<String, Object> childMap;
 			for (BpModule bpModule : mList) {
 				childMap = new HashMap<>();
-				childMap.put("value", bpModule.getModuTC());
-				childMap.put("label", bpModule.getModuTC());
+				childMap.put("value", bpModule.getModuCode());
+				childMap.put("label", bpModule.getModuCode());
 				childList.add(childMap);
 			}
 			

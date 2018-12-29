@@ -67,6 +67,13 @@ public class Model {
 	//从表模型，从表转换后关联的字段
 	private String msconvertRelationField;
 	
+	//树模型，用于判断是否为树模型
+	private String isTree;
+	//树模型，表的全部字段
+	private List<String> fields;
+	//树模型，路由
+	private List<String> routes;
+	
 	//交易号
 	private String tid;
 	//用于标签信息解析
@@ -445,6 +452,25 @@ public class Model {
 	public void setMsconvertRelationField(String msconvertRelationField) {
 		this.msconvertRelationField = msconvertRelationField;
 	}
+	public String getIsTree() {
+		return isTree;
+	}
+	public void setIsTree(String isTree) {
+		this.isTree = isTree;
+	}
+	public List<String> getFields() {
+		return fields;
+	}
+	public void setFields(List<String> fields) {
+		this.fields = fields;
+	}
+	public List<String> getRoutes() {
+		return routes;
+	}
+	public void setRoutes(List<String> routes) {
+		this.routes = routes;
+	}
+	
 	
 	
 }

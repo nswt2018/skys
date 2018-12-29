@@ -359,7 +359,7 @@ public class VelocityGetTemplateMulitData {
 						if (formitem.getProp() == null || formitem.getProp() == "") {
 							formitem.setProp(ename);
 						} else {
-							formitem.setProp(ConvertString.convertSomeCharUpper(formitem.getProp().toLowerCase()));
+							formitem.setProp(ConvertString.convertSomeCharUpper(formitem.getProp()));
 						}
 						if (formitem.getRequired() == null || formitem.getRequired() == "") {
 							formitem.setRequired("true");

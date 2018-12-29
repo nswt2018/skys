@@ -1,0 +1,104 @@
+#set($routes=${models.routes})
+#set($route="\$route")
+<template>
+	<Row >
+		<i-col span="5">
+		<i-menu active-name="1-1" width="auto" accordion :open-names="[menuData[0].name]">
+			<template v-for="item in menuData">
+				<Submenu :name="item.name" :key="item.name">
+					<template slot="title">
+						<Icon :type="item.icon"></Icon>
+						<span class="layout-text">{{ item.label }}</span>
+					</template>
+					<template v-for="childs in item.children">
+						<menu-item v-if="isMoreLeveMenu(childs)==false" :name="childs.name" :key="childs.name">
+							<router-link :to="{path:childs.path, query:{id:childs.param1,type:childs.param2,showparam:childs.showparam}}">{{ childs.label }}</router-link>
+						</menu-item>
+						<Submenu v-if="isMoreLeveMenu(childs)==true" :name="childs.name" :key="childs.name">
+							<template slot="title">
+								<Icon :type="childs.icon"></Icon>
+								<span class="layout-text">{{ childs.label }}</span>
+							</template>
+							<template v-for="child in childs.children">
+								<menu-item v-if="isMoreLeveMenu(child)==false" :name="child.name" :key="child.name">
+									<router-link  :to="{path:child.path, query:{id:child.param1,type:child.param2,showparam:child.showparam}}">{{ child.label }}</router-link>
+								</menu-item>
+								<Submenu v-if="isMoreLeveMenu(child)==true" :name="child.name" :key="child.name">
+									<template slot="title">
+										<Icon :type="child.icon"></Icon>
+										<span class="layout-text">{{ child.label }}</span>
+									</template>
+									<template v-for="kids in child.children">
+										<menu-item :name="kids.name" :key="kids.name">
+											<router-link :to="{path:kids.path, query:{id:kids.param1,type:kids.param2,showparam:kids.showparam}}">{{ kids.label }}</router-link>
+										</menu-item>
+									</template>
+								</Submenu>
+							</template>
+						</Submenu>
+					</template>
+				</Submenu>
+			</template>
+		</i-menu>
+		</i-col>
+		<i-col span="18">
+			<div class="layout-content-main" >
+				<router-view></router-view>
+			</div>
+		</i-col>
+	</Row>
+</template>
+<script>
+import util from '@/libs/util.js';
+import datetool from '@/libs/datetool';
+import pagepublictool from '@/libs/pagepublictool';
+import Cookies from 'js-cookie';
+import treemodeColumn from '@/libs/treemode-column.js';
+import VueRouter from "vue-router";
+import pagetool from '@/libs/pagetool';
+
+
+export default {
+	router : new VueRouter({
+		routes : [        		
+			#if($routes)
+			#foreach($nroute in $routes)
+								$nroute#if($foreach.hasNext),#end
+			#end
+			#end       		    
+		]
+	}),	
+    name: '${moducode}treemode-info',
+    data () {
+        return {
+        	treeurl: '/treemode/2000C.do',
+        	menuData:[]
+        };
+    },
+    methods: {
+        init () {
+       		pagepublictool.setPage(this);
+        	if(this.$route.query){
+           		treemodeColumn.setPage(this);
+        		treemodeColumn.getTreeData(this.$route.query.code,this.$route.query.id,this.$route.query.type);
+        	}
+        },
+        
+		isMoreLeveMenu(child){
+			if(child.children){
+			   if(child.children.length>0){
+					return true;
+				}else{
+					return false;
+				} 
+			}else {
+				return false;
+			}
+		},
+ 
+    },
+    created() {
+    	this.init();
+    }
+};
+</script>
