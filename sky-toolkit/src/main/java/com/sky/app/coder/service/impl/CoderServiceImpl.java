@@ -471,8 +471,8 @@ public class CoderServiceImpl implements ICoderService {
 		}
 		return fieldslist;
 	}
-	
-	//树模型，获取主表的全部字段，并放入集合中返回
+
+	// 树模型，获取主表的全部字段，并放入集合中返回
 	@Override
 	public List<String> getTreeModeMsTablesFields(String tablename) {
 		// 用于存放表的字段名称
@@ -499,11 +499,17 @@ public class CoderServiceImpl implements ICoderService {
 	public List<String> getTreeRouter(String tranCode) {
 		List<String> listMap = new ArrayList<String>();
 		String tempMap;
-		List<BpTreemode> treeMode = sqlsession.selectList("com.sky.app.core.CoderMapper.getTreeRouter", tranCode);
-		for (BpTreemode tree : treeMode) {
+		List<Systems> sysList = sqlsession.selectList("com.sky.app.core.CoderMapper.getSystemsList", tranCode);
+		for (int i = 0; i < sysList.size(); i++) {
+			List<String> upperSysList = ConvertString.subString(sysList.get(i).getSysKey());
+			List<String> fourlist = this.getSystemsInfo(upperSysList);
+			// 页面路径
+			String vuePath = fourlist.get(1).substring(fourlist.get(0).indexOf("\\src\\") + 4).replace('\\', '/');
+			String code = sysList.get(i).getModCode();
+
 			tempMap = "";
-			tempMap = "{ path: '/" + tree.getTranCode() + "',name: '" + tree.getTranCode()
-					+ "', component: () => import('@" + tree.getShowCond() + "')}";
+			tempMap = "{ path: '/" + code + "',name: '" + code + "', component: () => import('@" + vuePath + "/" + code
+					+ ".vue')}";
 			listMap.add(tempMap);
 		}
 		return listMap;
