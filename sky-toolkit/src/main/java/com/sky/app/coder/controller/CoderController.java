@@ -109,37 +109,28 @@ public class CoderController {
 							model.setTableListName(Arrays.asList(converTableArr));
 							//设置mapper映射文件，查询的字段以表加字段作为别名
 							model.setMapperSelectField(CoderService.getMultiMapperSelectField(tableArr));
+							//根据传入的模块关联表、模块数据库表主键，生成实体类中的内容(属性和get/set方法)
+							model.setModelClassStr(CoderService.getMultiClassStr(tableArr,primlist));
 							//对模块代码进行处理
 							String cmoduCode=ConvertString.convertFirstCharUpper(moduCode.toLowerCase());
 							//多表模型， 获得velocity生成文件所需要的三个参数（模板变量值，模板，路径）,放在list集合中
-							list=VelocityGetPutMapMulitParameter.getMap(cmoduCode,vuePath,javaPath,converTableArr,model,uppersyscode);
-							Model[] modelArr = (Model[])list.get(0);
-							String[] templateArr = (String[])list.get(1);
-							String[] pathArr = (String[])list.get(2);
-							for(int h=0;h<list.get(0).length;h++){
-								vcx.put("models", modelArr[h]);
-								VelocityCoder.velocity(vcx, templateArr[h], pathArr[h]);
+							Map<String, String> cmap=VelocityGetPutMapMulitParameter.getMap(cmoduCode,vuePath,javaPath,uppersyscode);
+							vcx.put("models", model);
+							for (String key : cmap.keySet()) {
+								// 根据传入的数据、模板、路径生成相应的文件
+								VelocityCoder.velocity(vcx, key, cmap.get(key));
 							}
-							//存放实体类内容
-							String classstr=null;
-							//多表模型会生成多个 实体类文件，需做特殊处理
-							for(int j = 0; j < converTableArr.length + 1; j++){
-								if (j < converTableArr.length) {
-									//根据传入的模块关联表名、主键，生成实体类中的内容(属性和get/set方法)
-									classstr=CoderService.getMultiClassStrBytable(tableArr[j],primlist.get(j));
+							//多表模型会生成多个 实体类文件、多个接口层，需做特殊处理
+							for(int j = 0; j < converTableArr.length; j++){
 									model.setConverTableName(converTableArr[j]);
 									model.setTableName(tableArr[j]);
-									model.setModelClassStr(classstr);
+									//根据传入的模块关联表名、主键，生成实体类中的内容(属性和get/set方法)
+									model.setModelClassStr(CoderService.getMultiClassStrBytable(tableArr[j],primlist.get(j)));
 									vcx.put("models", model);
+									//生成实体类
 									VelocityCoder.velocity(vcx, "com/sky/app/coder/templates/b/b-model.java.vm", javaPath + "/model/" + uppersyscode +cmoduCode+ converTableArr[j] + ".java");
-								} else {
-									//根据传入的模块关联表、模块数据库表主键，生成实体类中的内容(属性和get/set方法)
-									classstr=CoderService.getMultiClassStr(tableArr,primlist);
-									model.setModelClassStr(classstr);
-									model.setConverTableName("");
-									vcx.put("models", model);
-									VelocityCoder.velocity(vcx, "com/sky/app/coder/templates/b/b-model.java.vm", javaPath + "/model/" + uppersyscode +cmoduCode + ".java");
-								}
+									//生成dao接口
+									VelocityCoder.velocity(vcx, "com/sky/app/coder/templates/b/b-dao.java.vm", javaPath + "/dao/" + uppersyscode +cmoduCode + converTableArr[i] + "Dao.java");
 							}
 						}else if("单表模型".equals(modname)||"树模型".equals(modname)){
 							// 根据模块代码从页面元素表中取出该模块全部的字段信息，并关联字段定义表，获得字段在数据库的类型

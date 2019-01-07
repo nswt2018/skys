@@ -32,7 +32,6 @@ import ${servicepackname}.I${syscode}${model}Service;
 #if(${tablelistnames})
 #foreach(${tablelistname} in ${tablelistnames})
 import ${modelpackname}.${syscode}${model}${tablelistname};
-import ${servicepackname}.I${syscode}${model}${tablelistname}Service;
 #end
 #end
 import com.sky.core.exception.BusinessException;
@@ -45,12 +44,7 @@ import reactor.core.publisher.Mono;
 public class ${syscode}${model}Controller extends BaseController{
 	@Resource(name = "${syscode}${model}Service")
 	private I${syscode}${model}Service ${syscode}${model}Service;
-#if(${tablelistnames})
-#foreach(${tablelistname} in ${tablelistnames})
-	@Resource(name = "${syscode}${model}${tablelistname}Service")
-	private I${syscode}${model}${tablelistname}Service ${syscode}${model}${tablelistname}Service;
-#end
-#end
+	
 	@RequestMapping(value = "/${syscode}${tid}L.do", method = RequestMethod.POST)
 	@ResponseBody
 	public Mono<Page<${syscode}${model}>> get${syscode}${model}PageList(@RequestBody Page<${syscode}${model}> page, HttpServletRequest request,
@@ -68,15 +62,15 @@ public class ${syscode}${model}Controller extends BaseController{
 		try {
 			if (${model}!= null) {
 #if(${changetableinfo})
-				${changetableinfo}
+${changetableinfo}
 #end
 #if(${tablelistnames})
 #foreach(${tablelistname} in ${tablelistnames})
 				${syscode}${model}${tablelistname} ${model}${tablelistname}=new ${syscode}${model}${tablelistname}();
 				Copy(${model},${model}${tablelistname});
-			    ${syscode}${model}${tablelistname}Service.save(${model}${tablelistname});
 #end
 #end
+				${syscode}${model}Service.save(#if(${tablelistnames})#foreach(${tablelistname} in ${tablelistnames})${model}${tablelistname}#if($foreach.hasNext),#end#end#end);
 				return Mono.justOrEmpty(new Message("000001"));
 			} else {
 				return Mono.justOrEmpty(new Message("000004"));
@@ -93,15 +87,15 @@ public class ${syscode}${model}Controller extends BaseController{
 		try {
 			if (${model} != null) {
 #if(${changetableinfo})
-				${changetableinfo}
+${changetableinfo}
 #end
 #if(${tablelistnames})
 #foreach(${tablelistname} in ${tablelistnames})
 				${syscode}${model}${tablelistname} ${model}${tablelistname}=new ${syscode}${model}${tablelistname}();
 				Copy(${model},${model}${tablelistname});
-			    ${syscode}${model}${tablelistname}Service.update(${model}${tablelistname});
 #end
 #end
+				${syscode}${model}Service.update(#if(${tablelistnames})#foreach(${tablelistname} in ${tablelistnames})${model}${tablelistname}#if($foreach.hasNext),#end#end#end);
 				return Mono.justOrEmpty(new Message("000003"));
 			} else {
 				return Mono.justOrEmpty(new Message("000006"));
@@ -119,11 +113,7 @@ public class ${syscode}${model}Controller extends BaseController{
 			if (delKeys == null || delKeys.length == 0)
 				throw new BusinessException("000005");
 			for (String delKey : delKeys) {
-#if(${tablelistnames})
-#foreach(${tablelistname} in ${tablelistnames})
-			${syscode}${model}${tablelistname}Service.delete(delKey);
-#end
-#end
+				${syscode}${model}Service.delete(delKey);
 			}
 			return Mono.justOrEmpty(new Message("000002"));
 		} catch (Exception e) {
