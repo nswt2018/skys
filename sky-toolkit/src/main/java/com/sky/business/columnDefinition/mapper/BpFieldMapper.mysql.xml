@@ -35,4 +35,8 @@
 	<select id="findAllField" parameterType="String" resultType="BpField">
 		select * from BP_FIELD where tab_code = #{tabCode}
 	</select>
+	
+	<insert id="backupTab" parameterType="hashmap" statementType="STATEMENT">
+        create table ${newTabCode} SELECT * FROM ${oldTabCode}
+    </insert>
 </mapper>

@@ -11,10 +11,7 @@
 		bp_unit
 		WHERE 1=1
 			<if test="variables.moduCode != null and variables.moduCode != ''">
-		        AND MODU_CODE IN
-		        <foreach item="item" index="index" collection="variables.moduCode.split(',')" open="("  close=")" separator=",">
-		        	'${item}'
-		        </foreach>
+		        AND MODU_CODE = #{variables.moduCode}
 		    </if>
 			<if test="variables.unitCode != null and variables.unitCode != ''">
 				AND UNIT_CODE LIKE CONCAT('%',#{variables.unitCode},'%')

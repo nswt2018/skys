@@ -10,11 +10,8 @@
 		FROM 
 		bp_element
 		WHERE 1=1
-			<if test="variables.codeList != null and variables.codeList != ''">
-		        AND UNIT_CODE IN
-		        <foreach item="item" index="index" collection="variables.codeList" open="("  close=")" separator=",">
-		        	${item}
-		        </foreach>
+			<if test="variables.unitCode != null and variables.unitCode != ''">
+		        AND UNIT_CODE = #{variables.unitCode}
 		    </if>
 			<if test="variables.eleCName != null and variables.eleCName != ''">
 				AND ELE_CNAME LIKE CONCAT('%',#{variables.eleCName},'%')

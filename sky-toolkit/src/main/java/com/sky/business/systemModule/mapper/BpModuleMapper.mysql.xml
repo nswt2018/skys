@@ -29,11 +29,15 @@
 	</select>
 	
 	<select id="getTabName" parameterType="String" resultType="String">
-		SELECT tab_code from bp_tables where ISEXIST = '1'
+		SELECT CONCAT(tab_code, '/', tab_name) from bp_tables where ISEXIST = '1'
 	</select>
 	
 	<select id="getColumnName" parameterType="String" resultType="String">
 		SELECT CONCAT(col_code ,',', col_name) AS elename FROM bp_field WHERE tab_code = #{relTable} ORDER BY col_name
+	</select>
+	
+	<select id="getDoMainInfo" parameterType="String" resultType="String">
+		SELECT CONCAT(CNAME, ',', DATA_TYPE, ',', DATA_LEN) AS data FROM BP_DOMAIN
 	</select>
 	
 	<delete id="delData" parameterType="hashmap" statementType="STATEMENT">

@@ -61,12 +61,23 @@ public class BpField implements Serializable{
 	@Column(name="UPD_DATE")
 	private Date updDate;
 
+	@Column(name="DOMAINTYPE")
+	private String doMainType;
+	
 	public String getTabCode() {
 		return tabCode;
 	}
 
 	public void setTabCode(String tabCode) {
 		this.tabCode = tabCode;
+	}
+	
+	public String getDoMainType() {
+		return doMainType;
+	}
+
+	public void setDoMainType(String doMainType) {
+		this.doMainType = doMainType;
 	}
 
 	public String getColCode() {

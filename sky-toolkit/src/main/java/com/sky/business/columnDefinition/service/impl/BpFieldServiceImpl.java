@@ -23,5 +23,10 @@ public class BpFieldServiceImpl extends BaseServiceImpl<BpField> implements IBpF
 		return sqlSessionTemplate.delete(sqlId, map);
 	}
 
+	@Override
+	public int backupTab(String sqlId, Map<String, String> map) {
+		return sqlSessionTemplate.insert(sqlId, map);
+	}
+
 }
 

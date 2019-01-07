@@ -1,6 +1,7 @@
 package com.sky.business.tableDefinition.service.impl;
 
 
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -28,6 +29,16 @@ public class BpTableServiceImpl extends BaseServiceImpl<BpTable> implements IBpT
 	
 	public int updTab(String sqlId, String parameter) {
 		return sqlSessionTemplate.update(sqlId, parameter);
+	}
+
+	@Override
+	public List<String> findColumns(String sqlId, String parameter) {
+		return sqlSessionTemplate.selectList(sqlId, parameter);
+	}
+
+	@Override
+	public int insertBackUp(String sqlId, Map<String, Object> map) {
+		return sqlSessionTemplate.insert(sqlId, map);
 	}
 
 }

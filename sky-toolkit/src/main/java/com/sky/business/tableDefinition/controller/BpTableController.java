@@ -1,5 +1,6 @@
 package com.sky.business.tableDefinition.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -152,9 +153,30 @@ public class BpTableController extends BaseController {
 				Map<String, String> map = new HashMap<>();
 				map.put("tabCode", tabCode);
 				List<BpTable> list = bpTableService.findForList("com.sky.business.tableDefinition.dao.BpTableDao.findTable", tabCode);
-				//存在则报错返回
-				if(list != null && list.size() > 0)
-					return Mono.justOrEmpty(new Message("100002", tabCode + "表已经存在！"));
+				
+				boolean flag = false;
+				
+				//存在则备份 删除
+				if(list != null && list.size() > 0){
+					
+					map.clear();
+					map.put("oldTabCode", tabCode);
+					map.put("newTabCode", tabCode + "_backup");
+					
+					//备份
+					bpFieldService.backupTab("com.sky.business.columnDefinition.dao.BpFieldDao.backupTab", map);
+					
+					//删除原表
+					map.clear();
+					map.put("tabCode", tabCode);
+					bpTableService.dropTab("com.sky.business.tableDefinition.dao.BpTableDao.dropTable", tabCode);
+				
+					//修改bp_tables表字段 ISEXIST 表存在标识
+					bpTableService.updTab("com.sky.business.tableDefinition.dao.BpTableDao.updTab1", tabCode);
+					
+					flag = true;
+				}
+					
 				
 				//查询字段定义表 
 				List<BpField> list1 = bpFieldService.findForList("com.sky.business.columnDefinition.dao.BpFieldDao.findAllField", tabCode);
@@ -165,8 +187,18 @@ public class BpTableController extends BaseController {
 				//建表
 				this.tabFactory(list1);
 				
-				//修改bp_tables表字段
+				//修改bp_tables表字段 ISEXIST 表存在标识
 				bpTableService.updTab("com.sky.business.tableDefinition.dao.BpTableDao.updTab", tabCode);
+				
+				if(flag){
+					
+					//插入备份数据
+					insertBackUp(tabCode);
+					
+					//删除备份表
+					tabCode = tabCode + "_backup";
+					bpTableService.dropTab("com.sky.business.tableDefinition.dao.BpTableDao.dropTable", tabCode);
+				}
 				
 			return Mono.justOrEmpty(new Message("000001", "成功"));
 		} catch (Exception e) {
@@ -174,6 +206,35 @@ public class BpTableController extends BaseController {
 		}
 	}
 
+	/**
+	 * 插入备份数据
+	 * @param tabCode
+	 */
+	private void insertBackUp(String tabCode) {
+		List<String> newlist = bpTableService.findColumns("com.sky.business.tableDefinition.dao.BpTableDao.findColumns", tabCode);
+		List<String> oldlist = bpTableService.findColumns("com.sky.business.tableDefinition.dao.BpTableDao.findColumns", tabCode + "_backup");
+	
+		List<String> sameList = new ArrayList<>();
+		for (int i = 0; i < newlist.size(); i++) {
+			for (int j = 0; j < oldlist.size(); j++) {
+				if(newlist.get(i).equals(oldlist.get(j)))
+					sameList.add(newlist.get(i));
+			}
+		}
+		
+		if(sameList.size() > 0){
+			Map<String, Object> map = new HashMap<>();
+			map.put("newTabCode", tabCode);
+			map.put("oldTabCode", tabCode + "_backup");
+			map.put("list", sameList);
+			bpTableService.insertBackUp("com.sky.business.tableDefinition.dao.BpTableDao.insertBackUp", map);
+		}
+	}
+
+	/**
+	 * 建表
+	 * @param list
+	 */
 	private void tabFactory(List<BpField> list) {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -252,4 +313,25 @@ public class BpTableController extends BaseController {
 			return Mono.justOrEmpty(new Message("000001"));
 		}
 	}
+	
+	@RequestMapping(value="/TK0007L1.do")
+	@ResponseBody
+	public Mono<Page<BpTable>> getTabList1(@RequestBody Page<BpTable> page, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		page.setRequest(request);
+		bpTableService.findForPageList("com.sky.business.tableDefinition.dao.BpTableDao.findForPageList1", page);
+		page.setRequest(null);
+		return Mono.justOrEmpty(page);
+	}
+	
+	/*@PutMapping("/TK0007I1.do")
+	@ResponseBody
+	public Mono<Message> addTable(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		try {
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw new BusinessException("000004", e.getMessage());
+		}
+	}*/
 }

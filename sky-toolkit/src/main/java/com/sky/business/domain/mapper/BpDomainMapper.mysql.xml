@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sky.business.domain.dao.BpDomainDao">
+ 
+ 	 <select id="findForPageList" parameterType="Page" resultType="BpDomain">
+	       select
+	          * 
+	       from 
+	         BP_DOMAIN
+	       where 1=1
+	             <if test="variables.ename !=null and variables.ename !=''">
+	             		and ENAME like CONCAT('%',#{variables.ename},'%')
+	             </if>
+	             <if test="variables.cname !=null and variables.cname !=''">
+	             		and CNAME like CONCAT('%',#{variables.cname},'%')
+	             </if>
+	 </select>
+
+</mapper>  

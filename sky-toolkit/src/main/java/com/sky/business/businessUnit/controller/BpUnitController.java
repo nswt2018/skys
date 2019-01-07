@@ -107,21 +107,21 @@ public class BpUnitController extends BaseController {
 	
 	@DeleteMapping("/TK0005D.do")
 	@ResponseBody
-	public Mono<Message> deleteByComCode(@RequestParam String[] unitCode, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public Mono<Message> deleteByComCode(@RequestParam String unitCode, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try {
-			if(unitCode==null || unitCode.length == 0)
+			if(unitCode==null || unitCode.length() == 0)
 				throw new BusinessException("000005");
-			for(String id : unitCode) {
-				Map<String, String> map = new HashMap<>();
-				map.put("tabName", "bp_unit");
-				map.put("code", id);
-				bpUnitService.delUnit("com.sky.business.businessUnit.dao.BpUnitDao.delUnit", map);
-				//删除页面元素表中相关记录
-				map.clear();
-				map.put("tabName", "bp_element");
-				map.put("code", id);
-				bpUnitService.delUnit("com.sky.business.businessUnit.dao.BpUnitDao.delUnit", map);
-			}
+			
+			Map<String, String> map = new HashMap<>();
+			map.put("tabName", "bp_unit");
+			map.put("code", unitCode);
+			bpUnitService.delUnit("com.sky.business.businessUnit.dao.BpUnitDao.delUnit", map);
+			//删除页面元素表中相关记录
+			map.clear();
+			map.put("tabName", "bp_element");
+			map.put("code", unitCode);
+			bpUnitService.delUnit("com.sky.business.businessUnit.dao.BpUnitDao.delUnit", map);
+			
 			return Mono.justOrEmpty(new Message("000002"));
 		} catch (Exception e) {
 			e.printStackTrace();

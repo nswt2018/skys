@@ -167,14 +167,13 @@ public class BpModuleController extends BaseController {
 
 	@DeleteMapping("/TK0004D.do")
 	@ResponseBody
-	public Mono<Message> deleteByModCode(@RequestParam String[] moduCode, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public Mono<Message> deleteByModCode(@RequestParam String moduCode, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try {
-			if(moduCode==null || moduCode.length == 0)
+			if(moduCode==null || moduCode.length() == 0)
 				throw new BusinessException("000005");
-			for(String id : moduCode) {
-				bpModuleService.delete(id);
-				this.delData(id);
-			}
+			
+			bpModuleService.delete(moduCode);
+			this.delData(moduCode);
 			return Mono.justOrEmpty(new Message("000002"));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -244,6 +243,14 @@ public class BpModuleController extends BaseController {
 	@ResponseBody
 	public Mono<List<String>> getColList(@RequestParam String tabCode, HttpServletRequest request, HttpServletResponse response) throws Exception {	
 		List<String> list = bpModuleService.getTabInfo("com.sky.business.systemModule.dao.BpModuleDao.getColName", tabCode);
+		
+		return Mono.justOrEmpty(list);
+	}
+	
+	@RequestMapping(value="/TK0010L1.do")
+	@ResponseBody
+	public Mono<List<String>> getDoMainList(HttpServletRequest request, HttpServletResponse response) throws Exception {	
+		List<String> list = bpModuleService.getTabInfo("com.sky.business.systemModule.dao.BpModuleDao.getDoMainInfo", "");
 		
 		return Mono.justOrEmpty(list);
 	}

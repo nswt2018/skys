@@ -9,10 +9,10 @@
 		BP_COMMONFIELD
     where 1=1
         <if test="variables.colName !=null and variables.colName !=''">
-       		and COL_NAME=#{variables.colName}
+       		and COL_NAME like CONCAT('%',#{variables.colName},'%')
         </if>
         <if test="variables.colCode !=null and variables.colCode !=''">
-       		and COL_CODE=#{variables.colCode}
+       		and COL_CODE like CONCAT('%',#{variables.colCode},'%')
         </if>
 	</select>
 
