@@ -16,6 +16,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 
 import com.sky.app.coder.helper.ConvertString;
+import com.sky.app.coder.model.BpTreemode;
 import com.sky.app.coder.model.Element;
 import com.sky.app.coder.model.Systems;
 import com.sky.app.coder.service.ICoderService;
@@ -72,42 +73,45 @@ public class CoderServiceImpl implements ICoderService {
 	public Element getMultiFieldOne(String sqlId, String tabCode) {
 		return sqlsession.selectOne(sqlId, tabCode);
 	}
-	
+
+	// 获得按系统生成的前端页面路径、后台路径、包和系统简码
 	@Override
 	public List<String> getSystemsInfo(List<String> sysKeyList) {
-		String vuePath=null;
-		String javaPath=null;
-		String lastSysCode=null;
-		String packName=null;
-		String sysCode="";
-		String tempSysCode=null;
-		for(int j=0;j<sysKeyList.size();j++){
-			Systems system=this.getSystemsOne("com.sky.app.core.CoderMapper.findBpSystemsOne", sysKeyList.get(j));
-			if(!system.getVuePath().equals("") && !system.getJavaPath().equals("")){
-				vuePath=system.getVuePath();
-				javaPath=system.getJavaPath();
-				packName=system.getPackName();
+		String vuePath = null;
+		String javaPath = null;
+		String lastSysCode = null;
+		String packName = null;
+		String sysCode = "";
+		String tempSysCode = null;
+		List<String> list = new ArrayList<String>();
+		for (int j = 0; j < sysKeyList.size(); j++) {
+			Systems system = this.getSystemsOne("com.sky.app.core.CoderMapper.findBpSystemsOne", sysKeyList.get(j));
+			if (!system.getVuePath().equals("") && !system.getJavaPath().equals("")) {
+				vuePath = system.getVuePath();
+				javaPath = system.getJavaPath();
+				packName = system.getPackName();
+				list.add(vuePath);
 			}
-			tempSysCode=system.getSysCode().toLowerCase();
-			packName+="."+tempSysCode;
-			if(sysCode.equals("")){
-				sysCode="\\"+tempSysCode;
-			}else{
-				sysCode+="\\"+tempSysCode;
+			tempSysCode = system.getSysCode().toLowerCase();
+			packName += "." + tempSysCode;
+			if (sysCode.equals("")) {
+				sysCode = "\\" + tempSysCode;
+			} else {
+				sysCode += "\\" + tempSysCode;
 			}
-			if(j==sysKeyList.size()-1){
-				lastSysCode=system.getSysCode().toLowerCase();
+			if (j == sysKeyList.size() - 1) {
+				lastSysCode = system.getSysCode().toLowerCase();
 			}
 		}
-		vuePath=vuePath+sysCode;
-		javaPath=javaPath+"\\"+packName.replace(".", "\\");
-		List<String> list=new ArrayList<String>();
+		vuePath = vuePath + sysCode;
+		javaPath = javaPath + "\\" + packName.replace(".", "\\");
 		list.add(vuePath);
 		list.add(javaPath);
 		list.add(lastSysCode);
 		list.add(packName);
 		return list;
 	}
+
 	// 单表模型
 	@Override
 	public String getClassStr(String tablename, String tablepri) {
@@ -205,8 +209,8 @@ public class CoderServiceImpl implements ICoderService {
 				colnames[i - 1] = metadata.getColumnName(i);
 				tablecolnames[i - 1] = ConvertString
 						.convertSomeCharUpperReplace(tablename + "." + metadata.getColumnName(i));
-				if (colnames[i-1].equals(tablepri)) {
-					colTypes[i-1] = "String"; // 如果是主键,则类型全为字符串
+				if (colnames[i - 1].equals(tablepri)) {
+					colTypes[i - 1] = "String"; // 如果是主键,则类型全为字符串
 				} else {
 					colTypes[i - 1] = sqlType2JavaType(metadata.getColumnTypeName(i)); // 获取字段类型
 				}
@@ -253,7 +257,7 @@ public class CoderServiceImpl implements ICoderService {
 
 	// 多表模型,通过表名数据生成实体类内容
 	@Override
-	public String getMultiClassStr(String[] tablenames,List<String> listss) {
+	public String getMultiClassStr(String[] tablenames, List<String> listss) {
 		// 用于存放多个表列名数组
 		List<String[]> listnamearr = new ArrayList<String[]>();
 		// 用于存放多个表列名(加上表名组合的)数组
@@ -262,7 +266,7 @@ public class CoderServiceImpl implements ICoderService {
 		List<String[]> listtypearr = new ArrayList<String[]>();
 		// 输出的类字符串
 		StringBuffer str = new StringBuffer("");
-		for (int i=0;i<tablenames.length;i++) {
+		for (int i = 0; i < tablenames.length; i++) {
 			try {
 				conn = sqlSessionFactory.openSession().getConnection();
 				String sql = "select * from " + tablenames[i];
@@ -279,7 +283,7 @@ public class CoderServiceImpl implements ICoderService {
 					tablecolnames[j - 1] = ConvertString
 							.convertSomeCharUpperReplace(tablenames[i] + "." + metadata.getColumnName(j));// 获取加上表名字段名称
 					if (metadata.getColumnName(j).equals(listss.get(i))) {
-						colTypes[j-1] = "String"; // 如果是主键,则类型全为字符串
+						colTypes[j - 1] = "String"; // 如果是主键,则类型全为字符串
 					} else {
 						colTypes[j - 1] = sqlType2JavaType(metadata.getColumnTypeName(j)); // 获取字段类型
 					}
@@ -329,7 +333,8 @@ public class CoderServiceImpl implements ICoderService {
 		return str.toString();
 	}
 
-	// 多表模型，获得映射文件mapper中select后面的每个表的字段
+	// 多表模型，获得映射文件mapper中select后字段
+	@Override
 	public String getMultiMapperSelectField(String[] tablenames) {
 		// 用于存放多个表列名数组
 		List<String[]> listnamearr = new ArrayList<String[]>();
@@ -380,6 +385,134 @@ public class CoderServiceImpl implements ICoderService {
 		}
 		return str.toString();
 
+	}
+
+	// 主从模型，获得主表或从表映射文件mapper中select字段
+	@Override
+	public String getMsMapperSelectFields(String tablename) {
+		StringBuffer str = new StringBuffer("");
+		try {
+			Connection conn = sqlSessionFactory.openSession().getConnection();
+			String sql = "select * from " + tablename;
+			PreparedStatement statement = conn.prepareStatement(sql);
+			// 获取数据库的元数据
+			ResultSetMetaData metadata = statement.getMetaData();
+			// 数据库的字段个数
+			int len = metadata.getColumnCount();
+			// 加上表名的字段名称
+			tablecolnames = new String[len];
+			// 加上表名的字段且有别名->对应实体类
+			aliscolnames = new String[len];
+			for (int i = 1; i <= len; i++) {
+				tablecolnames[i - 1] = tablename + "." + metadata.getColumnName(i); // 获取表名加上字段组合的字段
+				aliscolnames[i - 1] = ConvertString
+						.convertSomeCharUpperReplace(tablename + "." + metadata.getColumnName(i));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		// 校验
+		if (null == tablecolnames)
+			return null;
+		// 拼接带有别名的查询字段
+		for (int index = 0; index < tablecolnames.length; index++) {
+			if (index < tablecolnames.length - 1) {
+				str.append("\r" + (tablecolnames[index]) + "  as  " + aliscolnames[index] + ",");
+			} else {
+				str.append("\r" + (tablecolnames[index]) + "  as " + aliscolnames[index]);
+			}
+		}
+		return str.toString();
+	}
+
+	// 树模型，获取表的全部字段，并放入集合中返回
+	@Override
+	public List<String> getTreeModeTableFields(String tablename) {
+		// 用于存放表的字段名称
+		List<String> fieldslist = new ArrayList<String>();
+		try {
+			Connection conn = sqlSessionFactory.openSession().getConnection();
+			String sql = "select * from " + tablename;
+			PreparedStatement statement = conn.prepareStatement(sql);
+			// 获取数据库的元数据
+			ResultSetMetaData metadata = statement.getMetaData();
+			// 数据库的字段个数
+			int len = metadata.getColumnCount();
+			for (int i = 1; i <= len; i++) {
+				fieldslist.add(ConvertString.convertSomeCharUpper(metadata.getColumnName(i)));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return fieldslist;
+	}
+
+	// 树模型，获取多个表的全部字段，并放入集合中返回
+	@Override
+	public List<String> getTreeModeTablesFields(String[] tablenames) {
+		// 用于存放表的字段名称
+		List<String> fieldslist = new ArrayList<String>();
+		try {
+			for (int j = 0; j < tablenames.length; j++) {
+				Connection conn = sqlSessionFactory.openSession().getConnection();
+				String sql = "select * from " + tablenames[j];
+				PreparedStatement statement = conn.prepareStatement(sql);
+				// 获取数据库的元数据
+				ResultSetMetaData metadata = statement.getMetaData();
+				// 数据库的字段个数
+				int len = metadata.getColumnCount();
+				for (int i = 1; i <= len; i++) {
+					fieldslist.add(
+							ConvertString.convertSomeCharUpperReplace(tablenames[j] + "." + metadata.getColumnName(i)));
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return fieldslist;
+	}
+
+	// 树模型，获取主表的全部字段，并放入集合中返回
+	@Override
+	public List<String> getTreeModeMsTablesFields(String tablename) {
+		// 用于存放表的字段名称
+		List<String> fieldslist = new ArrayList<String>();
+		try {
+			Connection conn = sqlSessionFactory.openSession().getConnection();
+			String sql = "select * from " + tablename;
+			PreparedStatement statement = conn.prepareStatement(sql);
+			// 获取数据库的元数据
+			ResultSetMetaData metadata = statement.getMetaData();
+			// 数据库的字段个数
+			int len = metadata.getColumnCount();
+			for (int i = 1; i <= len; i++) {
+				fieldslist.add(ConvertString.convertSomeCharUpperReplace(tablename + "." + metadata.getColumnName(i)));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return fieldslist;
+	}
+
+	// 树模型
+	@Override
+	public List<String> getTreeRouter(String tranCode) {
+		List<String> listMap = new ArrayList<String>();
+		String tempMap;
+		List<Systems> sysList = sqlsession.selectList("com.sky.app.core.CoderMapper.getSystemsList", tranCode);
+		for (int i = 0; i < sysList.size(); i++) {
+			List<String> upperSysList = ConvertString.subString(sysList.get(i).getSysKey());
+			List<String> fourlist = this.getSystemsInfo(upperSysList);
+			// 页面路径
+			String vuePath = fourlist.get(1).substring(fourlist.get(0).indexOf("\\src\\") + 4).replace('\\', '/');
+			String code = sysList.get(i).getModCode();
+
+			tempMap = "";
+			tempMap = "{ path: '/" + code + "',name: '" + code + "', component: () => import('@" + vuePath + "/" + code
+					+ ".vue')}";
+			listMap.add(tempMap);
+		}
+		return listMap;
 	}
 
 	/*
@@ -509,6 +642,5 @@ public class CoderServiceImpl implements ICoderService {
 		}
 
 	}
-
 
 }

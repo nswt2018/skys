@@ -52,16 +52,19 @@ public class CoderController {
 					//该模块全部的上级系统编号及本编号
 					List<String> upperSysList=ConvertString.subString(syslist.get(i).getSysKey());
 					List<String> fourlist=CoderService.getSystemsInfo(upperSysList);
+					//前端路径
+					String vuePathBefore=fourlist.get(0);
 					//前端页面路径
-					String vuePath=fourlist.get(0);
+					String vuePath=fourlist.get(1);
 					//后台代码路径
-					String javaPath=fourlist.get(1);
+					String javaPath=fourlist.get(2);
 					//包名
-					String packName=fourlist.get(3);
+					String packName=fourlist.get(4);
 					//系统简码
-					String uppersyscode=ConvertString.convertFirstCharUpper(fourlist.get(2).toLowerCase());
+					String uppersyscode=ConvertString.convertFirstCharUpper(fourlist.get(3).toLowerCase());
 					//模块代码
 					String moduCode=syslist.get(i).getModCode();
+					
 					//放模板所需要的全部变量
 					Model model =null;
 					// 将model里面的变量值放入VelocityContext
@@ -69,8 +72,10 @@ public class CoderController {
 					//根据模块代码获得该模块的模型，判断单表还是多表
 					Element element = CoderService.getModuleOne("com.sky.app.core.CoderMapper.findBpModuleForOne",moduCode);
 					if(element!=null){
+						//模块模型
+						String modname=element.getModName();
 						//先判断该模块的模型,进行不同的处理
-						if("多表模型".equals(element.getModName())){
+						if("多表模型".equals(modname)){
 							//用于存放velocity生成文件所需要的参数数组
 							List<Object[]> list=new ArrayList<Object[]>();
 							//存放表的主键字段
@@ -104,54 +109,56 @@ public class CoderController {
 							model.setTableListName(Arrays.asList(converTableArr));
 							//设置mapper映射文件，查询的字段以表加字段作为别名
 							model.setMapperSelectField(CoderService.getMultiMapperSelectField(tableArr));
+							//根据传入的模块关联表、模块数据库表主键，生成实体类中的内容(属性和get/set方法)
+							model.setModelClassStr(CoderService.getMultiClassStr(tableArr,primlist));
 							//对模块代码进行处理
 							String cmoduCode=ConvertString.convertFirstCharUpper(moduCode.toLowerCase());
 							//多表模型， 获得velocity生成文件所需要的三个参数（模板变量值，模板，路径）,放在list集合中
-							list=VelocityGetPutMapMulitParameter.getMap(cmoduCode,vuePath,javaPath,converTableArr,model,uppersyscode);
-							Model[] modelArr = (Model[])list.get(0);
-							String[] templateArr = (String[])list.get(1);
-							String[] pathArr = (String[])list.get(2);
-							for(int h=0;h<list.get(0).length;h++){
-								vcx.put("models", modelArr[h]);
-								VelocityCoder.velocity(vcx, templateArr[h], pathArr[h]);
+							Map<String, String> cmap=VelocityGetPutMapMulitParameter.getMap(cmoduCode,vuePath,javaPath,uppersyscode);
+							vcx.put("models", model);
+							for (String key : cmap.keySet()) {
+								// 根据传入的数据、模板、路径生成相应的文件
+								VelocityCoder.velocity(vcx, key, cmap.get(key));
 							}
-							//存放实体类内容
-							String classstr=null;
-							//多表模型会生成多个 实体类文件，需做特殊处理
-							for(int j = 0; j < converTableArr.length + 1; j++){
-								if (j < converTableArr.length) {
-									//根据传入的模块关联表名、主键，生成实体类中的内容(属性和get/set方法)
-									classstr=CoderService.getMultiClassStrBytable(tableArr[j],primlist.get(j));
+							//多表模型会生成多个 实体类文件、多个接口层，需做特殊处理
+							for(int j = 0; j < converTableArr.length; j++){
 									model.setConverTableName(converTableArr[j]);
 									model.setTableName(tableArr[j]);
-									model.setModelClassStr(classstr);
+									//根据传入的模块关联表名、主键，生成实体类中的内容(属性和get/set方法)
+									model.setModelClassStr(CoderService.getMultiClassStrBytable(tableArr[j],primlist.get(j)));
 									vcx.put("models", model);
+									//生成实体类
 									VelocityCoder.velocity(vcx, "com/sky/app/coder/templates/b/b-model.java.vm", javaPath + "/model/" + uppersyscode +cmoduCode+ converTableArr[j] + ".java");
-								} else {
-									//根据传入的模块关联表、模块数据库表主键，生成实体类中的内容(属性和get/set方法)
-									classstr=CoderService.getMultiClassStr(tableArr,primlist);
-									model.setModelClassStr(classstr);
-									model.setConverTableName("");
-									vcx.put("models", model);
-									VelocityCoder.velocity(vcx, "com/sky/app/coder/templates/b/b-model.java.vm", javaPath + "/model/" + uppersyscode +cmoduCode + ".java");
-								}
+									//生成dao接口
+									VelocityCoder.velocity(vcx, "com/sky/app/coder/templates/b/b-dao.java.vm", javaPath + "/dao/" + uppersyscode +cmoduCode + converTableArr[i] + "Dao.java");
 							}
-						}else if("单表模型".equals(element.getModName())){
+						}else if("单表模型".equals(modname)||"树模型".equals(modname)){
 							// 根据模块代码从页面元素表中取出该模块全部的字段信息，并关联字段定义表，获得字段在数据库的类型
 							List<Element> list = CoderService.getTagInfo("com.sky.app.core.CoderMapper.findBpForList",moduCode);
 							Element el = CoderService.getElement("com.sky.app.core.CoderMapper.findBpForOne", moduCode);
 							//根据传入的模块关联表、模块数据库表主键，生成实体类中的内容(属性和get/set方法)
 							String str=CoderService.getClassStr(el.getRelTable(),el.getColCode());
 							// 将数据库取出来的值放入model解析,然后取得model
-							model = new VelocityGetTemplateData().getModel(list, el,str,packName,uppersyscode);
+							model = new VelocityGetTemplateData().getModel(list, el,packName);
+							// 实体类里面的属性 以及get/set 方法
+							model.setModelClassStr(str);
+							// 系统简码
+							model.setSysCode(uppersyscode);
+							//用于挂接到树节点上
+							model.setFields(CoderService.getTreeModeTableFields(el.getRelTable()));
+							//树模型
+							if("树模型".equals(modname)){
+								model.setIsTree("1");
+								model.setRoutes(CoderService.getTreeRouter(moduCode));
+							}
 							// 获得velocity生成文件所需要的两个参数（模板，路径）,放在map中，key(包路径+模板名称)->value(文件路径+文件名)
-							Map<String, String> cmap=VelocityGetPutMapParameter.getMap(moduCode,vuePath,javaPath,uppersyscode);
+							Map<String, String> cmap=VelocityGetPutMapParameter.getMap(moduCode,vuePath,javaPath,uppersyscode,modname,vuePathBefore);
 							vcx.put("models", model);
 							for (String key : cmap.keySet()) {
 								// 根据传入的数据、模板、路径生成相应的文件
 								VelocityCoder.velocity(vcx, key, cmap.get(key));
 							}
-						}else if("主从模型".equals(element.getModName())){
+						}else if("主从模型".equals(modname)){
 							//主从模型只有两张表，主表和从表
 							// 将模块的关联表转放入数组中，默认第一张表为主表，第二张表为从表
 							String[] mstableArr = element.getRelTable().split(",");
@@ -175,10 +182,10 @@ public class CoderController {
 							List<Element> mslist = CoderService.getMultiTagInfo("com.sky.app.core.CoderMapper.findBpElementForList",moduCode);
 							model = new VelocityGetMsTemplateData(mstableArr,mstableprimarr,mstableprimpkarr).getModel(mslist,msclassstrarr,element,packName,uppersyscode);
 							//设置mapper映射文件，查询的字段以表加字段作为别名
-							String[] mtablenamearr={mstableArr[0]};
-							model.setMapperSelectField(CoderService.getMultiMapperSelectField(mtablenamearr));
-							mtablenamearr[0]=mstableArr[1];
-							model.setMsmapperSelectField(CoderService.getMultiMapperSelectField(mtablenamearr));
+							model.setMapperSelectField(CoderService.getMsMapperSelectFields(mstableArr[0]));//主表
+							model.setMsmapperSelectField(CoderService.getMsMapperSelectFields(mstableArr[1]));//从表
+							//用于挂接到树节点上
+							model.setFields(CoderService.getTreeModeMsTablesFields(mstableArr[0]));
 							// 获得velocity生成文件所需要的两个参数（模板，路径）,放在map中，key(包路径+模板名称)->value(文件路径+文件名)
 							Map<String, String> cmap=VelocityGetPutMapMsParameter.getMap(moduCode,vuePath,javaPath,uppersyscode);
 							vcx.put("models", model);

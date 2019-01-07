@@ -17,6 +17,9 @@
 #set($updformitems=${models.updformitem})
 #set($viewform=${models.viewform})
 #set($viewformitems=${models.viewformitem})
+
+#set($fields=${models.fields})
+#set($istree=${models.isTree})
 <style>
 </style>
 <template>

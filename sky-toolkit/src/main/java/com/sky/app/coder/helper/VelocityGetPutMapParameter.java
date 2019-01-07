@@ -6,30 +6,35 @@ import java.util.Map;
 import com.sky.app.coder.model.Element;
 
 public class VelocityGetPutMapParameter {
-	public static Map<String, String> getMap(String moduCode, String vuePath, String javaPath, String uppersyscode) {
+	public static Map<String, String> getMap(String moduCode, String vuePath, String javaPath, String uppersyscode,String moduname,String vuePathBef) {
 		// 将模块代码字母全部小写
 		String lModuCode = moduCode.toLowerCase();
 		// 先小写，模块代码首字母大写
 		String cModuCode = ConvertString.convertFirstCharUpper(lModuCode);
 		// 替换字符串中‘\’为‘/’
-		String vuepath = ConvertString.replace(vuePath);
-		String javapath = ConvertString.replace(javaPath);
+		vuePathBef = ConvertString.replace(vuePathBef);
+		vuePath = ConvertString.replace(vuePath);
+		javaPath = ConvertString.replace(javaPath);
+		
 		// 将velocity生成文件后面两个参数放入map (包名+模板名称)->value(文件路径+文件名)
 		Map<String, String> cmap = new HashMap<String, String>();
-		cmap.put("com/sky/app/coder/templates/a-vue.vm", vuepath + "/" + lModuCode + ".vue");
-		cmap.put("com/sky/app/coder/templates/a-js.vm", vuepath + "/" + lModuCode + "-column.js");
+		cmap.put("com/sky/app/coder/templates/a-vue.vm", vuePath + "/" + lModuCode + ".vue");
+		if("树模型".equals(moduname)){
+			cmap.put("com/sky/app/coder/templates/d/treemode.vm", vuePathBef + "/treemode/" + lModuCode+ "treemode" + ".vue");
+		}
+		cmap.put("com/sky/app/coder/templates/a-js.vm", vuePath + "/" + lModuCode + "-column.js");
 		cmap.put("com/sky/app/coder/templates/a-controller.java.vm",
-				javapath + "/controller/" + uppersyscode + cModuCode + "Controller.java");
+				javaPath + "/controller/" + uppersyscode + cModuCode + "Controller.java");
 		cmap.put("com/sky/app/coder/templates/a-Mapper.xml.vm",
-				javapath + "/mapper/" + uppersyscode + cModuCode + "Mapper.mysql.xml");
+				javaPath + "/mapper/" + uppersyscode + cModuCode + "Mapper.mysql.xml");
 		cmap.put("com/sky/app/coder/templates/a-IService.java.vm",
-				javapath + "/service/I" + uppersyscode + cModuCode + "Service.java");
+				javaPath + "/service/I" + uppersyscode + cModuCode + "Service.java");
 		cmap.put("com/sky/app/coder/templates/a-ServiceImpl.java.vm",
-				javapath + "/service/impl/" + uppersyscode + cModuCode + "ServiceImpl.java");
+				javaPath + "/service/impl/" + uppersyscode + cModuCode + "ServiceImpl.java");
 		cmap.put("com/sky/app/coder/templates/a-dao.java.vm",
-				javapath + "/dao/" + uppersyscode + cModuCode + "Dao.java");
+				javaPath + "/dao/" + uppersyscode + cModuCode + "Dao.java");
 		cmap.put("com/sky/app/coder/templates/a-model.java.vm",
-				javapath + "/model/" + uppersyscode + cModuCode + ".java");
+				javaPath + "/model/" + uppersyscode + cModuCode + ".java");
 		return cmap;
 	}
 }

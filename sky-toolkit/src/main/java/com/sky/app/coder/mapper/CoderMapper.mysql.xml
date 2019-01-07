@@ -22,10 +22,10 @@
 				b.data_type 
 			FROM
 				BP_ELEMENT a
-				LEFT JOIN ( SELECT CONCAT( tab_code, '.', col_code ) AS col_code, data_type FROM bp_field ) b ON a.ele_ename = b.col_code 
+				LEFT JOIN ( SELECT CONCAT( tab_code, '.', col_code ) AS col_code, data_type,UI_ORDER,tab_code FROM bp_field ) b ON a.ele_ename = b.col_code 
 			WHERE
 				1 = 1 
-				AND a.MODU_CODE = #{moduCode}
+				AND a.MODU_CODE = #{moduCode} ORDER BY a.UNIT_CODE,b.tab_code,b.UI_ORDER
 	             
   </select>
   <select id="findBpFieldForOne" parameterType="String" resultType="Element">
@@ -49,7 +49,7 @@
 				LEFT JOIN ( SELECT * FROM bp_field WHERE tab_code IN ( SELECT rel_table FROM BP_MODULE WHERE MODU_CODE = #{moduCode} ) ) b ON a.ele_ename = b.col_code 
 			WHERE
 				1 = 1 
-				AND a.MODU_CODE = #{moduCode}
+				AND a.MODU_CODE = #{moduCode} ORDER BY a.UNIT_CODE ,b.UI_ORDER
 	             
   </select>
   
@@ -85,5 +85,37 @@
 			WHERE
 				1 = 1 
 				AND SYS_KEY=#{sysKey}
+  </select>
+  <select id = "getTreeRouter" parameterType = "String" resultType = "BpTreemode" > 
+		  SELECT
+			* 
+			FROM
+				bp_transaction 
+			WHERE
+				SUBSTR( nod_code, 1, 3 ) IN (
+			SELECT
+				rel_info 
+			FROM
+				BP_MODULE 
+			WHERE
+				modu_code = #{moduCode}) AND tran_code!=''
+	</select>
+	<select id="getSystemsList" parameterType="String" resultType="Systems">
+			SELECT 
+			  * 
+			FROM
+			  BP_SYSTEMS 
+			WHERE mod_code IN 
+			  (SELECT 
+			    tran_code 
+			  FROM
+			    bp_transaction 
+			  WHERE SUBSTR(nod_code, 1, 3) IN 
+			    (SELECT 
+			      rel_info 
+			    FROM
+			      BP_MODULE 
+			    WHERE modu_code = #{moduCode}) 
+			    AND tran_code != '')
   </select>
 </mapper>

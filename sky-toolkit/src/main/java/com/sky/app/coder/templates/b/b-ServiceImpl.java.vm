@@ -2,22 +2,64 @@
 #set($servicepackname=${models.servicePackName})
 #set($modelpackname=${models.modelPackName})
 #set($model=${models.model})
-#set($convertablename=${models.converTableName})
+#set($tablelistnames=${models.tableListName})
 #set($syscode=${models.sysCode})
 package ${serviceimplpackname};
 
 import com.sky.core.base.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
-#if(${convertablename})
-import ${modelpackname}.${syscode}${model}${convertablename};
-import ${servicepackname}.I${syscode}${model}${convertablename}Service;
-@Service("${syscode}${model}${convertablename}Service")
-public class ${syscode}${model}${convertablename}ServiceImpl extends BaseServiceImpl<${syscode}${model}${convertablename}> implements I${syscode}${model}${convertablename}Service{
-}
-#else
+import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.common.Mapper;
+import javax.annotation.Resource;
+
 import ${modelpackname}.${syscode}${model};
 import ${servicepackname}.I${syscode}${model}Service;
+#if(${tablelistnames})
+#foreach(${tablelistname} in ${tablelistnames})
+import ${modelpackname}.${syscode}${model}${tablelistname};
+#end
+#end
+
+@Transactional
 @Service("${syscode}${model}Service")
 public class ${syscode}${model}ServiceImpl extends BaseServiceImpl<${syscode}${model}> implements I${syscode}${model}Service{
-}
+#if(${tablelistnames})
+#foreach(${tablelistname} in ${tablelistnames})
+	@Resource
+	private Mapper<${syscode}${model}${tablelistname}> ${syscode}${model}${tablelistname}Dao;
 #end
+#end
+	
+	@Override
+	public int save(#if(${tablelistnames})#foreach(${tablelistname} in ${tablelistnames})${syscode}${model}${tablelistname}  ${tablelistname}#if($foreach.hasNext),#end#end#end) {
+		int count=0;
+#if(${tablelistnames})
+#foreach(${tablelistname} in ${tablelistnames})
+		count=+${syscode}${model}${tablelistname}Dao.insert(${tablelistname});
+#end
+#end
+		return count;
+	}
+
+	@Override
+	public int update(#if(${tablelistnames})#foreach(${tablelistname} in ${tablelistnames})${syscode}${model}${tablelistname}  ${tablelistname}#if($foreach.hasNext),#end#end#end) {
+		int count=0;
+#if(${tablelistnames})
+#foreach(${tablelistname} in ${tablelistnames})
+		count=+${syscode}${model}${tablelistname}Dao.updateByPrimaryKey(${tablelistname});
+#end
+#end
+		return count;
+	}
+	
+	@Override
+	public int delete(String delKey) {
+		int count=0;
+#if(${tablelistnames})
+#foreach(${tablelistname} in ${tablelistnames})
+		count=+${syscode}${model}${tablelistname}Dao.deleteByPrimaryKey(delKey);
+#end
+#end
+		return count;
+	}
+}

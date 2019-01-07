@@ -145,16 +145,123 @@ export default {
        		pagepublictool.setPage(this);
         	pagepublictool.page(this.getSearch());
         	//pagepublictool.getButtons();
-        	this.columns=${moducode}Column.getColumns();
+        	this.columns=${moducode}Column.getColumns();      	
+        	//树模型，用于挂树节点
+        	if(this.$route.query.id){
+#if($fields)
+#foreach($field in $fields)
+				if("${field}"==this.$route.query.showparam){
+					this.${field}= this.$route.query.id;   
+	        		this.addForm.${field} = this.$route.query.id;
+	        		this.updForm.${field} = this.$route.query.id;
+				}
+#end
+#end
+				pagepublictool.page(this.getSearch());
+        	}
+        	if(this.$route.query.type){
+               	this.type = this.$route.query.type;
+            	if(this.type==='VIEW' || this.type==='view'){
+                	this.buttonInfos = [{
+                		title:'查看',
+        		        code:'100101',
+        		        icon:'info',
+        		        href:'view'
+        		        }];
+            	}else if(this.type==='ADD'  || this.type==='add'){
+            		this.buttonInfos = [{
+            			title:'新增',
+        		        code:'100102',
+        		        icon:'primary',
+        		        href:'add'
+        		        }];       		
+            	}else if(this.type==='UPD' || this.type==='upd'){
+            		this.buttonInfos = [{
+            			title:'修改',
+    			        code:'100103',
+    			        icon:'warning',
+    			        href:'upd'
+    			        }];     		
+            	}else if(this.type==='DEL' || this.type==='del'){
+            		this.buttonInfos = [{
+            			title:'删除',
+    			        code:'100104',
+    			        icon:'error',
+    			        href:'del'
+    	        		}];       		
+            	}
+        	}
         },
         searching () {
     		pagepublictool.page(this.getSearch());
         },
         onClicking(type){
-         	if(type==='VIEW' || type==='view') pagepublictool.view();
-        	else if(type==='ADD'  || type==='add') pagepublictool.add();
-        	else if(type==='UPD' || type==='upd') pagepublictool.update();
-        	else if(type==='DEL' || type==='del') pagepublictool.delete(this.deleteurl+"?delKeys="+this.deleteKey.join(','));
+#if(${istree}=='1')
+			let router=this.$router;
+        	if(type==='VIEW' || type==='view'){
+         		if(this.$route.query.id){
+         			pagepublictool.view();
+         		}else{
+        	     	pagepublictool.view();
+        	        let query = {
+	        	     	id:this.viewForm.${tableprimary},
+	        	     	code :'${titleName}',
+	        	     	type :type
+        	     		};
+        	        router.push({
+        	             name: '${moducode}treemode',
+        	             query: query
+        	         });
+         		}
+    		}else if(type==='ADD'  || type==='add'){
+	        	if(this.$route.query.id){
+	        		pagepublictool.add();
+	        	}else{
+		        	let query = {
+		    		    id:this.viewForm.${tableprimary},
+		    		    code :'${titleName}',
+		    		    type :type
+		    		    };
+		    		router.push({
+		    		     name: '${moducode}treemode',
+		    		     query: query
+		    		});
+	        	}
+       		 }else if(type==='UPD' || type==='upd'){
+        		if(this.$route.query.id){
+        			pagepublictool.update();      			
+        		}else{
+    	            let query = {
+	    		     	id:this.viewForm.${tableprimary},
+	    		     	code :'${titleName}',
+	    		     	type :type
+    		     	};
+    		        router.push({
+    		            name: '${moducode}treemode',
+    		            query: query
+    		        });
+        		}
+        	}else if(type==='DEL' || type==='del'){
+        		if(this.$route.query.id){
+        			pagepublictool.delete(this.deleteurl+"?delKeys="+this.deleteKey.join(','));    			
+        		}else{
+    	            let query = {
+	    		     	id:this.viewForm.${tableprimary},
+	    		     	code :'${titleName}',
+	    		     	type :type
+    		     	};
+    		        router.push({
+    		        	name:'${moducode}treemode',
+	    		        query: query
+    		        });         		
+        		}
+        	}
+#else
+				if(type==='VIEW' || type==='view') pagepublictool.view();
+        		else if(type==='ADD'  || type==='add') pagepublictool.add();
+        		else if(type==='UPD' || type==='upd') pagepublictool.update();
+        		else if(type==='DEL' || type==='del') pagepublictool.delete(this.deleteurl+"?delKeys="+this.deleteKey.join(','));
+#end
         },
         saving(refValue){
          	pagepublictool.save(refValue);

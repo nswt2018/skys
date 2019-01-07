@@ -257,7 +257,7 @@ export default {
     	getSearch() {
     		let menuCode = Cookies.get('menucode');
         	return {'menuCode':menuCode,'pageSize': this.pageSize, 'currentPage': this.currentPage
-        	#if($inputs!='null'),'valObj':{#foreach($input in $inputs)'${input.value}': this.${input.value}#if($foreach.hasNext),#end#end}#end
+        	#if($inputs),'valObj':{#foreach($input in $inputs)'${input.value}': this.${input.value}#if($foreach.hasNext),#end#end}#end
         	};
         },
         getMsSearch() {
@@ -273,6 +273,51 @@ export default {
         	this.${table.columns}=${moducode}Column.getColumns();
         	mspagepublictool.setPage(this);
         	this.${mstable.columns}=ms${moducode}Column.getColumns();
+        	//树模型，用于挂树节点
+        	if(this.$route.query.id){
+#if($fields)
+#foreach($field in $fields)
+				if("${field}"==this.$route.query.showparam){
+					this.${field}= this.$route.query.id;   
+	        		this.addForm.${field} = this.$route.query.id;
+	        		this.updForm.${field} = this.$route.query.id;
+				}
+#end
+#end
+				pagepublictool.page(this.getSearch());
+        	}
+        	if(this.$route.query.type){
+               	this.type = this.$route.query.type;
+            	if(this.type==='VIEW' || this.type==='view'){
+                	this.buttonInfos = [{
+                		title:'查看',
+        		        code:'100101',
+        		        icon:'info',
+        		        href:'view'
+        		        }];
+            	}else if(this.type==='ADD'  || this.type==='add'){
+            		this.buttonInfos = [{
+            			title:'新增',
+        		        code:'100102',
+        		        icon:'primary',
+        		        href:'add'
+        		        }];       		
+            	}else if(this.type==='UPD' || this.type==='upd'){
+            		this.buttonInfos = [{
+            			title:'修改',
+    			        code:'100103',
+    			        icon:'warning',
+    			        href:'upd'
+    			        }];     		
+            	}else if(this.type==='DEL' || this.type==='del'){
+            		this.buttonInfos = [{
+            			title:'删除',
+    			        code:'100104',
+    			        icon:'error',
+    			        href:'del'
+    	        		}];       		
+            	}
+        	}
         },
         searching () {
     		pagepublictool.page(this.getSearch());

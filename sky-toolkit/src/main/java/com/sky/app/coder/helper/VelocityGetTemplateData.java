@@ -35,9 +35,9 @@ public class VelocityGetTemplateData {
 	List<FormItem> viewformitems = new ArrayList<FormItem>();
 	List<TableColumn> tablecolumns = new ArrayList<TableColumn>();
 
-	public Model getModel(List<Element> list, Element el, String str, String packname, String lastSysCode) {
+	public Model getModel(List<Element> list, Element el, String packname) {
 		Model model = new Model();
-		colcode = ConvertString.convertSomeCharUpper(el.getColCode().toLowerCase());
+		colcode = ConvertString.convertSomeCharUpper(el.getColCode());
 		pk = el.getPkGen();
 		// 设置模块标题名称
 		model.setTitleName(el.getModuCname());
@@ -50,16 +50,12 @@ public class VelocityGetTemplateData {
 		model.setModuCode(el.getModuCode().toLowerCase());
 		// 模块交易号
 		model.setTid(el.getModuTc());
-		// 系统简码
-		model.setSysCode(lastSysCode);
 		// 模块数据库表名
 		model.setTableName(el.getRelTable());
 		// 全部小写，模块数据库表主键字段
 		model.setTablePrimary(colcode);
 		// 模块数据库表主键策略 0为手动录入，1为自动录入
 		model.setTablePrimaryValue(pk);
-		// 实体类里面的属性 以及get/set 方法
-		model.setModelClassStr(str);
 		// 包名--controller 二级包名+系统简码（全部小写）+每层固定的命名
 		model.setControllerPackName(packname + ".controller");
 		// 包名--service 二级包名+系统简码（全部小写）+每层固定的命名
@@ -102,7 +98,7 @@ public class VelocityGetTemplateData {
 			// 字段名称
 			cname = list.get(i).getEleCname();
 			// 字段，字段全部小写，如果字段中有“_”,则将字段中"_"去掉后第一字母大写
-			ename = ConvertString.convertSomeCharUpper(list.get(i).getEleEname().toLowerCase());
+			ename = ConvertString.convertSomeCharUpper(list.get(i).getEleEname());
 			if (list.get(i).getComName().equals("条件搜索")) {
 				Input input = new Input();
 				// 如果搜索框的标签信息没有录入，则设置默认值
@@ -199,7 +195,7 @@ public class VelocityGetTemplateData {
 							if (formitem.getProp() == null || formitem.getProp() == "") {
 								formitem.setProp(ename);
 							} else {
-								formitem.setProp(ConvertString.convertSomeCharUpper(formitem.getProp().toLowerCase()));
+								formitem.setProp(ConvertString.convertSomeCharUpper(formitem.getProp()));
 							}
 							if (formitem.getRequired() == null || formitem.getRequired() == "") {
 								formitem.setRequired("true");

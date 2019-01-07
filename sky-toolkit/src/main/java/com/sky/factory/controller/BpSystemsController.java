@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sky.core.base.controller.BaseController;
 import com.sky.core.exception.BusinessException;
 import com.sky.core.message.Message;
+import com.sky.factory.model.BpModuleModel;
 import com.sky.factory.model.BpSystems;
 import com.sky.factory.service.IBpSystemsService;
 
@@ -217,11 +218,11 @@ public class BpSystemsController extends BaseController {
 		try {
 			List<BpSystems> sList = bpSystemsService.findForList("com.sky.factory.dao.BpSystemsDao.findAll", "");
 			List<BpSystems> sysList = this.getList(sList);
-		
+			List<BpModuleModel> moduleList = bpSystemsService.getTreeRouter("com.sky.factory.dao.BpSystemsDao.findAllNodule", "");
 			for (BpSystems bpSystems : sysList) {
 				System.out.println(bpSystems.toString());
 			}
-			if( bpSystemsService.flushRouter(sysList)) return Mono.justOrEmpty(new Message("000001"));
+			if( bpSystemsService.flushRouter(sysList)&& bpSystemsService.flushOtherRouter(moduleList)) return Mono.justOrEmpty(new Message("000001"));
 			else return Mono.justOrEmpty(new Message("100001"));
 		} catch (Exception e) {
 			e.printStackTrace();

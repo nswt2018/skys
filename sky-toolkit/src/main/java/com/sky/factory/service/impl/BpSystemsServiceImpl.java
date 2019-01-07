@@ -19,6 +19,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 
 import com.sky.core.base.service.impl.BaseServiceImpl;
+import com.sky.factory.model.BpModuleModel;
 import com.sky.factory.model.BpSystems;
 import com.sky.factory.service.IBpSystemsService;
 
@@ -35,7 +36,10 @@ public class BpSystemsServiceImpl extends BaseServiceImpl<BpSystems> implements 
 	public int deleteBySysKey(String sqlId, String parameter) {
 		return sqlSessionTemplate.delete(sqlId, parameter);
 	}
-	
+	@Override
+	public List<BpModuleModel> getTreeRouter(String sqlId, String parameter){
+		return sqlSessionTemplate.selectList(sqlId, parameter);
+	}
 	@Override
 	public int updChildren(String sqlId, Map<String, String> map) {
 		return sqlSessionTemplate.update(sqlId, map);
@@ -204,6 +208,81 @@ public class BpSystemsServiceImpl extends BaseServiceImpl<BpSystems> implements 
 		}
 
 	}
-	
+public boolean flushOtherRouter(List<BpModuleModel> moduleList){
+		
+		File file = new File("D:/sky-plat/softfactory/sofa/src/router/router.js");//定义一个file对象，用来初始化FileInputStream
+		FileInputStream is = null;
+		BufferedReader bReader = null;
+		InputStreamReader isr = null;
+		BufferedWriter writer = null;
+		try {
+			is = new FileInputStream(file);
+			isr = new InputStreamReader(is, "utf-8");
+			bReader = new BufferedReader(isr); //实例化一个BufferedReader对象，将文件内容读取到缓存
+			StringBuilder sb = new StringBuilder(); //定义一个字符串缓存，将字符串存放缓存中
+			String str = null;
+			String begin = "//otherRouterBegin"; //开始标识
+			String end = "//otherRouterEnd"; //结束标识
+			while ((str = bReader.readLine()) != null) {//逐行读取文件内容，不读取换行符和末尾的空格
+				sb.append(str + "\n"); //将读取的字符串添加换行符后累加存放在缓存中
+			}
+			StringBuilder menu = new StringBuilder();
+			menu.append("\n");
+			for (int i = 0; i < moduleList.size(); i++) {
+				BpModuleModel bpModule = moduleList.get(i);
+				if(bpModule.getModName().equals("树模型")){
+					menu.append("\t\t{ path: '" + bpModule.getModuCode().toLowerCase() +"treemode', title: '"+ bpModule.getModuCName() + "树节点信息', "
+							+ "name: '" + bpModule.getModuCode().toLowerCase() +"treemode', component: () => "
+							+ "import('@/views/treemode/" + bpModule.getModuCode().toLowerCase() +"treemode.vue') },\n");
+
+				}
+			}
+			menu.append("\n");
+			
+			//替换路由
+			sb.replace(sb.indexOf(begin)+18, sb.indexOf(end), menu.toString());
+			System.out.println(menu.toString());
+			
+			OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(file),"UTF-8"); 
+			writer=new BufferedWriter(out);   
+			writer.write("");
+			writer.write(sb.toString());
+			writer.flush();
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+			if (is != null) {
+				try {
+					is.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (isr != null) {
+				try {
+					isr.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (bReader != null) {
+				try {
+					bReader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+	}
 }
 

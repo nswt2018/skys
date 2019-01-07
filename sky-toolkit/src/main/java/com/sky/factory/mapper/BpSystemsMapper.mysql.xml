@@ -37,4 +37,8 @@
 	<update id="updChildren" parameterType="hashmap">
 		UPDATE BP_SYSTEMS SET UPPER_NAME = #{sysName} WHERE UPPER_SYS = #{sysKey}
 	</update>
+	
+	<select id="findAllNodule" parameterType="String" resultType="BpModuleModel">
+		SELECT * FROM BP_MODULE WHERE modu_code IN (SELECT mod_code FROM BP_SYSTEMS)  
+	</select>
 </mapper>

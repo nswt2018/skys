@@ -51,7 +51,7 @@ public class ConvertString {
 		if (str == null) {
 			return null;
 		}
-		str=str.trim();
+		str=str.toLowerCase().replace(" ", "");
 		String temporary;
 		for (int i = 0; i < str.length(); i++) {
 			temporary = String.valueOf(str.charAt(i));
@@ -67,7 +67,7 @@ public class ConvertString {
 		if (str == null) {
 			return null;
 		}
-		str=str.toLowerCase().trim();
+		str=str.toLowerCase().replace(" ", "");
 		String temporary;
 		for (int i = 0; i < str.length(); i++) {
 			temporary = String.valueOf(str.charAt(i));
@@ -172,6 +172,6 @@ public class ConvertString {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(replaceStringDotBack("lxstest.test_key"));
+		System.out.println(subString("040101"));
 	}
 }

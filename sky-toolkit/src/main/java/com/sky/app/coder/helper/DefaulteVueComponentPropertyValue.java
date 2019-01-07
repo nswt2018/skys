@@ -87,7 +87,6 @@ public class DefaulteVueComponentPropertyValue {
 		modal3.setLoading("updloading");
 		modal3.setMaskClosable("false");
 		modal3.setOnOk("");
-		modal3.setOnCancel("");
 		modal3.setForm("updForm");
 		List<Modal> list = new ArrayList<Modal>();
 		list.add(modal1);
@@ -122,7 +121,6 @@ public class DefaulteVueComponentPropertyValue {
 		modal3.setLoading("msupdloading");
 		modal3.setMaskClosable("false");
 		modal3.setOnOk("");
-		modal3.setOnCancel("");
 		modal3.setForm("msupdForm");
 		List<Modal> list = new ArrayList<Modal>();
 		list.add(modal1);
