@@ -94,7 +94,7 @@ public class BpSystemsServiceImpl extends BaseServiceImpl<BpSystems> implements 
 				if(modCode != null && !("".equals(modCode))){ //一级菜单
 					menu.append("\t\t\t{ path: '" + bpSystems.getSysCode().toLowerCase() +"list', title: '"+ bpSystems.getSysName() + "', "
 						+ "name: '" + bpSystems.getSysCode() + "-info',icon: 'android-checkbox', component: () => "
-						+ "import('@/views/" + bpSystems.getSysCode().toLowerCase() + "/" + bpSystems.getModCode() + ".vue') },\n");
+						+ "import('@/views/" + bpSystems.getSysCode().toLowerCase() + "/" + bpSystems.getModCode().toLowerCase() + ".vue') },\n");
 				}else{
 					for (int j = 0; j <sList2.size(); j++) {
 						BpSystems bpSystems2 = sList2.get(j);
@@ -103,7 +103,7 @@ public class BpSystemsServiceImpl extends BaseServiceImpl<BpSystems> implements 
 							if(modCode2 != null && !("".equals(modCode2))){ //二级菜单
 								menu.append("\t\t\t{ path: '" + bpSystems2.getSysCode().toLowerCase() +"list', title: '"+ bpSystems2.getSysName() + "', "
 									+ "name: '" + bpSystems2.getSysCode() + "-info',icon: 'navicon-round', component: () => "
-									+ "import('@/views/" + bpSystems.getSysCode().toLowerCase() + "/" + bpSystems2.getSysCode().toLowerCase() + "/" + bpSystems2.getModCode() + ".vue') },\n");
+									+ "import('@/views/" + bpSystems.getSysCode().toLowerCase() + "/" + bpSystems2.getSysCode().toLowerCase() + "/" + bpSystems2.getModCode().toLowerCase() + ".vue') },\n");
 							}else{ //三、四级菜单公共部分
 								menu.append("\t\t\t{\n");
 								menu.append("\t\t\t\tpath: '" + bpSystems2.getSysCode().toLowerCase() +"list', title: '"+ bpSystems2.getSysName() 
@@ -121,7 +121,7 @@ public class BpSystemsServiceImpl extends BaseServiceImpl<BpSystems> implements 
 											menu.append("\t\t\t\t\t{ path: '" + bpSystems3.getSysCode().toLowerCase() +"list', title: '"+ bpSystems3.getSysName() + "', "
 												+ "name: '" + bpSystems3.getSysCode() + "-info',icon: 'navicon-round', component: () => "
 												+ "import('@/views/" + bpSystems.getSysCode().toLowerCase() + "/" + bpSystems2.getSysCode().toLowerCase() + "/" 
-												+ bpSystems3.getSysCode().toLowerCase() + "/" + bpSystems3.getModCode() + ".vue') },\n");
+												+ bpSystems3.getSysCode().toLowerCase() + "/" + bpSystems3.getModCode().toLowerCase() + ".vue') },\n");
 											
 										}else{
 											menu.append("\t\t\t\t\t{\n");
@@ -138,7 +138,7 @@ public class BpSystemsServiceImpl extends BaseServiceImpl<BpSystems> implements 
 															menu.append("\t\t\t\t\t\t\t{ path: '" + bpSystems5.getSysCode().toLowerCase() +"list', title: '"+ bpSystems5.getSysName() + "', "
 																+ "name: '" + bpSystems5.getSysCode() + "-info',icon: 'navicon-round', component: () => "
 																+ "import('@/views/" + bpSystems.getSysCode().toLowerCase() + "/" + bpSystems2.getSysCode().toLowerCase() + "/" 
-																+ bpSystems3.getSysCode().toLowerCase() + "/" + bpSystems5.getSysCode().toLowerCase() +"/" + bpSystems5.getModCode() + ".vue') },\n");
+																+ bpSystems3.getSysCode().toLowerCase() + "/" + bpSystems5.getSysCode().toLowerCase() +"/" + bpSystems5.getModCode().toLowerCase() + ".vue') },\n");
 														}
 													}
 													
