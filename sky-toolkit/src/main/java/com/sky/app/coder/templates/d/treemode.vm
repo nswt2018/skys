@@ -79,6 +79,9 @@ export default {
         init () {
        		pagepublictool.setPage(this);
         	if(this.$route.query){
+        	    if(!this.$route.query.code){
+        			this.$router.go(0);
+        		}
            		treemodeColumn.setPage(this);
         		treemodeColumn.getTreeData(this.$route.query.code,this.$route.query.id,this.$route.query.type);
         	}
