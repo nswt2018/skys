@@ -130,7 +130,7 @@ public class CoderController {
 									//生成实体类
 									VelocityCoder.velocity(vcx, "com/sky/app/coder/templates/b/b-model.java.vm", javaPath + "/model/" + uppersyscode +cmoduCode+ converTableArr[j] + ".java");
 									//生成dao接口
-									VelocityCoder.velocity(vcx, "com/sky/app/coder/templates/b/b-dao.java.vm", javaPath + "/dao/" + uppersyscode +cmoduCode + converTableArr[i] + "Dao.java");
+									VelocityCoder.velocity(vcx, "com/sky/app/coder/templates/b/b-dao.java.vm", javaPath + "/dao/" + uppersyscode +cmoduCode + converTableArr[j] + "Dao.java");
 							}
 						}else if("单表模型".equals(modname)||"树模型".equals(modname)){
 							// 根据模块代码从页面元素表中取出该模块全部的字段信息，并关联字段定义表，获得字段在数据库的类型
