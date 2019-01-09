@@ -39,4 +39,15 @@
 	<insert id="backupTab" parameterType="hashmap" statementType="STATEMENT">
         create table ${newTabCode} SELECT * FROM ${oldTabCode}
     </insert>
+    
+    <select id="findColList" parameterType="String" resultType="BpField">
+		SELECT 
+		column_name AS col_code,
+		column_comment AS col_name,
+		table_name AS tab_code,
+		data_type,
+		column_type AS data_len,
+		(CASE column_key WHEN 'PRI' THEN '1' ELSE '0' END) AS pk_gen
+		FROM information_schema.columns WHERE table_name = #{_parameter}
+	</select>
 </mapper>

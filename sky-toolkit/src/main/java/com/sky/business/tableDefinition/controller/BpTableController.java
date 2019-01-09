@@ -1,6 +1,7 @@
 package com.sky.business.tableDefinition.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -319,19 +320,46 @@ public class BpTableController extends BaseController {
 	public Mono<Page<BpTable>> getTabList1(@RequestBody Page<BpTable> page, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		page.setRequest(request);
-		bpTableService.findForPageList("com.sky.business.tableDefinition.dao.BpTableDao.findForPageList1", page);
+		bpTableService.findForPageList("com.sky.business.tableDefinition.dao.BpTableDao.findTabPageList", page);
 		page.setRequest(null);
 		return Mono.justOrEmpty(page);
 	}
 	
-	/*@PutMapping("/TK0007I1.do")
+	@PutMapping("/TK0007I1.do")
 	@ResponseBody
-	public Mono<Message> addTable(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public Mono<Message> addTable(@RequestParam String[] tabCode,  HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try {
+			Map<String, String[]> map = new HashMap<>();
+			map.put("arr", tabCode);
+			List<BpTable> tList = bpTableService.findForList("com.sky.business.tableDefinition.dao.BpTableDao.findTabList", map);
+			Date date = new Date();
+			for (BpTable bpTable : tList) {
+				bpTable.setCrtDate(date);
+				bpTable.setIsExist("1");
+				
+				bpTableService.save(bpTable);
+				
+				List<BpField> cList = bpFieldService.findForList("com.sky.business.columnDefinition.dao.BpFieldDao.findColList", bpTable.getTabCode());
+				for (BpField bpField : cList) {
+					String dataType = bpField.getDataType();
+					if(dataType.equals("int") || dataType.equals("date") || dataType.equals("datetime")) bpField.setDataLen("");
+					else{
+						String dataLen = bpField.getDataLen().replace(dataType, "");
+						dataLen = dataLen.substring(1, dataLen.length()-1);
+						bpField.setDataLen(dataLen);
+					}
+					
+					bpField.setCrtDate(date);
+					
+					bpFieldService.save(bpField);
+				}
+			}
 			
+			
+			return Mono.justOrEmpty(new Message("000001"));
 		}catch (Exception e) {
 			e.printStackTrace();
 			throw new BusinessException("000004", e.getMessage());
 		}
-	}*/
+	}
 }

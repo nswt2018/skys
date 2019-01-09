@@ -82,13 +82,22 @@
 	 	FROM information_schema.tables
 		WHERE table_type='base table'
 			<if test="variables.tabCode != null and variables.tabCode != ''">
-				AND tab_code LIKE CONCAT('%',#{variables.tabCode},'%')
+				AND table_name LIKE CONCAT('%',#{variables.tabCode},'%')
 			</if>
 			<if test="variables.tabName != null and variables.tabName != ''">
-				AND tab_name LIKE CONCAT('%',#{variables.tabName},'%')
+				AND table_comment LIKE CONCAT('%',#{variables.tabName},'%')
 			</if>
-			<if test="orderBy != null and orderBy != ''">
-				 order by ${orderBy}
-			</if>
+		AND table_name NOT IN (SELECT tab_code FROM bp_tables)
+	</select>
+	
+	<select id="findTabList" resultType="BpTable" parameterType="hashmap" statementType="STATEMENT">
+		SELECT
+	 		table_name as tabCode,table_comment as tabName
+	 	FROM information_schema.tables
+		WHERE table_type='base table'
+		and table_name in
+		<foreach collection="arr" item="item" index="index" open="(" separator="," close=")">
+         	'${item}'
+        </foreach>
 	</select>
 </mapper>
