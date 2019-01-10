@@ -103,15 +103,17 @@ public class VelocityGetTemplateMulitData {
 	public String dealTabInfo() {
 		String temp = null;
 		StringBuffer sb = new StringBuffer();
-		String[] tabinfoarr = relInfo.split("=");
-		for (int i = 1; i < tabinfoarr.length; i++) {
-			if (i < tabinfoarr.length - 1) {
-				temp = tabinfoarr[0].replace(" ", "") + "=" + tabinfoarr[i].replace(" ", "") + " AND ";
-			} else {
-				temp = tabinfoarr[0].replace(" ", "") + "=" + tabinfoarr[i].replace(" ", "");
+		String[] relInfoArray = relInfo.split("and");
+		for (int j = 0; j < relInfoArray.length; j++) {
+			String[] tabinfoarr = relInfoArray[j].split("=");
+			for (int i = 1; i < tabinfoarr.length; i++) {
+				if (j == relInfoArray.length - 1 && i == tabinfoarr.length - 1) {
+					temp = tabinfoarr[0].replace(" ", "") + "=" + tabinfoarr[i].replace(" ", "");
+				} else {
+					temp = tabinfoarr[0].replace(" ", "") + "=" + tabinfoarr[i].replace(" ", "") + " AND ";
+				}
+				sb.append(temp);
 			}
-
-			sb.append(temp);
 		}
 		return sb.toString();
 	}
@@ -126,18 +128,21 @@ public class VelocityGetTemplateMulitData {
 	public String getChangeTabInfo(String modelmoducode) {
 		String temp = null;
 		StringBuffer sb = new StringBuffer();
-		String[] tabinfoarr = relInfo.split("=");
-		for (int i = 1; i < tabinfoarr.length; i++) {
-			String get = ConvertString
-					.StringFirstCharUpper(ConvertString.convertSomeCharUpperReplace(tabinfoarr[0]).replace(" ", ""));
-			String set = ConvertString
-					.StringFirstCharUpper(ConvertString.convertSomeCharUpperReplace(tabinfoarr[i]).replace(" ", ""));
-			if (i < tabinfoarr.length - 1) {
-				temp = modelmoducode + ".set" + set + "(" + modelmoducode + ".get" + get + "());\r";
-			} else {
-				temp = "                " + modelmoducode + ".set" + set + "(" + modelmoducode + ".get" + get + "());";
+		String[] relInfoArray = relInfo.split("and");
+		for (int j = 0; j < relInfoArray.length; j++) {
+			String[] tabinfoarr = relInfoArray[j].split("=");
+			for (int i = 1; i < tabinfoarr.length; i++) {
+				String get = ConvertString
+						.StringFirstCharUpper(ConvertString.convertSomeCharUpperReplace(tabinfoarr[0]).replace(" ", ""));
+				String set = ConvertString
+						.StringFirstCharUpper(ConvertString.convertSomeCharUpperReplace(tabinfoarr[i]).replace(" ", ""));
+				if (i < tabinfoarr.length - 1) {
+					temp = modelmoducode + ".set" + set + "(" + modelmoducode + ".get" + get + "());\r";
+				} else {
+					temp = "                " + modelmoducode + ".set" + set + "(" + modelmoducode + ".get" + get + "());";
+				}
+				sb.append(temp);
 			}
-			sb.append(temp);
 		}
 		return sb.toString();
 	}
@@ -151,7 +156,7 @@ public class VelocityGetTemplateMulitData {
 		// 字段
 		String ename = null;
 		// 将关联表的关联关系放在数组中
-		String[] tablerefinfo = relInfo.split("=");
+		String[] refinfoArray = relInfo.split("and");
 		for (int i = 0; i < list.size(); i++) {
 			// 用于判断该字段是否需要页面显示
 			Boolean flag = true;
@@ -160,9 +165,12 @@ public class VelocityGetTemplateMulitData {
 			// 字段，字段全部小写，如果字段中有“_”或“.”,则将字符串中"_"或“.”去掉，后面的第一字母大写
 			ename = ConvertString.convertSomeCharUpperReplace(list.get(i).getEleEname());
 			// 判断字段是否为关联表关系中的字段
-			for (int j = 1; j < tablerefinfo.length; j++) {
-				if (list.get(i).getEleEname().equals(tablerefinfo[j].trim())) {
-					flag = false;
+			for(int k=0;k<refinfoArray.length;k++){
+				String[] tablerefinfo= refinfoArray[k].split("=");
+				for (int j = 1; j < tablerefinfo.length; j++) {
+					if (list.get(i).getEleEname().equals(tablerefinfo[j].trim())) {
+						flag = false;
+					}
 				}
 			}
 			if (flag) {

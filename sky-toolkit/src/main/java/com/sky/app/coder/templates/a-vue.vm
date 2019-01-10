@@ -20,6 +20,11 @@
 
 #set($fields=${models.fields})
 #set($istree=${models.isTree})
+
+#set($tablename=${models.tableName})
+#set($selectfields=${models.selectFields})
+#set($radiofields=${models.radioFields})
+#set($checkboxfields=${models.checkboxFields})
 <style>
 </style>
 <template>

@@ -12,6 +12,22 @@ export default {
         	saveurl: '/${syscode}${tid}I.do',
         	deleteurl: '/${syscode}${tid}D.do',
         	updateurl: '/${syscode}${tid}U.do',
+        	selecturl:'/SelectValue.do',
+#if($selectfields)
+#foreach($selectfield in $selectfields)
+			${selectfield}Select:[],
+#end
+#end
+#if($radiofields)
+#foreach($radiofield in $radiofields)
+			${radiofield}Radio:[],
+#end
+#end
+#if($checkboxfields)
+#foreach($checkboxfield in $checkboxfields)
+			${checkboxfield}Checkbox:[],
+#end
+#end
 #if($inputs)
 #foreach($input in $inputs) 
 #if(${input.defaultValue})
@@ -41,6 +57,15 @@ export default {
 #end
 #if(${formitem.datepicker}&&${formitem.datepicker.defaultValue})
 				"${formitem.datepicker.value}":"${formitem.datepicker.defaultValue}",
+#end
+#if(${formitem.select}&&${formitem.select.defaultValue})
+				"${formitem.select.value}":"${formitem.select.defaultValue}",
+#end
+#if(${formitem.radio}&&${formitem.radio.defaultValue})
+				"${formitem.radio.value}":"${formitem.radio.defaultValue}",
+#end
+#if(${formitem.checkbox}&&${formitem.checkbox.defaultValue})
+				"${formitem.checkbox.value}":"${formitem.checkbox.defaultValue}",
 #end
 #end
 #end
@@ -191,23 +216,44 @@ export default {
     	        		}];       		
             	}
         	}
+#if($selectfields)
+#foreach($selectfield in $selectfields)
+			this.${selectfield}Select=pagepublictool.getSelectList({table:'${tablename}',field:'${selectfield}'});
+#end
+#end
+#if($radiofields)
+#foreach($radiofield in $radiofields)
+			this.${radiofield}Radio=pagepublictool.getSelectList({table:'${tablename}',field:'${radiofield}'});
+#end
+#end
+#if($checkboxfields)
+#foreach($checkboxfield in $checkboxfields)
+			this.${checkboxfield}Checkbox=pagepublictool.getSelectList({table:'${tablename}',field:'${checkboxfield}'});
+#end
+#end
         },
         searching () {
     		pagepublictool.page(this.getSearch());
         },
         onClicking(type){
+        //树模型
 #if(${istree}=='1')
 			let router=this.$router;
+			let query = {
+	        	vue_id:this.viewForm.${tableprimary},
+	        	vue_code:'${titleName}',
+	        	vue_type:type,
+#if($fields)
+#foreach($field in $fields)
+				${field}:this.viewForm.${field}#if($foreach.hasNext),#end
+#end
+#end	        	
+        	};
         	if(type==='VIEW' || type==='view'){
          		if(this.$route.query.id){
          			pagepublictool.view();
          		}else{
         	     	pagepublictool.view();
-        	        let query = {
-	        	     	id:this.viewForm.${tableprimary},
-	        	     	code :'${titleName}',
-	        	     	type :type
-        	     		};
         	        router.push({
         	             name: '${moducode}treemode',
         	             query: query
@@ -217,11 +263,6 @@ export default {
 	        	if(this.$route.query.id){
 	        		pagepublictool.add();
 	        	}else{
-		        	let query = {
-		    		    id:this.viewForm.${tableprimary},
-		    		    code :'${titleName}',
-		    		    type :type
-		    		    };
 		    		router.push({
 		    		     name: '${moducode}treemode',
 		    		     query: query
@@ -231,11 +272,6 @@ export default {
         		if(this.$route.query.id){
         			pagepublictool.update();      			
         		}else{
-    	            let query = {
-	    		     	id:this.viewForm.${tableprimary},
-	    		     	code :'${titleName}',
-	    		     	type :type
-    		     	};
     		        router.push({
     		            name: '${moducode}treemode',
     		            query: query
@@ -245,11 +281,6 @@ export default {
         		if(this.$route.query.id){
         			pagepublictool.delete(this.deleteurl+"?delKeys="+this.deleteKey.join(','));    			
         		}else{
-    	            let query = {
-	    		     	id:this.viewForm.${tableprimary},
-	    		     	code :'${titleName}',
-	    		     	type :type
-    		     	};
     		        router.push({
     		        	name:'${moducode}treemode',
 	    		        query: query
@@ -264,6 +295,24 @@ export default {
 #end
         },
         saving(refValue){
+#if($selectfields)
+#foreach($selectfield in $selectfields)
+			this.addForm.${selectfield}=this.addForm.${selectfield}.join(',');
+			this.updForm.${selectfield}=this.updForm.${selectfield}.join(',');
+#end
+#end
+#if($radiofields)
+#foreach($radiofield in $radiofields)
+			this.addForm.${radiofield}=this.addForm.${radiofield}.join(',');
+			this.updForm.${radiofield}=this.updForm.${radiofield}.join(',');
+#end
+#end
+#if($checkboxfields)
+#foreach($checkboxfield in $checkboxfields)
+			this.addForm.${checkboxfield}=this.addForm.${checkboxfield}.join(',');
+			this.updForm.${checkboxfield}=this.updForm.${checkboxfield}.join(',');
+#end
+#end
          	pagepublictool.save(refValue);
         },
         reseting (refValue) {

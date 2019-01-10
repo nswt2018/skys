@@ -81,7 +81,17 @@ public class Model {
 	private FormItem formitem;
 	private DatePicker datepicker;
 	private InputNumber inputnumber;
-
+	private Select select;
+	private Radio radio;
+	private Checkbox checkbox;
+	
+	//页面下拉框
+	private List<String> selectFields;
+	//单选框
+	private List<String> radioFields;
+	//多选框
+	private List<String> checkboxFields;
+	
 	private Button button;
 	private Table table;
 	private Page1 page;
@@ -469,6 +479,42 @@ public class Model {
 	}
 	public void setRoutes(List<String> routes) {
 		this.routes = routes;
+	}
+	public Select getSelect() {
+		return select;
+	}
+	public void setSelect(Select select) {
+		this.select = select;
+	}
+	public Radio getRadio() {
+		return radio;
+	}
+	public void setRadio(Radio radio) {
+		this.radio = radio;
+	}
+	public Checkbox getCheckbox() {
+		return checkbox;
+	}
+	public void setCheckbox(Checkbox checkbox) {
+		this.checkbox = checkbox;
+	}
+	public List<String> getSelectFields() {
+		return selectFields;
+	}
+	public void setSelectFields(List<String> selectFields) {
+		this.selectFields = selectFields;
+	}
+	public List<String> getRadioFields() {
+		return radioFields;
+	}
+	public void setRadioFields(List<String> radioFields) {
+		this.radioFields = radioFields;
+	}
+	public List<String> getCheckboxFields() {
+		return checkboxFields;
+	}
+	public void setCheckboxFields(List<String> checkboxFields) {
+		this.checkboxFields = checkboxFields;
 	}
 	
 	

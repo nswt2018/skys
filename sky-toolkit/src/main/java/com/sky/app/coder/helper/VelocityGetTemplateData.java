@@ -1,39 +1,45 @@
 package com.sky.app.coder.helper;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.sky.app.coder.model.Button;
+import com.sky.app.coder.model.Checkbox;
 import com.sky.app.coder.model.DatePicker;
 import com.sky.app.coder.model.Element;
-import com.sky.app.coder.model.Form;
 import com.sky.app.coder.model.FormItem;
 import com.sky.app.coder.model.Input;
 import com.sky.app.coder.model.InputNumber;
-import com.sky.app.coder.model.Modal;
 import com.sky.app.coder.model.Model;
-import com.sky.app.coder.model.Page1;
-import com.sky.app.coder.model.Table;
+import com.sky.app.coder.model.Radio;
+import com.sky.app.coder.model.Select;
 import com.sky.app.coder.model.TableColumn;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 /*
  * 单表模型，将模板中所需要的数据都封装在Model实体类中
  */
 public class VelocityGetTemplateData {
 	// 主键字段
-	private String colcode =null;
+	private String colcode = null;
 	// 主键策略
 	private String pk = null;
+	//下拉框字段
+	List<String> selectFields=new ArrayList<String>();
+	//单选字段
+	List<String> radioFields=new ArrayList<String>();
+	//多选字段
+	List<String> checkboxFields=new ArrayList<String>();
+	// 搜索框
 	List<Input> inputs = new ArrayList<Input>();
+	// 新增页面字段
 	List<FormItem> addformitems = new ArrayList<FormItem>();
+	// 修改页面字段
 	List<FormItem> updformitems = new ArrayList<FormItem>();
+	// 查看页面字段
 	List<FormItem> viewformitems = new ArrayList<FormItem>();
+	// 展示列表
 	List<TableColumn> tablecolumns = new ArrayList<TableColumn>();
+	// 获得解析json字符串的实例化
+	ParseJsonString pjs = new ParseJsonString();
 
 	public Model getModel(List<Element> list, Element el, String packname) {
 		Model model = new Model();
@@ -66,7 +72,7 @@ public class VelocityGetTemplateData {
 		model.setDaoPackName(packname + ".dao");
 		// 包名--model 二级包名+系统简码（全部小写）+每层固定的命名
 		model.setModelPackName(packname + ".model");
-		
+
 		// 设置默认的组件属性值
 		DefaulteVueComponentPropertyValue dv = new DefaulteVueComponentPropertyValue();
 		model.setButton(dv.getButton());
@@ -76,8 +82,12 @@ public class VelocityGetTemplateData {
 		model.setAddform(dv.getForm()[0]);
 		model.setUpdform(dv.getForm()[1]);
 		model.setViewform(dv.getForm()[2]);
-		
+
 		this.setComponentPropertyValue(list);
+		//下拉框 单选框 多选框
+		model.setSelectFields(selectFields);
+		model.setRadioFields(radioFields);
+		model.setCheckboxFields(checkboxFields);
 		// vue非默认组件属性值赋值，通过前台页面输入，从数据库获取并做相应的处理
 		model.setInputs(inputs);
 		model.setAddformitem(addformitems);
@@ -86,10 +96,9 @@ public class VelocityGetTemplateData {
 		model.setTablecolumns(tablecolumns);
 		return model;
 	}
+
 	// 解析页面元素标签信息,并将标签中的属性值赋值
 	public void setComponentPropertyValue(List<Element> list) {
-		//获得解析json字符串的实例化
-		ParseJsonString pjs = new ParseJsonString();
 		// 字段名称
 		String cname = null;
 		// 字段
@@ -148,148 +157,294 @@ public class VelocityGetTemplateData {
 				tablecolumn.setValue(ename);
 				tablecolumns.add(tablecolumn);
 			} else if (list.get(i).getComName().equals("新增信息") || list.get(i).getComName().equals("修改信息")) {
-				FormItem formitem = new FormItem();
-				DatePicker dp = null;
-				InputNumber in = null;
-				Input auinput = null;
-				// 如果新增信息或修改信息标签信息没有录入，则设置默认值
-				if (list.get(i).getTagInfo() == null || "".equals(list.get(i).getTagInfo())) {
-					formitem.setLabel(cname);
-					// 如果字段为主键且主键生成策略为0（手动输入），则设为必输，且有验证提示语
-					if (colcode.equals(ename) && pk.equals("0")) {
-						formitem.setProp(ename);
-						formitem.setRequired("true");
-					}
-					// 新增信息或修改信息表单，现在只支持input输入框,日期,数值
-					if (list.get(i).getDataType().equals("date") || list.get(i).getDataType().equals("datetime")) {
-						dp = new DatePicker();
-						dp.setValue(ename);
-						dp.setPlaceholder(cname);
-					} else if (list.get(i).getDataType().equals("decimal")
-							|| list.get(i).getDataType().equals("numeric") || list.get(i).getDataType().equals("double")
-							|| list.get(i).getDataType().equals("float") || list.get(i).getDataType().equals("int")
-							|| list.get(i).getDataType().equals("bigint")) {
-						in = new InputNumber();
-						in.setValue(ename);
-						in.setPlaceholder(cname);
-						in.setMax(1000000);
-						in.setMin(0);
-					} else {
-						auinput = new Input();
-						auinput.setValue(ename);
-						auinput.setPlaceholder(cname);
-					}
-					formitem.setInput(auinput);
-					formitem.setDatepicker(dp);
-					formitem.setInputNumber(in);
-				} else {
-					Model aumodel = new Model();
-					// 将数据库中取出的JSON字符串,去除字符串中的‘@’、‘：’，放入FormItem实体类中
-					aumodel = pjs.parseJsonTagInfo(ConvertString.replaceSomeChar(list.get(i).getTagInfo()));
-					if (aumodel.getFormitem() != null) {
-						formitem = aumodel.getFormitem();
-						if (formitem.getLabel() == null || formitem.getLabel() == "") {
-							formitem.setLabel(cname);
-						}
-						if (colcode.equals(ename) && pk.equals("0")) {
-							if (formitem.getProp() == null || formitem.getProp() == "") {
-								formitem.setProp(ename);
-							} else {
-								formitem.setProp(ConvertString.convertSomeCharUpper(formitem.getProp()));
-							}
-							if (formitem.getRequired() == null || formitem.getRequired() == "") {
-								formitem.setRequired("true");
-							}
-						}
-					} else {
-						formitem.setLabel(cname);
-						if (colcode.equals(ename) && pk.equals("0")) {
-							formitem.setProp(ename);
-							formitem.setRequired("true");
-						}
-					}
-					auinput = aumodel.getInput();
-					// 如果新增或修改组件中录入的标签信息有input、Datepicker、InputNumber标签，则将value的值赋给defaultvalue
-					if (auinput != null) {
-						auinput.setDefaultValue(auinput.getValue());
-						auinput.setValue(ename);
-						auinput.setConvertValue(list.get(i).getEleEname());
-						if (auinput.getPlaceholder() == null || auinput.getPlaceholder() == "") {
-							auinput.setPlaceholder("请输入" + cname);
-						}
-						/*
-						 * if (auinput.getType() == null || auinput.getType() ==
-						 * "") { auinput.setType("text"); } if
-						 * (auinput.getIcon() == null || auinput.getIcon() ==
-						 * "") { auinput.setIcon("search"); } if
-						 * (auinput.getWidth() == null || auinput.getWidth() ==
-						 * "") { auinput.setWidth("200px"); } if
-						 * (auinput.getOnChange() == null ||
-						 * auinput.getOnChange() == "") {
-						 * auinput.setOnChange("true"); }
-						 */
-					}
-					dp = aumodel.getDatepicker();
-					if (dp != null) {
-						dp.setDefaultValue(dp.getValue());
-						dp.setValue(ename);
-						if (dp.getPlaceholder() == null || dp.getPlaceholder() == "") {
-							dp.setPlaceholder("请输入" + cname);
-						}
-					}
-					in = aumodel.getInputnumber();
-					if (in != null) {
-						in.setDefaultValue(in.getValue());
-						in.setValue(ename);
-						if (in.getMax() == 0) {
-							in.setMax(100000);
-						}
-						if (in.getMin() == 0) {
-							in.setMin(1);
-						}
-						if (in.getPlaceholder() == null || in.getPlaceholder() == "") {
-							in.setPlaceholder("请输入" + cname);
-						}
-					}
-					formitem.setInput(aumodel.getInput());
-					formitem.setDatepicker(aumodel.getDatepicker());
-					formitem.setInputNumber(aumodel.getInputnumber());
-				}
-				if (list.get(i).getComName().equals("新增信息")) {
-					addformitems.add(formitem);
-				} else {
-					updformitems.add(formitem);
+				//如果字段为主键且主键生成策略为自动生成，则页面不显示
+				if(colcode.equals(ename) && pk.equals("1")){
+					
+				}else{
+					this.setFormItemPropertyValue(list.get(i));
 				}
 			} else if (list.get(i).getComName().equals("查看信息")) {
-				FormItem viewformitem = new FormItem();
-				// 如果查看信息的标签信息没有录入，则设置默认值
-				if (list.get(i).getTagInfo() == null || "".equals(list.get(i).getTagInfo())) {
-					// 字段名称
-					viewformitem.setLabel(cname);
-					Input vinput = new Input();
-					// 字段
-					vinput.setValue(ename);
-					viewformitem.setInput(vinput);
-				} else {
-					Model vmodel = new Model();
-					// 将数据库中取出的JSON字符串，去除字符串中的‘@’、‘：’放入FormItem实体类中
-					vmodel = pjs.parseJsonTagInfo(ConvertString.replaceSomeChar(list.get(i).getTagInfo()));
-					if (vmodel.getFormitem() != null) {
-						viewformitem = vmodel.getFormitem();
-						if (viewformitem.getLabel() == null || viewformitem.getLabel() == "") {
-							viewformitem.setLabel("请输入" + cname);
-						}
-					} else {
-						viewformitem.setLabel(cname);
-					}
-					if (vmodel.getInput() != null) {
-						vmodel.getInput().setValue(ename);
-					}
-					viewformitem.setInput(vmodel.getInput());
-				}
-				viewformitems.add(viewformitem);
+				this.setViewFormItemPropertyValue(list.get(i));
 			}
 		}
 	}
 
+	public void setFormItemPropertyValue(Element element) {
+		FormItem formitem = new FormItem();
+		DatePicker dp = null;
+		InputNumber in = null;
+		Input auinput = null;
+		Select select = null;
+		Radio radio = null;
+		Checkbox checkbox = null;
+		// 字段中文
+		String cname = element.getEleCname();
+		// 字段英文
+		String ename = ConvertString.convertSomeCharUpper(element.getEleEname());
+		// 标签信息
+		String tagInfo = element.getTagInfo();
+		// 单元名称
+		String comName = element.getComName();
+		// 显示类型，字符串、日期等
+		String uiType = element.getUiType();
+		// 如果新增信息或修改信息标签信息没有录入，则设置默认值
+		if (tagInfo == null || "".equals(tagInfo)) {
+			formitem.setLabel(cname);
+			// 如果字段为主键且主键生成策略为0（手动输入），则设为必输，且有验证提示语
+			if (colcode.equals(ename) && pk.equals("0")) {
+				formitem.setProp(ename);
+				formitem.setRequired("true");
+			}
+			// 新增信息或修改信息表单，现在只支持字符串,日期,数值，选择框，单选，多选
+			if ("D1".equals(uiType)) {
+				// 日期
+				dp = new DatePicker();
+				dp.setValue(ename);
+				dp.setPlaceholder(cname);
+			} else if ("C1".equals(uiType)) {
+				// 数字
+				in = new InputNumber();
+				in.setValue(ename);
+				in.setPlaceholder(cname);
+				in.setMax(1000000);
+				in.setMin(0);
+			} else if ("A1".equals(uiType)) {
+				// 字符串 单行
+				auinput = new Input();
+				auinput.setValue(ename);
+				auinput.setPlaceholder(cname);
+			} else if ("A2".equals(uiType)) {
+				// 字符串 多行
+				auinput = new Input();
+				auinput.setValue(ename);
+				auinput.setType("textarea");
+				auinput.setPlaceholder(cname);
+			} else if ("B1".equals(uiType)) {
+				// 单选按钮
+				radio = new Radio();
+				radio.setValue(ename);
+			} else if ("B2".equals(uiType)) {
+				// 多选按钮
+				checkbox = new Checkbox();
+				checkbox.setValue(ename);
+			} else if ("B3".equals(uiType)) {
+				// 下拉选择框 单选
+				select = new Select();
+				select.setValue(ename);
+			} else if ("B4".equals(uiType)) {
+				// 下拉选择框 多选
+				select = new Select();
+				select.setValue(ename);
+				select.setMultiple("true");
+			}
+			formitem.setInput(auinput);
+			formitem.setDatepicker(dp);
+			formitem.setInputNumber(in);
+			formitem.setRadio(radio);
+			formitem.setCheckbox(checkbox);
+			formitem.setSelect(select);
+		} else {
+			Model aumodel = new Model();
+			// 将数据库中取出的JSON字符串,去除字符串中的‘@’、‘：’，放入FormItem实体类中
+			aumodel = pjs.parseJsonTagInfo(ConvertString.replaceSomeChar(tagInfo));
+			if (aumodel.getFormitem() != null) {
+				formitem = aumodel.getFormitem();
+				if (formitem.getLabel() == null || formitem.getLabel() == "") {
+					formitem.setLabel(cname);
+				}
+				if (colcode.equals(ename) && pk.equals("0")) {
+					if (formitem.getProp() == null || formitem.getProp() == "") {
+						formitem.setProp(ename);
+					} else {
+						formitem.setProp(ConvertString.convertSomeCharUpper(formitem.getProp()));
+					}
+					if (formitem.getRequired() == null || formitem.getRequired() == "") {
+						formitem.setRequired("true");
+					}
+				}
+			} else {
+				formitem.setLabel(cname);
+				if (colcode.equals(ename) && pk.equals("0")) {
+					formitem.setProp(ename);
+					formitem.setRequired("true");
+				}
+			}
+			// 如果新增或修改组件中录入的标签信息有input、Datepicker、InputNumber标签，则将value的值赋给defaultvalue
+			// 字符串
+			auinput = aumodel.getInput();
+			if (auinput != null) {
+				auinput.setDefaultValue(auinput.getValue());
+				auinput.setValue(ename);
+				auinput.setConvertValue(element.getEleEname());
+				if (auinput.getPlaceholder() == null || auinput.getPlaceholder() == "") {
+					auinput.setPlaceholder("请输入" + cname);
+				}
+			}
+			// 日期
+			dp = aumodel.getDatepicker();
+			if (dp != null) {
+				dp.setDefaultValue(dp.getValue());
+				dp.setValue(ename);
+				if (dp.getPlaceholder() == null || dp.getPlaceholder() == "") {
+					dp.setPlaceholder("请输入" + cname);
+				}
+			}
+			// 数字
+			in = aumodel.getInputnumber();
+			if (in != null) {
+				in.setDefaultValue(in.getValue());
+				in.setValue(ename);
+				if (in.getMax() == 0) {
+					in.setMax(100000);
+				}
+				if (in.getMin() == 0) {
+					in.setMin(1);
+				}
+				if (in.getPlaceholder() == null || in.getPlaceholder() == "") {
+					in.setPlaceholder("请输入" + cname);
+				}
+			}
+			// 下拉选择框
+			select = aumodel.getSelect();
+			if (select != null) {
+				select.setDefaultValue(select.getValue());
+				select.setValue(ename);
+				if (select.getMultiple() == null || select.getMultiple() == "") {
+					select.setMultiple("true");
+				}
+			}
+			// 单选框
+			radio = aumodel.getRadio();
+			if (radio != null) {
+				radio.setDefaultValue(radio.getValue());
+				radio.setValue(ename);
+			}
+			// 多选框
+			checkbox = new Checkbox();
+			if (checkbox != null) {
+				checkbox.setDefaultValue(checkbox.getValue());
+				checkbox.setValue(ename);
+			}
+			formitem.setInput(aumodel.getInput());
+			formitem.setDatepicker(aumodel.getDatepicker());
+			formitem.setInputNumber(aumodel.getInputnumber());
+			formitem.setSelect(aumodel.getSelect());
+			formitem.setRadio(aumodel.getRadio());
+			formitem.setCheckbox(aumodel.getCheckbox());
+		}
+		if ("新增信息".equals(comName)) {
+			addformitems.add(formitem);
+		} else {
+			updformitems.add(formitem);
+		}
+	}
+
+	public void setViewFormItemPropertyValue(Element element) {
+		FormItem viewformitem = new FormItem();
+		DatePicker dp = null;
+		InputNumber in = null;
+		Input vinput = null;
+		Select select = null;
+		Radio radio = null;
+		Checkbox checkbox = null;
+		// 字段英文
+		String ename = ConvertString.convertSomeCharUpper(element.getEleEname());
+		// 标签信息
+		String tagInfo = element.getTagInfo();
+		// 显示类型，字符串、日期等
+		String uiType = element.getUiType();
+		viewformitem.setLabel(element.getEleCname());
+		// 如果查看信息的标签信息没有录入，则设置默认值
+		if (tagInfo == null || "".equals(tagInfo)) {
+			// 新增信息或修改信息表单，现在只支持字符串,日期,数值，选择框，单选，多选
+			if ("D1".equals(uiType)) {
+				// 日期
+				dp = new DatePicker();
+				dp.setValue(ename);
+			} else if ("C1".equals(uiType)) {
+				// 数字
+				in = new InputNumber();
+				in.setValue(ename);
+			} else if ("A1".equals(uiType)) {
+				// 字符串 单行
+				vinput = new Input();
+				vinput.setValue(ename);
+			} else if ("A2".equals(uiType)) {
+				// 字符串 多行
+				vinput = new Input();
+				vinput.setValue(ename);
+				vinput.setType("textarea");
+			} else if ("B1".equals(uiType)) {
+				// 单选按钮
+				radio = new Radio();
+				radio.setValue(ename);
+				radioFields.add(ename);
+			} else if ("B2".equals(uiType)) {
+				// 多选按钮
+				checkbox = new Checkbox();
+				checkbox.setValue(ename);
+				checkboxFields.add(ename);
+			} else if ("B3".equals(uiType)) {
+				// 下拉选择框 单选
+				select = new Select();
+				select.setValue(ename);
+				//将下拉选择的字段放入集合中
+				selectFields.add(ename);
+			} else if ("B4".equals(uiType)) {
+				// 下拉选择框 多选
+				select = new Select();
+				select.setValue(ename);
+				select.setMultiple("true");
+				//将下拉选择的字段放入集合中
+				selectFields.add(ename);
+			}
+			viewformitem.setInput(vinput);
+			viewformitem.setDatepicker(dp);
+			viewformitem.setInputNumber(in);
+			viewformitem.setRadio(radio);
+			viewformitem.setCheckbox(checkbox);
+			viewformitem.setSelect(select);
+		} else {
+			Model vmodel = new Model();
+			// 将数据库中取出的JSON字符串，去除字符串中的‘@’、‘：’放入FormItem实体类中
+			vmodel = pjs.parseJsonTagInfo(ConvertString.replaceSomeChar(tagInfo));
+			//字符串 单行以及多行
+			if (vmodel.getInput() != null) {
+				vmodel.getInput().setValue(ename);
+				if(vmodel.getInput().getType()!=null){
+					vmodel.getInput().setType("true");
+				}
+			}
+			//数字
+			if(vmodel.getInputnumber()!=null){
+				vmodel.getInputnumber().setValue(ename);;
+			}
+			//日期
+			if(vmodel.getDatepicker()!=null){
+				vmodel.getDatepicker().setValue(ename);
+			}
+			//下拉框
+			if(vmodel.getSelect()!=null){
+				vmodel.getSelect().setValue(ename);
+				radioFields.add(ename);
+			}
+			//单选框
+			if(vmodel.getRadio()!=null){
+				vmodel.getRadio().setValue(ename);
+				checkboxFields.add(ename);
+			}
+			//多选框
+			if(vmodel.getCheckbox()!=null){
+				vmodel.getCheckbox().setValue(ename);
+				selectFields.add(ename);
+			}
+			viewformitem.setInput(vmodel.getInput());
+			viewformitem.setInputNumber(vmodel.getInputnumber());
+			viewformitem.setDatepicker(vmodel.getDatepicker());
+			viewformitem.setSelect(vmodel.getSelect());
+			viewformitem.setRadio(vmodel.getRadio());
+			viewformitem.setCheckbox(vmodel.getCheckbox());
+		}
+		viewformitems.add(viewformitem);
+	}
 }

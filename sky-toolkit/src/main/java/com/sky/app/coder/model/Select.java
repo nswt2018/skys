@@ -21,6 +21,8 @@ public class Select {
 	private String notFoundText;
 	//在返回选项时，是否将 label 和 value 一并返回，默认只返回 value
 	private String labelInValue;
+	//自己加的属性,默认给字段赋值
+	private String defaultValue;
 	//事件
 	//选中的Option变化时触发，默认返回 value，如需返回 label，详见 label-in-value 属性
 	private String onChange;
@@ -113,6 +115,12 @@ public class Select {
 	}
 	public void setOnOpenChange(String onOpenChange) {
 		this.onOpenChange = onOpenChange;
+	}
+	public String getDefaultValue() {
+		return defaultValue;
+	}
+	public void setDefaultValue(String defaultValue) {
+		this.defaultValue = defaultValue;
 	}
 	
 }

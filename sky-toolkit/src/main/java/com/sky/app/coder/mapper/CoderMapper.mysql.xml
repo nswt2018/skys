@@ -43,7 +43,10 @@
 	       SELECT
 				a.*,
 				b.col_name,
-				b.data_type 
+				b.data_type,
+				b.JOIN_TAB_CODE,
+				b.UI_TYPE,
+				b.JOIN_COL_CODE
 			FROM
 				BP_ELEMENT a
 				LEFT JOIN ( SELECT * FROM bp_field WHERE tab_code IN ( SELECT rel_table FROM BP_MODULE WHERE MODU_CODE = #{moduCode} ) ) b ON a.ele_ename = b.col_code 

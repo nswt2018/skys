@@ -1,11 +1,7 @@
 package com.sky.app.coder.helper;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import com.sky.app.coder.model.Model;
 
 public class VelocityGetPutMapMulitParameter {
 	/**
