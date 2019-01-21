@@ -4,7 +4,7 @@
 
 	              <FormItem label="${formitem.label}:" #if(${formitem.labelWidth})label-width="${formitem.labelWidth}"#end style="width:300px">
 #if(${formitem.input})
-	                 <Input :readonly="true" v-model="${viewform.model}.${formitem.input.value}"/>
+	                 <Input :readonly="true" v-model="${viewform.model}.${formitem.input.value}" #if(${formitem.input.type}=="textarea")type="${formitem.input.type}" :autosize="{minRows: 2,maxRows: 5}"#end/>
 #end
 #if(${formitem.inputNumber})	                 
 	                 <InputNumber :readonly="true" v-model="${viewform.model}.${formitem.inputNumber.value}" style="width:200px"></InputNumber>
@@ -12,23 +12,19 @@
 #if(${formitem.datepicker})	                 
 	                 <DatePicker :readonly="true"  type="date" v-model="${viewform.model}.${formitem.datepicker.value}"></DatePicker>
 #end
-#if(${formitem.type}=="select")	                 
-	                 <Select  v-model="${viewform.model}.${formitem.value}" />
-	                 	 <Option value="beijing">New York</Option>
-                	 </Select>
+#if(${formitem.select})	                 
+	                 <Select v-model="${viewform.model}.${formitem.select.value}" disabled>
+        				  <Option  v-for="item in ${formitem.select.value}Select" :value="item.value" :key="item.value">{{ item.label }}</Option>
+    				 </Select>
 #end
-#if(${formitem.type}=="radioGroup")	                 
-	                 <RadioGroup v-model="${viewform.model}.${formitem.value}">
-                		 <Radio label="male">Male</Radio>
-                		 <Radio label="female">Female</Radio>
+#if(${formitem.radio})	                 
+	                 <RadioGroup v-model="${viewform.model}.${formitem.radio.value}">
+                		 <Radio disabled v-for="item in ${formitem.radio.value}Radio" :label="item.label" :key="item.value"></Radio>
             		 </RadioGroup>
 #end
-#if(${formitem.type}=="checkboxGroup")	                 
-	                 <CheckboxGroup v-model="${viewform.model}.${formitem.value}">
-		                 <Checkbox label="Eat"></Checkbox>
-		                 <Checkbox label="Sleep"></Checkbox>
-		                 <Checkbox label="Run"></Checkbox>
-		                 <Checkbox label="Movie"></Checkbox>
+#if(${formitem.checkbox})	                 
+	                 <CheckboxGroup v-model="${viewform.model}.${formitem.checkbox.value}">
+		                 <Checkbox disabled  v-for="item in ${formitem.checkbox.value}Checkbox" :label="item.label" :key="item.value"></Checkbox>
            			 </CheckboxGroup>
 #end
 #if(${formitem.type}=="switch")	                 

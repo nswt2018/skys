@@ -61,7 +61,7 @@ public class VelocityGetMsTemplateData {
 		// 从表模型，从表数据库表名
 		model.setMstableName(tablenamearr[1]);
 		// 从表模型，主从表的关联字段
-		String[] relationfieldarr = el.getRelInfo().split("=");
+		String[] relationfieldarr = this.arrangeArray(el.getRelInfo().split("="),tablenamearr);
 		// 从表模型，主表关联字段
 		model.setRelationField(ConvertString.convertSomeCharUpperReplace(relationfieldarr[0]));
 		// 从表模型，从表关联字段
@@ -120,7 +120,24 @@ public class VelocityGetMsTemplateData {
 		model.setMstablecolumns(mstablecolumns);
 		return model;
 	}
-
+	/**
+	 * 重新排列主从表的关联字段，左边是主表关联字段
+	 * @param arr
+	 * @return
+	 */
+	public String[] arrangeArray(String[] arr,String[] tablename){
+		String[] tempArray=new String[2];
+		for(int i=0;i<arr.length;i++){
+			if(arr[i].replace(" ", "").indexOf(tablename[0].replace(" ", ""))!=-1){
+				tempArray[0]=arr[i];
+			}
+			if(arr[i].replace(" ", "").indexOf(tablename[1].replace(" ", ""))!=-1){
+				tempArray[1]=arr[i];
+			}
+		}
+		return tempArray;
+	}
+	
 	// 解析页面元素标签信息,并将标签中的属性值赋值
 	public void setComponentPropertyValue(List<Element> list) {
 		// 获得解析json字符串的实例化

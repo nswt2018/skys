@@ -3,11 +3,14 @@ package com.sky.app.coder.helper;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.sky.app.coder.model.Checkbox;
 import com.sky.app.coder.model.DatePicker;
 import com.sky.app.coder.model.FormItem;
 import com.sky.app.coder.model.Input;
 import com.sky.app.coder.model.InputNumber;
 import com.sky.app.coder.model.Model;
+import com.sky.app.coder.model.Radio;
+import com.sky.app.coder.model.Select;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -30,6 +33,9 @@ public class ParseJsonString {
 		map.put("formitem", FormItem.class);
 		map.put("datepicker", DatePicker.class);
 		map.put("inputnumber", InputNumber.class);
+		map.put("radio", Radio.class);
+		map.put("checkbox", Checkbox.class);
+		map.put("select", Select.class);
 		// 使用了toBean方法，需要三个参数
 		Model model = (Model) JSONObject.toBean(jsonObject, Model.class, map);
 		return model;

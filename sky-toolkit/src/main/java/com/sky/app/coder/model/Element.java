@@ -1,16 +1,9 @@
 package com.sky.app.coder.model;
 
-import java.util.Map;
-
-import com.sky.core.util.ReflectHelper;
 
 public class Element {
 	//字段中文
 	private String eleEname;
-	//字段名称
-	private String colName;
-	//字段类型
-	private String dataType;
 	//字段英文
 	private String eleCname;
 	//单元类型
@@ -33,14 +26,20 @@ public class Element {
 	private String moduModel;
 	//模型名称
 	private String modName;
+	//字段名称  字段定义表
+	private String colName;
+	//字段类型  字段定义表
+	private String dataType;
+	//页面值显示类型  字段定义表
+	private String uiType;
+	//关联字段 字段定义表
+	private String joinTabCode;
 	//模块数据库表主键字段
 	private String colCode;
 	//模块数据库主键策略值
 	private String pkGen;
-	//多表模型
+	//多表模型 关联关系
 	private String relInfo;
-	//传入映射文件参数  多表模型
-	Map variables;
 	public String getEleEname() {
 		return eleEname;
 	}
@@ -137,17 +136,23 @@ public class Element {
 	public void setModName(String modName) {
 		this.modName = modName;
 	}
-	public Map getVariables() {
-		return variables;
-	}
-	public void setVariables(Object obj) {
-		this.variables = ReflectHelper.getFieldValues(obj);
-	}
 	public String getRelInfo() {
 		return relInfo;
 	}
 	public void setRelInfo(String relInfo) {
 		this.relInfo = relInfo;
+	}
+	public String getUiType() {
+		return uiType;
+	}
+	public void setUiType(String uiType) {
+		this.uiType = uiType;
+	}
+	public String getJoinTabCode() {
+		return joinTabCode;
+	}
+	public void setJoinTabCode(String joinTabCode) {
+		this.joinTabCode = joinTabCode;
 	}
 	
 

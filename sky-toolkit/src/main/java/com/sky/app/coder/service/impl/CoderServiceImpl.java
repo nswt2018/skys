@@ -5,18 +5,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.persistence.Column;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 
 import com.sky.app.coder.helper.ConvertString;
-import com.sky.app.coder.model.BpTreemode;
 import com.sky.app.coder.model.Element;
 import com.sky.app.coder.model.Systems;
 import com.sky.app.coder.service.ICoderService;
@@ -148,20 +145,7 @@ public class CoderServiceImpl implements ICoderService {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (statement != null) {
-				try {
-					statement.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
+			this.close();
 		}
 		// 校验
 		if (null == colnames && null == colTypes)
@@ -192,7 +176,7 @@ public class CoderServiceImpl implements ICoderService {
 		try {
 			conn = sqlSessionFactory.openSession().getConnection();
 			String sql = "select * from " + tablename;
-			PreparedStatement statement = conn.prepareStatement(sql);
+			statement = conn.prepareStatement(sql);
 			// 获取数据库的元数据
 			ResultSetMetaData metadata = statement.getMetaData();
 			// 数据库的字段个数
@@ -218,20 +202,7 @@ public class CoderServiceImpl implements ICoderService {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (statement != null) {
-				try {
-					statement.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
+			this.close();
 		}
 		// 校验
 		if (null == colnames && null == colTypes)
@@ -266,11 +237,11 @@ public class CoderServiceImpl implements ICoderService {
 		List<String[]> listtypearr = new ArrayList<String[]>();
 		// 输出的类字符串
 		StringBuffer str = new StringBuffer("");
-		for (int i = 0; i < tablenames.length; i++) {
-			try {
+		try {
+			for (int i = 0; i < tablenames.length; i++) {
 				conn = sqlSessionFactory.openSession().getConnection();
 				String sql = "select * from " + tablenames[i];
-				PreparedStatement statement = conn.prepareStatement(sql);
+				statement = conn.prepareStatement(sql);
 				// 获取数据库的元数据
 				ResultSetMetaData metadata = statement.getMetaData();
 				// 数据库的字段个数
@@ -291,24 +262,11 @@ public class CoderServiceImpl implements ICoderService {
 				listnamearr.add(colnames);
 				listtablenamearr.add(tablecolnames);
 				listtypearr.add(colTypes);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				if (conn != null) {
-					try {
-						conn.close();
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
-				}
-				if (statement != null) {
-					try {
-						statement.close();
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
-				}
 			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			this.close();
 		}
 		// 合并
 		if (listtablenamearr.size() > 0) {
@@ -341,11 +299,11 @@ public class CoderServiceImpl implements ICoderService {
 		// 用于存放多个表加上别名的列名数组
 		List<String[]> listalisnamearr = new ArrayList<String[]>();
 		StringBuffer str = new StringBuffer("");
-		for (int j = 0; j < tablenames.length; j++) {
-			try {
-				Connection conn = sqlSessionFactory.openSession().getConnection();
+		try {
+			for (int j = 0; j < tablenames.length; j++) {
+				conn = sqlSessionFactory.openSession().getConnection();
 				String sql = "select * from " + tablenames[j];
-				PreparedStatement statement = conn.prepareStatement(sql);
+				statement = conn.prepareStatement(sql);
 				// 获取数据库的元数据
 				ResultSetMetaData metadata = statement.getMetaData();
 				// 数据库的字段个数
@@ -361,10 +319,13 @@ public class CoderServiceImpl implements ICoderService {
 				}
 				listnamearr.add(tablecolnames);
 				listalisnamearr.add(aliscolnames);
-			} catch (SQLException e) {
-				e.printStackTrace();
 			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			this.close();
 		}
+
 		// 合并多个表列名数组
 		if (listnamearr.size() > 0) {
 			tablecolnames = concatAll(listnamearr);
@@ -392,9 +353,9 @@ public class CoderServiceImpl implements ICoderService {
 	public String getMsMapperSelectFields(String tablename) {
 		StringBuffer str = new StringBuffer("");
 		try {
-			Connection conn = sqlSessionFactory.openSession().getConnection();
+			conn = sqlSessionFactory.openSession().getConnection();
 			String sql = "select * from " + tablename;
-			PreparedStatement statement = conn.prepareStatement(sql);
+			statement = conn.prepareStatement(sql);
 			// 获取数据库的元数据
 			ResultSetMetaData metadata = statement.getMetaData();
 			// 数据库的字段个数
@@ -410,6 +371,8 @@ public class CoderServiceImpl implements ICoderService {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			this.close();
 		}
 		// 校验
 		if (null == tablecolnames)
@@ -431,9 +394,9 @@ public class CoderServiceImpl implements ICoderService {
 		// 用于存放表的字段名称
 		List<String> fieldslist = new ArrayList<String>();
 		try {
-			Connection conn = sqlSessionFactory.openSession().getConnection();
+			conn = sqlSessionFactory.openSession().getConnection();
 			String sql = "select * from " + tablename;
-			PreparedStatement statement = conn.prepareStatement(sql);
+			statement = conn.prepareStatement(sql);
 			// 获取数据库的元数据
 			ResultSetMetaData metadata = statement.getMetaData();
 			// 数据库的字段个数
@@ -443,6 +406,8 @@ public class CoderServiceImpl implements ICoderService {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			this.close();
 		}
 		return fieldslist;
 	}
@@ -454,9 +419,9 @@ public class CoderServiceImpl implements ICoderService {
 		List<String> fieldslist = new ArrayList<String>();
 		try {
 			for (int j = 0; j < tablenames.length; j++) {
-				Connection conn = sqlSessionFactory.openSession().getConnection();
+				conn = sqlSessionFactory.openSession().getConnection();
 				String sql = "select * from " + tablenames[j];
-				PreparedStatement statement = conn.prepareStatement(sql);
+				statement = conn.prepareStatement(sql);
 				// 获取数据库的元数据
 				ResultSetMetaData metadata = statement.getMetaData();
 				// 数据库的字段个数
@@ -468,6 +433,8 @@ public class CoderServiceImpl implements ICoderService {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			this.close();
 		}
 		return fieldslist;
 	}
@@ -478,9 +445,9 @@ public class CoderServiceImpl implements ICoderService {
 		// 用于存放表的字段名称
 		List<String> fieldslist = new ArrayList<String>();
 		try {
-			Connection conn = sqlSessionFactory.openSession().getConnection();
+			conn = sqlSessionFactory.openSession().getConnection();
 			String sql = "select * from " + tablename;
-			PreparedStatement statement = conn.prepareStatement(sql);
+			statement = conn.prepareStatement(sql);
 			// 获取数据库的元数据
 			ResultSetMetaData metadata = statement.getMetaData();
 			// 数据库的字段个数
@@ -490,6 +457,8 @@ public class CoderServiceImpl implements ICoderService {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			this.close();
 		}
 		return fieldslist;
 	}
@@ -617,6 +586,26 @@ public class CoderServiceImpl implements ICoderService {
 		format += String.format("        this.%s = %s;\r\n", new Object[] { name, name });
 		format += "    }\r\n";
 		return new StringBuffer(format);
+	}
+
+	/**
+	 * 关闭数据库连接
+	 */
+	public void close() {
+		if (conn != null) {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		if (statement != null) {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/*

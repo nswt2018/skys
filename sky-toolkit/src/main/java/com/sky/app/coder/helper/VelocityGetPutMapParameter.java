@@ -3,7 +3,6 @@ package com.sky.app.coder.helper;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sky.app.coder.model.Element;
 
 public class VelocityGetPutMapParameter {
 	public static Map<String, String> getMap(String moduCode, String vuePath, String javaPath, String uppersyscode,String moduname,String vuePathBef) {

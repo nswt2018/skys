@@ -22,9 +22,13 @@ public class FormItem {
 	//表单字段类型 下拉选择框：select,输入框：input,单选框：radioGroup,多选框：checkboxGroup�?
 	//日期年月日：DatePicker，日期时分秒：TimePicker  自己添加的不是FormItem组件的属性
 	private String type;
+	
 	private Input input;
 	private DatePicker datepicker;
 	private InputNumber inputNumber;
+	private Select select;
+	private Radio radio;
+	private Checkbox checkbox;
 	public String getLabel() {
 		return label;
 	}
@@ -103,6 +107,24 @@ public class FormItem {
 	}
 	public void setInputNumber(InputNumber inputNumber) {
 		this.inputNumber = inputNumber;
+	}
+	public Select getSelect() {
+		return select;
+	}
+	public void setSelect(Select select) {
+		this.select = select;
+	}
+	public Radio getRadio() {
+		return radio;
+	}
+	public void setRadio(Radio radio) {
+		this.radio = radio;
+	}
+	public Checkbox getCheckbox() {
+		return checkbox;
+	}
+	public void setCheckbox(Checkbox checkbox) {
+		this.checkbox = checkbox;
 	}
 	
 }
