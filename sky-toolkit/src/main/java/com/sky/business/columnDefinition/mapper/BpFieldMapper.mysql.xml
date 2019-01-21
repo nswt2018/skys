@@ -16,9 +16,7 @@
 			<if test="variables.colName != null and variables.colName != ''">
 				AND col_name LIKE CONCAT('%',#{variables.colName},'%')
 			</if>
-			<if test="orderBy != null and orderBy != ''">
-				 order by ${orderBy}
-			</if>
+			ORDER BY UI_ORDER
 	</select>
 	
 	<delete id="deleteById" parameterType="hashmap">
@@ -47,7 +45,7 @@
 		table_name AS tab_code,
 		data_type,
 		column_type AS data_len,
-		(CASE column_key WHEN 'PRI' THEN '1' ELSE '0' END) AS pk_gen
+		(CASE column_key WHEN 'PRI' THEN '1' ELSE NUll END) AS pk_gen
 		FROM information_schema.columns WHERE table_name = #{_parameter}
 	</select>
 </mapper>

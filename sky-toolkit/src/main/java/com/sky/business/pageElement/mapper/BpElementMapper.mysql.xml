@@ -3,7 +3,7 @@
 <mapper namespace="com.sky.business.pageElement.dao.BpElementDao">
 	
 	<!-- 分页 -->
-	<select id="findForPageList" parameterType="Page"
+	<select id="findForList" parameterType="Page"
 		resultType="BpElement">
 		SELECT  
 		*
@@ -19,9 +19,7 @@
 			<if test="variables.eleEName != null and variables.eleEName != ''">
 				AND ELE_ENAME LIKE CONCAT('%',#{variables.eleEName},'%')
 			</if>	
-			<if test="orderBy != null and orderBy != ''">
-				order by ${orderBy}
-			</if>	
+			order by ele_ename
 	</select>
 	
 	<select id="findAllColumns" parameterType="hashmap" resultType="BpColumns">

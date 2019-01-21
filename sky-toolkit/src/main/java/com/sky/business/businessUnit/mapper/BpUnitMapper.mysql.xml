@@ -3,7 +3,7 @@
 <mapper namespace="com.sky.business.businessUnit.dao.BpUnitDao">
 	
 	<!-- 分页 -->
-	<select id="findForPageList" parameterType="Page"
+	<select id="findForList" parameterType="Page"
 		resultType="BpUnit">
 		SELECT  
 		*

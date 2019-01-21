@@ -39,12 +39,10 @@ public class BpElementController extends BaseController {
 	
 	@RequestMapping(value="/TK0006L.do")
 	@ResponseBody
-	public Mono<Page<BpElement>> getElementList(@RequestBody Page<BpElement> page, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public Mono<List<BpElement>> getElementList(@RequestBody Page<BpElement> page, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		page.setRequest(request);
-		bpElementService.findForPageList("com.sky.business.pageElement.dao.BpElementDao.findForPageList", page);
-		page.setRequest(null);
-		return Mono.justOrEmpty(page);
+		List<BpElement> elementList = bpElementService.findForList("com.sky.business.pageElement.dao.BpElementDao.findForList", page);
+		return Mono.justOrEmpty(elementList);
 	}
 	
 	@RequestMapping("/TK0006U.do")

@@ -342,12 +342,13 @@ public class BpTableController extends BaseController {
 				List<BpField> cList = bpFieldService.findForList("com.sky.business.columnDefinition.dao.BpFieldDao.findColList", bpTable.getTabCode());
 				for (BpField bpField : cList) {
 					String dataType = bpField.getDataType();
-					if(dataType.equals("int") || dataType.equals("date") || dataType.equals("datetime")) bpField.setDataLen("");
-					else{
+					if(dataType.equals("char") || dataType.equals("decimal") || dataType.equals("varchar")){
+						
 						String dataLen = bpField.getDataLen().replace(dataType, "");
 						dataLen = dataLen.substring(1, dataLen.length()-1);
 						bpField.setDataLen(dataLen);
-					}
+						
+					}else  bpField.setDataLen("");
 					
 					bpField.setCrtDate(date);
 					

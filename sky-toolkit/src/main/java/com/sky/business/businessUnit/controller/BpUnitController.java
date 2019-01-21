@@ -61,12 +61,11 @@ public class BpUnitController extends BaseController {
 	
 	@RequestMapping(value="/TK0005L.do")
 	@ResponseBody
-	public Mono<Page<BpUnit>> getComponetList(@RequestBody Page<BpUnit> page, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public Mono<List<BpUnit>> getComponetList(@RequestBody Page<BpUnit> page, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		page.setRequest(request);
-		bpUnitService.findForPageList("com.sky.business.businessUnit.dao.BpUnitDao.findForPageList", page);
-		page.setRequest(null);
-		return Mono.justOrEmpty(page);
+		
+		List<BpUnit> unitList = bpUnitService.findForList("com.sky.business.businessUnit.dao.BpUnitDao.findForList", page);
+		return Mono.justOrEmpty(unitList);
 	}
 	
 	/*@PutMapping("/TK0005I.do")
