@@ -14,17 +14,17 @@
 #end
 #if(${formitem.select})	                 
 	                 <Select v-model="${viewform.model}.${formitem.select.value}" disabled>
-        				  <Option  v-for="item in ${formitem.select.value}Select" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        				  <Option  v-for="item in ${formitem.select.value}ViewSelect" :value="item.value" :key="item.value">{{ item.label }}</Option>
     				 </Select>
 #end
 #if(${formitem.radio})	                 
 	                 <RadioGroup v-model="${viewform.model}.${formitem.radio.value}">
-                		 <Radio disabled v-for="item in ${formitem.radio.value}Radio" :label="item.label" :key="item.value"></Radio>
+                		 <Radio disabled v-for="item in ${formitem.radio.value}ViewRadio" :label="item.label" :key="item.value"></Radio>
             		 </RadioGroup>
 #end
 #if(${formitem.checkbox})	                 
 	                 <CheckboxGroup v-model="${viewform.model}.${formitem.checkbox.value}">
-		                 <Checkbox disabled  v-for="item in ${formitem.checkbox.value}Checkbox" :label="item.label" :key="item.value"></Checkbox>
+		                 <Checkbox disabled  v-for="item in ${formitem.checkbox.value}ViewCheckbox" :label="item.label" :key="item.value"></Checkbox>
            			 </CheckboxGroup>
 #end
 #if(${formitem.type}=="switch")	                 

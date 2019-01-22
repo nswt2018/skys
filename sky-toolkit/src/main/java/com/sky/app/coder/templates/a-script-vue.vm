@@ -13,19 +13,30 @@ export default {
         	deleteurl: '/${syscode}${tid}D.do',
         	updateurl: '/${syscode}${tid}U.do',
         	selecturl:'/SelectValue.do',
-#if($selectfields)
-#foreach($selectfield in $selectfields)
-			${selectfield}Select:[],
+#if($viewformitems)
+#foreach($viewformitem in $viewformitems)
+#if(${viewformitem.select.selectFields})
+			${viewformitem.select.selectFields.get(0)}ViewSelect:[],
+#end
+#if(${viewformitem.radio.selectFields})
+			${viewformitem.radio.selectFields.get(0)}ViewRadio:[],
+#end
+#if(${viewformitem.checkbox.selectFields})
+			${viewformitem.checkbox.selectFields.get(0)}ViewCheckbox:[],
+#end			
 #end
 #end
-#if($radiofields)
-#foreach($radiofield in $radiofields)
-			${radiofield}Radio:[],
+#if($addformitems)
+#foreach($addformitem in $addformitems)
+#if(${addformitem.select.selectFields})
+			${addformitem.select.selectFields.get(0)}Select:[],
 #end
+#if(${addformitem.radio.selectFields})
+			${addformitem.radio.selectFields.get(0)}Radio:[],
 #end
-#if($checkboxfields)
-#foreach($checkboxfield in $checkboxfields)
-			${checkboxfield}Checkbox:[],
+#if(${addformitem.checkbox.selectFields})
+			${addformitem.checkbox.selectFields.get(0)}Checkbox:[],
+#end			
 #end
 #end
 #if($inputs)
@@ -162,30 +173,56 @@ export default {
     methods: {
     	getSearch() {
     		let menuCode = Cookies.get('menucode');
+    		let param;
+        	if(this.$route.query.vue_showparam){
+    			param = this.getParam();
+    		}else{
+    			param = {#foreach($input in $inputs)'${input.value}': this.${input.value}#if($foreach.hasNext),#end#end};
+    		}
         	return {'menuCode':menuCode,'pageSize': this.pageSize, 'currentPage': this.currentPage
-        	#if($inputs),'valObj':{#foreach($input in $inputs)'${input.value}': this.${input.value}#if($foreach.hasNext),#end#end}#end
-        	};
+        	,'valObj':param}; 
+        },
+        getParam(){
+	        if(this.$route.query.vue_showparam){
+	        	var param={#foreach($field in $fields)'${field}':''#if($foreach.hasNext),#end#end}
+        		var showParamArr=this.$route.query.vue_showparam.split(",");
+        		for(var showParam of showParamArr){
+#if($fields)
+#foreach($field in $fields)
+					if("${field}"==showParam){
+		        		param.${field} = this.$route.query.${field};
+					}else if(param.${field} == ""){
+						param.${field} = this.${field};
+					}
+#end
+#end
+        		}       		 
+        	return param;
+        	}
         },  
         init () {
        		pagepublictool.setPage(this);
-        	pagepublictool.page(this.getSearch());
         	//pagepublictool.getButtons();
         	this.columns=${moducode}Column.getColumns();      	
         	//树模型，用于挂树节点
-        	if(this.$route.query.id){
+        	if(this.$route.query.vue_showparam){
+        		var showParamArr=this.$route.query.vue_showparam.split(",");
+        		for(var showParam of showParamArr){
 #if($fields)
 #foreach($field in $fields)
-				if("${field}"==this.$route.query.showparam){
-					this.${field}= this.$route.query.id;   
-	        		this.addForm.${field} = this.$route.query.id;
-	        		this.updForm.${field} = this.$route.query.id;
-				}
+					if("${field}"==showParam){
+		        		this.addForm.${field} = this.$route.query.${field};
+		        		this.updForm.${field} = this.$route.query.${field};
+					}
 #end
 #end
+        		}
 				pagepublictool.page(this.getSearch());
+        	}else{
+        		pagepublictool.page(this.getSearch());
         	}
-        	if(this.$route.query.type){
-               	this.type = this.$route.query.type;
+        	if(this.$route.query.vue_type){
+               	this.type = this.$route.query.vue_type;
             	if(this.type==='VIEW' || this.type==='view'){
                 	this.buttonInfos = [{
                 		title:'查看',
@@ -216,19 +253,31 @@ export default {
     	        		}];       		
             	}
         	}
-#if($selectfields)
-#foreach($selectfield in $selectfields)
-			this.${selectfield}Select=pagepublictool.getSelectList({table:'${tablename}',field:'${selectfield}'});
+        	//下拉框、多选框、单选框，字段值赋值
+#if($viewformitems)
+#foreach($viewformitem in $viewformitems)
+#if(${viewformitem.select.selectFields})
+			this.${viewformitem.select.selectFields.get(0)}ViewSelect=pagepublictool.getSelectList({table:'${tablename}',field:'${viewformitem.select.selectFields.get(1)}'});
+#end
+#if(${viewformitem.radio.selectFields})
+			this.${viewformitem.radio.selectFields.get(0)}ViewRadio=pagepublictool.getSelectList({table:'${tablename}',field:'${viewformitem.radio.selectFields.get(1)}'});
+#end
+#if(${viewformitem.checkbox.selectFields})
+			this.${viewformitem.checkbox.selectFields.get(0)}ViewCheckbox=pagepublictool.getSelectList({table:'${tablename}',field:'${viewformitem.checkbox.selectFields.get(1)}'});
+#end			
 #end
 #end
-#if($radiofields)
-#foreach($radiofield in $radiofields)
-			this.${radiofield}Radio=pagepublictool.getSelectList({table:'${tablename}',field:'${radiofield}'});
+#if($addformitems)
+#foreach($addformitem in $addformitems)
+#if(${addformitem.select.selectFields})
+			this.${addformitem.select.selectFields.get(0)}Select=pagepublictool.getSelectList({table:'${tablename}',field:'${addformitem.select.selectFields.get(1)}'});
 #end
+#if(${addformitem.radio.selectFields})
+			this.${addformitem.radio.selectFields.get(0)}Radio=pagepublictool.getSelectList({table:'${tablename}',field:'${addformitem.radio.selectFields.get(1)}'});
 #end
-#if($checkboxfields)
-#foreach($checkboxfield in $checkboxfields)
-			this.${checkboxfield}Checkbox=pagepublictool.getSelectList({table:'${tablename}',field:'${checkboxfield}'});
+#if(${addformitem.checkbox.selectFields})
+			this.${addformitem.checkbox.selectFields.get(0)}Checkbox=pagepublictool.getSelectList({table:'${tablename}',field:'${addformitem.checkbox.selectFields.get(1)}'});
+#end			
 #end
 #end
         },
@@ -236,8 +285,8 @@ export default {
     		pagepublictool.page(this.getSearch());
         },
         onClicking(type){
-        //树模型
 #if(${istree}=='1')
+        	//树模型
 			let router=this.$router;
 			let query = {
 	        	vue_id:this.viewForm.${tableprimary},
@@ -245,12 +294,12 @@ export default {
 	        	vue_type:type,
 #if($fields)
 #foreach($field in $fields)
-				${field}:this.viewForm.${field}#if($foreach.hasNext),#end
+				${field}:this.viewForm.${field}#if($foreach.hasNext),#end    
 #end
-#end	        	
+#end	        	      		        	
         	};
         	if(type==='VIEW' || type==='view'){
-         		if(this.$route.query.id){
+         		if(!this.$route.query){
          			pagepublictool.view();
          		}else{
         	     	pagepublictool.view();
@@ -260,7 +309,7 @@ export default {
         	         });
          		}
     		}else if(type==='ADD'  || type==='add'){
-	        	if(this.$route.query.id){
+	        	if(!this.$route.query){
 	        		pagepublictool.add();
 	        	}else{
 		    		router.push({
@@ -269,7 +318,7 @@ export default {
 		    		});
 	        	}
        		 }else if(type==='UPD' || type==='upd'){
-        		if(this.$route.query.id){
+        		if(!this.$route.query){
         			pagepublictool.update();      			
         		}else{
     		        router.push({
@@ -278,7 +327,7 @@ export default {
     		        });
         		}
         	}else if(type==='DEL' || type==='del'){
-        		if(this.$route.query.id){
+        		if(!this.$route.query){
         			pagepublictool.delete(this.deleteurl+"?delKeys="+this.deleteKey.join(','));    			
         		}else{
     		        router.push({
@@ -295,22 +344,25 @@ export default {
 #end
         },
         saving(refValue){
-#if($selectfields)
-#foreach($selectfield in $selectfields)
-			this.addForm.${selectfield}=this.addForm.${selectfield}.join(',');
-			this.updForm.${selectfield}=this.updForm.${selectfield}.join(',');
+     		//多选下拉框、多选框，将选择的多个值用逗号隔开转为字符串
+#if($addformitems)
+#foreach($addformitem in $addformitems)
+#if(${addformitem.select.selectFields} && ${addformitem.select.multiple}=="true")
+			if(this.addForm.${addformitem.select.selectFields.get(0)}){
+				this.addForm.${addformitem.select.selectFields.get(0)}=this.addForm.${addformitem.select.selectFields.get(0)}.join(',');
+			}
+			if(this.updForm.${addformitem.select.selectFields.get(0)}){
+				this.updForm.${addformitem.select.selectFields.get(0)}=this.updForm.${addformitem.select.selectFields.get(0)}.join(',');
+			}
 #end
-#end
-#if($radiofields)
-#foreach($radiofield in $radiofields)
-			this.addForm.${radiofield}=this.addForm.${radiofield}.join(',');
-			this.updForm.${radiofield}=this.updForm.${radiofield}.join(',');
-#end
-#end
-#if($checkboxfields)
-#foreach($checkboxfield in $checkboxfields)
-			this.addForm.${checkboxfield}=this.addForm.${checkboxfield}.join(',');
-			this.updForm.${checkboxfield}=this.updForm.${checkboxfield}.join(',');
+#if(${addformitem.checkbox.selectFields})
+			if(this.addForm.${addformitem.checkbox.selectFields.get(0)}){
+				this.addForm.${addformitem.checkbox.selectFields.get(0)}=this.addForm.${addformitem.checkbox.selectFields.get(0)}.join(',');
+			}
+			if(this.updForm.${addformitem.checkbox.selectFields.get(0)}){
+				this.updForm.${addformitem.checkbox.selectFields.get(0)}=this.updForm.${addformitem.checkbox.selectFields.get(0)}.join(',');
+			}
+#end			
 #end
 #end
          	pagepublictool.save(refValue);
@@ -321,11 +373,36 @@ export default {
         choicing(selection, row) {
         	pagepublictool.choice(selection, row);
         	this.deleteKey.push(row.${tableprimary});
+        	//将修改对话框的多选下拉框、多选框，以逗号隔开的字符串转为数组
+#if($addformitems)
+#foreach($addformitem in $addformitems)
+#if(${addformitem.select.selectFields} && ${addformitem.select.multiple}=="true")
+			if(this.updForm.${addformitem.select.selectFields.get(0)}){
+				this.updForm.${addformitem.select.selectFields.get(0)}=row.${addformitem.select.selectFields.get(0)}.split(',');
+			}
+#end
+#if(${addformitem.checkbox.selectFields})
+			if(this.updForm.${addformitem.checkbox.selectFields.get(0)}){
+				this.updForm.${addformitem.checkbox.selectFields.get(0)}=row.${addformitem.checkbox.selectFields.get(0)}.split(',');
+			}
+#end			
+#end
+#end
         },
         cancing(selection, row){
         	pagepublictool.cancel(selection, row);
         	if(this.selectedLines>0){
         		this.deleteKey.splice(this.deleteKey.indexOf(row.${tableprimary}), 1);
+ #if($addformitems)
+#foreach($addformitem in $addformitems)
+#if(${addformitem.select.selectFields} && ${addformitem.select.multiple}=="true")
+				this.updForm.${addformitem.select.selectFields.get(0)}='';
+#end
+#if(${addformitem.checkbox.selectFields})
+				this.updForm.${addformitem.checkbox.selectFields.get(0)}='';
+#end			
+#end
+#end
         	}
         },
         choicingAll(selection){

@@ -1,0 +1,59 @@
+import Vue from 'vue';
+import iView from 'iview';
+import util from '@/libs/util.js';
+
+let ${moducode}treemodeColumn = {};
+const header = {'Content-Type': 'application/json;charset=UTF-8'};
+
+${moducode}treemodeColumn.getColumns = function() {
+	
+};
+
+${moducode}treemodeColumn.setPage = function(obj) {
+	this.spa = obj;
+};
+
+//获取树数据
+${moducode}treemodeColumn.getTreeData = function(param) {
+	var params = new URLSearchParams();
+	for(var key in param){
+			params.append(key,param[key]);
+		}
+	util.ajax.post(this.spa.treeurl, params, header).then((rres) => {  	
+		this.spa.menuData = ${moducode}treemodeColumn.eidtTree(rres.data);
+	});
+};
+
+//处理后台返回的树形数据
+${moducode}treemodeColumn.eidtTree = function(tree) {
+
+	const result = [];
+    tree.forEach(d=>{
+		let item = {
+            vue_label: d.vue_nodName,
+            vue_name: d.vue_nodCode,
+			vue_children: d.vue_children,
+			vue_path: '/'+d.vue_tranCode,
+			vue_showcond:d.vue_showCond,
+			vue_showparam: d.vue_showParam,
+			vue_id: d.vue_id,
+			vue_type: d.vue_type,
+#if($fields)
+#foreach($field in $fields)
+			${field}:d.${field},  
+#end
+#end	     	
+            expand: true
+        };
+		
+		// 如果有子节点，递归
+        if (item.vue_children) {
+            item.vue_children = ${moducode}treemodeColumn.eidtTree(item.vue_children);
+        }
+
+        result.push(item);
+	});
+	return result;
+};
+
+export default ${moducode}treemodeColumn;

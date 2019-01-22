@@ -85,13 +85,6 @@ public class Model {
 	private Radio radio;
 	private Checkbox checkbox;
 	
-	//页面下拉框
-	private List<String> selectFields;
-	//单选框
-	private List<String> radioFields;
-	//多选框
-	private List<String> checkboxFields;
-	
 	private Button button;
 	private Table table;
 	private Page1 page;
@@ -498,25 +491,5 @@ public class Model {
 	public void setCheckbox(Checkbox checkbox) {
 		this.checkbox = checkbox;
 	}
-	public List<String> getSelectFields() {
-		return selectFields;
-	}
-	public void setSelectFields(List<String> selectFields) {
-		this.selectFields = selectFields;
-	}
-	public List<String> getRadioFields() {
-		return radioFields;
-	}
-	public void setRadioFields(List<String> radioFields) {
-		this.radioFields = radioFields;
-	}
-	public List<String> getCheckboxFields() {
-		return checkboxFields;
-	}
-	public void setCheckboxFields(List<String> checkboxFields) {
-		this.checkboxFields = checkboxFields;
-	}
-	
-	
 	
 }

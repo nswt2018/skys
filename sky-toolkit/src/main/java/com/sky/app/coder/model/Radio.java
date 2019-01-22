@@ -1,5 +1,7 @@
 package com.sky.app.coder.model;
 
+import java.util.List;
+
 public class Radio {
 	// 只在单独使用时有效。可以使用 v-model 双向绑定数据
 	private String value;
@@ -13,7 +15,9 @@ public class Radio {
 	private String disabled;
 	//自己加的属性,默认给字段赋值
 	private String defaultValue;
-
+	
+	//单选框
+	private String[] radioFields;
 	public String getValue() {
 		return value;
 	}
@@ -61,6 +65,15 @@ public class Radio {
 	public void setDefaultValue(String defaultValue) {
 		this.defaultValue = defaultValue;
 	}
+
+	public String[] getRadioFields() {
+		return radioFields;
+	}
+
+	public void setRadioFields(String[] radioFields) {
+		this.radioFields = radioFields;
+	}
+
 	
 	
 }

@@ -1,5 +1,7 @@
 package com.sky.app.coder.model;
 
+import java.util.List;
+
 public class Select {
 	//指定选中项目的 value 值，可以使用 v-model 双向绑定数据。单选时只接受 String 或 Number，多选时只接受 Array
 	private String value;
@@ -32,6 +34,9 @@ public class Select {
 	private String onClear;
 	//下拉框展开或收起时触发
 	private String onOpenChange;
+	
+	//页面下拉框
+	private String[] selectFields;
 	public String getValue() {
 		return value;
 	}
@@ -122,5 +127,12 @@ public class Select {
 	public void setDefaultValue(String defaultValue) {
 		this.defaultValue = defaultValue;
 	}
+	public String[] getSelectFields() {
+		return selectFields;
+	}
+	public void setSelectFields(String[] selectFields) {
+		this.selectFields = selectFields;
+	}
+	
 	
 }
