@@ -20,6 +20,7 @@ public class VelocityGetPutMapParameter {
 		cmap.put("com/sky/app/coder/templates/a-vue.vm", vuePath + "/" + lModuCode + ".vue");
 		if("树模型".equals(moduname)){
 			cmap.put("com/sky/app/coder/templates/d/treemode.vm", vuePathBef + "/treemode/" + lModuCode+ "treemode" + ".vue");
+			cmap.put("com/sky/app/coder/templates/d/treemode_column.vm", vuePathBef + "/treemode/" + lModuCode+ "treemode-column" + ".js");
 		}
 		cmap.put("com/sky/app/coder/templates/a-js.vm", vuePath + "/" + lModuCode + "-column.js");
 		cmap.put("com/sky/app/coder/templates/a-controller.java.vm",

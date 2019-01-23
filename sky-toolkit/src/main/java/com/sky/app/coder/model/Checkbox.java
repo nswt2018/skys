@@ -1,5 +1,7 @@
 package com.sky.app.coder.model;
 
+import java.util.List;
+
 public class Checkbox {
 	// 只在单独使用时有效。可以使用 v-model 双向绑定数据
 	private String value;
@@ -12,6 +14,8 @@ public class Checkbox {
 	//自己加的属性,默认给字段赋值
 	private String defaultValue;
 	
+	//多选框
+	private String[] checkboxFields;
 	public String getValue() {
 		return value;
 	}
@@ -51,5 +55,15 @@ public class Checkbox {
 	public void setDefaultValue(String defaultValue) {
 		this.defaultValue = defaultValue;
 	}
+
+	public String[] getCheckboxFields() {
+		return checkboxFields;
+	}
+
+	public void setCheckboxFields(String[] checkboxFields) {
+		this.checkboxFields = checkboxFields;
+	}
+
+	
 	
 }

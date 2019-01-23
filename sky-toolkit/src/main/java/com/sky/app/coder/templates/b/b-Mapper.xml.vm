@@ -17,10 +17,10 @@ ${mapperselectfield}
 #if(${tableinfo})
 		   and ${tableinfo}
 #end	       
-#if(${inputs})	
-#foreach($input in $inputs)       
-	             <if test="variables.${input.value} !=null and variables.${input.value} !=''">
-	             		and ${input.convertValue}=#{variables.${input.value}}
+#if($fields)
+#foreach($field in $fields)       
+	             <if test="variables.${field.get(0)} !=null and variables.${field.get(0)} !=''">
+	             		and ${field.get(1)}=#{variables.${field.get(0)}}
 	             </if>
 #end
 #end	 

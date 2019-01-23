@@ -22,12 +22,6 @@ public class VelocityGetTemplateData {
 	private String colcode = null;
 	// 主键策略
 	private String pk = null;
-	//下拉框字段
-	List<String> selectFields=new ArrayList<String>();
-	//单选字段
-	List<String> radioFields=new ArrayList<String>();
-	//多选字段
-	List<String> checkboxFields=new ArrayList<String>();
 	// 搜索框
 	List<Input> inputs = new ArrayList<Input>();
 	// 新增页面字段
@@ -84,10 +78,6 @@ public class VelocityGetTemplateData {
 		model.setViewform(dv.getForm()[2]);
 
 		this.setComponentPropertyValue(list);
-		//下拉框 单选框 多选框
-		model.setSelectFields(selectFields);
-		model.setRadioFields(radioFields);
-		model.setCheckboxFields(checkboxFields);
 		// vue非默认组件属性值赋值，通过前台页面输入，从数据库获取并做相应的处理
 		model.setInputs(inputs);
 		model.setAddformitem(addformitems);
@@ -187,6 +177,10 @@ public class VelocityGetTemplateData {
 		String comName = element.getComName();
 		// 显示类型，字符串、日期等
 		String uiType = element.getUiType();
+		//用于放字段和转换后的字段
+		String [] fields=new String[2];
+		fields[0]=ename;
+		fields[1]=element.getEleEname();
 		// 如果新增信息或修改信息标签信息没有录入，则设置默认值
 		if (tagInfo == null || "".equals(tagInfo)) {
 			formitem.setLabel(cname);
@@ -196,12 +190,12 @@ public class VelocityGetTemplateData {
 				formitem.setRequired("true");
 			}
 			// 新增信息或修改信息表单，现在只支持字符串,日期,数值，选择框，单选，多选
-			if ("D1".equals(uiType)) {
+			if ("C1".equals(uiType)) {
 				// 日期
 				dp = new DatePicker();
 				dp.setValue(ename);
 				dp.setPlaceholder(cname);
-			} else if ("C1".equals(uiType)) {
+			} else if ("D1".equals(uiType)) {
 				// 数字
 				in = new InputNumber();
 				in.setValue(ename);
@@ -223,19 +217,23 @@ public class VelocityGetTemplateData {
 				// 单选按钮
 				radio = new Radio();
 				radio.setValue(ename);
+				radio.setRadioFields(fields);
 			} else if ("B2".equals(uiType)) {
 				// 多选按钮
 				checkbox = new Checkbox();
 				checkbox.setValue(ename);
+				checkbox.setCheckboxFields(fields);
 			} else if ("B3".equals(uiType)) {
 				// 下拉选择框 单选
 				select = new Select();
 				select.setValue(ename);
+				select.setSelectFields(fields);
 			} else if ("B4".equals(uiType)) {
 				// 下拉选择框 多选
 				select = new Select();
 				select.setValue(ename);
 				select.setMultiple("true");
+				select.setSelectFields(fields);
 			}
 			formitem.setInput(auinput);
 			formitem.setDatepicker(dp);
@@ -309,6 +307,7 @@ public class VelocityGetTemplateData {
 			if (select != null) {
 				select.setDefaultValue(select.getValue());
 				select.setValue(ename);
+				select.setSelectFields(fields);
 				if (select.getMultiple() == null || select.getMultiple() == "") {
 					select.setMultiple("true");
 				}
@@ -318,12 +317,14 @@ public class VelocityGetTemplateData {
 			if (radio != null) {
 				radio.setDefaultValue(radio.getValue());
 				radio.setValue(ename);
+				radio.setRadioFields(fields);
 			}
 			// 多选框
 			checkbox = new Checkbox();
 			if (checkbox != null) {
 				checkbox.setDefaultValue(checkbox.getValue());
 				checkbox.setValue(ename);
+				checkbox.setCheckboxFields(fields);
 			}
 			formitem.setInput(aumodel.getInput());
 			formitem.setDatepicker(aumodel.getDatepicker());
@@ -340,7 +341,6 @@ public class VelocityGetTemplateData {
 	}
 
 	public void setViewFormItemPropertyValue(Element element) {
-		FormItem viewformitem = new FormItem();
 		DatePicker dp = null;
 		InputNumber in = null;
 		Input vinput = null;
@@ -353,15 +353,20 @@ public class VelocityGetTemplateData {
 		String tagInfo = element.getTagInfo();
 		// 显示类型，字符串、日期等
 		String uiType = element.getUiType();
+		FormItem viewformitem = new FormItem();
 		viewformitem.setLabel(element.getEleCname());
+		//用于放字段和转换后的字段
+		String [] fields=new String[2];
+		fields[0]=ename;
+		fields[1]=element.getEleEname();
 		// 如果查看信息的标签信息没有录入，则设置默认值
 		if (tagInfo == null || "".equals(tagInfo)) {
 			// 新增信息或修改信息表单，现在只支持字符串,日期,数值，选择框，单选，多选
-			if ("D1".equals(uiType)) {
+			if ("C1".equals(uiType)) {
 				// 日期
 				dp = new DatePicker();
 				dp.setValue(ename);
-			} else if ("C1".equals(uiType)) {
+			} else if ("D1".equals(uiType)) {
 				// 数字
 				in = new InputNumber();
 				in.setValue(ename);
@@ -378,25 +383,23 @@ public class VelocityGetTemplateData {
 				// 单选按钮
 				radio = new Radio();
 				radio.setValue(ename);
-				radioFields.add(ename);
+				radio.setRadioFields(fields);
 			} else if ("B2".equals(uiType)) {
 				// 多选按钮
 				checkbox = new Checkbox();
 				checkbox.setValue(ename);
-				checkboxFields.add(ename);
+				checkbox.setCheckboxFields(fields);
 			} else if ("B3".equals(uiType)) {
 				// 下拉选择框 单选
 				select = new Select();
 				select.setValue(ename);
-				//将下拉选择的字段放入集合中
-				selectFields.add(ename);
+				select.setSelectFields(fields);
 			} else if ("B4".equals(uiType)) {
 				// 下拉选择框 多选
 				select = new Select();
 				select.setValue(ename);
 				select.setMultiple("true");
-				//将下拉选择的字段放入集合中
-				selectFields.add(ename);
+				select.setSelectFields(fields);
 			}
 			viewformitem.setInput(vinput);
 			viewformitem.setDatepicker(dp);
@@ -426,17 +429,17 @@ public class VelocityGetTemplateData {
 			//下拉框
 			if(vmodel.getSelect()!=null){
 				vmodel.getSelect().setValue(ename);
-				radioFields.add(ename);
+				vmodel.getSelect().setSelectFields(fields);
 			}
 			//单选框
 			if(vmodel.getRadio()!=null){
 				vmodel.getRadio().setValue(ename);
-				checkboxFields.add(ename);
+				vmodel.getRadio().setRadioFields(fields);
 			}
 			//多选框
 			if(vmodel.getCheckbox()!=null){
 				vmodel.getCheckbox().setValue(ename);
-				selectFields.add(ename);
+				vmodel.getCheckbox().setCheckboxFields(fields);
 			}
 			viewformitem.setInput(vmodel.getInput());
 			viewformitem.setInputNumber(vmodel.getInputnumber());

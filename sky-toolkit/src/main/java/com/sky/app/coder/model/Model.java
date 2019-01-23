@@ -70,7 +70,7 @@ public class Model {
 	//树模型，用于判断是否为树模型
 	private String isTree;
 	//树模型，表的全部字段
-	private List<String> fields;
+	private List<String[]> fields;
 	//树模型，路由
 	private List<String> routes;
 	
@@ -84,13 +84,6 @@ public class Model {
 	private Select select;
 	private Radio radio;
 	private Checkbox checkbox;
-	
-	//页面下拉框
-	private List<String> selectFields;
-	//单选框
-	private List<String> radioFields;
-	//多选框
-	private List<String> checkboxFields;
 	
 	private Button button;
 	private Table table;
@@ -468,10 +461,10 @@ public class Model {
 	public void setIsTree(String isTree) {
 		this.isTree = isTree;
 	}
-	public List<String> getFields() {
+	public List<String[]> getFields() {
 		return fields;
 	}
-	public void setFields(List<String> fields) {
+	public void setFields(List<String[]> fields) {
 		this.fields = fields;
 	}
 	public List<String> getRoutes() {
@@ -498,25 +491,5 @@ public class Model {
 	public void setCheckbox(Checkbox checkbox) {
 		this.checkbox = checkbox;
 	}
-	public List<String> getSelectFields() {
-		return selectFields;
-	}
-	public void setSelectFields(List<String> selectFields) {
-		this.selectFields = selectFields;
-	}
-	public List<String> getRadioFields() {
-		return radioFields;
-	}
-	public void setRadioFields(List<String> radioFields) {
-		this.radioFields = radioFields;
-	}
-	public List<String> getCheckboxFields() {
-		return checkboxFields;
-	}
-	public void setCheckboxFields(List<String> checkboxFields) {
-		this.checkboxFields = checkboxFields;
-	}
-	
-	
 	
 }
