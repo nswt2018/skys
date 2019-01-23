@@ -70,7 +70,7 @@ public class Model {
 	//树模型，用于判断是否为树模型
 	private String isTree;
 	//树模型，表的全部字段
-	private List<String> fields;
+	private List<String[]> fields;
 	//树模型，路由
 	private List<String> routes;
 	
@@ -461,10 +461,10 @@ public class Model {
 	public void setIsTree(String isTree) {
 		this.isTree = isTree;
 	}
-	public List<String> getFields() {
+	public List<String[]> getFields() {
 		return fields;
 	}
-	public void setFields(List<String> fields) {
+	public void setFields(List<String[]> fields) {
 		this.fields = fields;
 	}
 	public List<String> getRoutes() {

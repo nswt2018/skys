@@ -40,7 +40,7 @@ ${moducode}treemodeColumn.eidtTree = function(tree) {
 			vue_type: d.vue_type,
 #if($fields)
 #foreach($field in $fields)
-			${field}:d.${field},  
+			${field.get(0)}:d.${field.get(0)},  
 #end
 #end	     	
             expand: true

@@ -35,11 +35,11 @@ public interface ICoderService{
 	String getMsMapperSelectFields(String tablename);
 	
 	//树模型，获取表的全部字段，并放入集合中返回
-	List<String> getTreeModeTableFields(String tablename);
+	List<String []> getTreeModeTableFields(String tablename);
 	//树模型，获取多个表的全部字段，并放入集合中返回
-	List<String> getTreeModeTablesFields(String[] tablenames);
+	List<String []> getTreeModeTablesFields(String[] tablenames);
 	//树模型，获取主表的全部字段，并放入集合中返回
-	List<String> getTreeModeMsTablesFields(String tablename);
+	List<String []> getTreeModeMsTablesFields(String tablename);
 	//树模型，获取动态路由
 	List<String> getTreeRouter(String tranCode);
 }

@@ -11,7 +11,7 @@
 					</template>
 					<template v-for="childs in item.vue_children">
 						<menu-item v-if="isMoreLeveMenu(childs)==false" :name="childs.vue_name" :key="childs.vue_name">
-							<router-link :to="{path:childs.vue_path, query:{vue_id:childs.vue_id,vue_type:childs.vue_type,vue_showparam:childs.vue_showparam,#if($fields)#foreach($field in $fields)${field}:childs.${field}#if($foreach.hasNext),#end#end#end}}">{{ childs.vue_label }}</router-link>
+							<router-link :to="{path:childs.vue_path, query:{vue_id:childs.vue_id,vue_type:childs.vue_type,vue_showparam:childs.vue_showparam,#if($fields)#foreach($field in $fields)${field.get(0)}:childs.${field.get(0)}#if($foreach.hasNext),#end#end#end}}">{{ childs.vue_label }}</router-link>
 						</menu-item>
 						<Submenu v-if="isMoreLeveMenu(childs)==true" :name="childs.vue_name" :key="childs.vue_name">
 							<template slot="title">
@@ -20,7 +20,7 @@
 							</template>
 							<template v-for="child in childs.vue_children">
 								<menu-item v-if="isMoreLeveMenu(child)==false" :name="child.vue_name" :key="child.vue_name">
-									<router-link  :to="{path:child.vue_path, query:{vue_id:child.vue_id,vue_type:child.vue_type,vue_showparam:child.vue_showparam,#if($fields)#foreach($field in $fields)${field}:child.${field}#if($foreach.hasNext),#end#end#end}}">{{ child.vue_label }}</router-link>
+									<router-link  :to="{path:child.vue_path, query:{vue_id:child.vue_id,vue_type:child.vue_type,vue_showparam:child.vue_showparam,#if($fields)#foreach($field in $fields)${field.get(0)}:child.${field.get(0)}#if($foreach.hasNext),#end#end#end}}">{{ child.vue_label }}</router-link>
 								</menu-item>
 								<Submenu v-if="isMoreLeveMenu(child)==true" :name="child.vue_name" :key="child.vue_name">
 									<template slot="title">
@@ -29,7 +29,7 @@
 									</template>
 									<template v-for="kids in child.vue_children">
 										<menu-item :name="kids.vue_name" :key="kids.vue_name">
-											<router-link :to="{path:kids.vue_path, query:{vue_id:kids.vue_id,vue_type:kids.vue_type,vue_showparam:kids.vue_showparam,#if($fields)#foreach($field in $fields)${field}:kids.${field}#if($foreach.hasNext),#end#end#end}}">{{ kids.vue_label }}</router-link>
+											<router-link :to="{path:kids.vue_path, query:{vue_id:kids.vue_id,vue_type:kids.vue_type,vue_showparam:kids.vue_showparam,#if($fields)#foreach($field in $fields)${field.get(0)}:kids.${field.get(0)}#if($foreach.hasNext),#end#end#end}}">{{ kids.vue_label }}</router-link>
 										</menu-item>
 									</template>
 								</Submenu>
@@ -57,7 +57,8 @@ export default {
 		routes : [        		
 #if($routes)
 #foreach($nroute in $routes)
-								$nroute#if($foreach.hasNext),#end
+$nroute#if($foreach.hasNext),#end
+
 #end
 #end 			
 		]

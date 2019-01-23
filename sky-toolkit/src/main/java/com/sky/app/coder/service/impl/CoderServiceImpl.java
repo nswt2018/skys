@@ -390,9 +390,9 @@ public class CoderServiceImpl implements ICoderService {
 
 	// 树模型，获取表的全部字段，并放入集合中返回
 	@Override
-	public List<String> getTreeModeTableFields(String tablename) {
+	public List<String[]> getTreeModeTableFields(String tablename) {
 		// 用于存放表的字段名称
-		List<String> fieldslist = new ArrayList<String>();
+		List<String[]> fieldslist = new ArrayList<String[]>();
 		try {
 			conn = sqlSessionFactory.openSession().getConnection();
 			String sql = "select * from " + tablename;
@@ -402,7 +402,10 @@ public class CoderServiceImpl implements ICoderService {
 			// 数据库的字段个数
 			int len = metadata.getColumnCount();
 			for (int i = 1; i <= len; i++) {
-				fieldslist.add(ConvertString.convertSomeCharUpper(metadata.getColumnName(i)));
+				String[] fieldsarr = new String[2];
+				fieldsarr[0] = ConvertString.convertSomeCharUpper(metadata.getColumnName(i));
+				fieldsarr[1] = metadata.getColumnName(i);
+				fieldslist.add(fieldsarr);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -414,9 +417,9 @@ public class CoderServiceImpl implements ICoderService {
 
 	// 树模型，获取多个表的全部字段，并放入集合中返回
 	@Override
-	public List<String> getTreeModeTablesFields(String[] tablenames) {
+	public List<String[]> getTreeModeTablesFields(String[] tablenames) {
 		// 用于存放表的字段名称
-		List<String> fieldslist = new ArrayList<String>();
+		List<String[]> fieldslist = new ArrayList<String[]>();
 		try {
 			for (int j = 0; j < tablenames.length; j++) {
 				conn = sqlSessionFactory.openSession().getConnection();
@@ -427,8 +430,12 @@ public class CoderServiceImpl implements ICoderService {
 				// 数据库的字段个数
 				int len = metadata.getColumnCount();
 				for (int i = 1; i <= len; i++) {
-					fieldslist.add(
-							ConvertString.convertSomeCharUpperReplace(tablenames[j] + "." + metadata.getColumnName(i)));
+					String[] fieldsarr = new String[3];
+					fieldsarr[0] = ConvertString
+							.convertSomeCharUpperReplace(tablenames[j] + "." + metadata.getColumnName(i));
+					fieldsarr[1] = tablenames[j] + "." + metadata.getColumnName(i);
+					fieldsarr[2] = ConvertString.convertSomeCharUpperReplace(metadata.getColumnName(i));
+					fieldslist.add(fieldsarr);
 				}
 			}
 		} catch (SQLException e) {
@@ -441,9 +448,9 @@ public class CoderServiceImpl implements ICoderService {
 
 	// 树模型，获取主表的全部字段，并放入集合中返回
 	@Override
-	public List<String> getTreeModeMsTablesFields(String tablename) {
+	public List<String[]> getTreeModeMsTablesFields(String tablename) {
 		// 用于存放表的字段名称
-		List<String> fieldslist = new ArrayList<String>();
+		List<String[]> fieldslist = new ArrayList<String[]>();
 		try {
 			conn = sqlSessionFactory.openSession().getConnection();
 			String sql = "select * from " + tablename;
@@ -453,7 +460,11 @@ public class CoderServiceImpl implements ICoderService {
 			// 数据库的字段个数
 			int len = metadata.getColumnCount();
 			for (int i = 1; i <= len; i++) {
-				fieldslist.add(ConvertString.convertSomeCharUpperReplace(tablename + "." + metadata.getColumnName(i)));
+				String[] fieldsarr = new String[3];
+				fieldsarr[0] = ConvertString.convertSomeCharUpperReplace(tablename + "." + metadata.getColumnName(i));
+				fieldsarr[1] = tablename + "." + metadata.getColumnName(i);
+				fieldsarr[2] = ConvertString.convertSomeCharUpperReplace(metadata.getColumnName(i));
+				fieldslist.add(fieldsarr);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

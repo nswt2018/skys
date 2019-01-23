@@ -111,6 +111,8 @@ public class CoderController {
 							model.setMapperSelectField(CoderService.getMultiMapperSelectField(tableArr));
 							//根据传入的模块关联表、模块数据库表主键，生成实体类中的内容(属性和get/set方法)
 							model.setModelClassStr(CoderService.getMultiClassStr(tableArr,primlist));
+							//用于挂接到树节点上
+							model.setFields(CoderService.getTreeModeTablesFields(tableArr));
 							//对模块代码进行处理
 							String cmoduCode=ConvertString.convertFirstCharUpper(moduCode.toLowerCase());
 							//多表模型， 获得velocity生成文件所需要的三个参数（模板变量值，模板，路径）,放在list集合中

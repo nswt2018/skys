@@ -184,15 +184,15 @@ export default {
         },
         getParam(){
 	        if(this.$route.query.vue_showparam){
-	        	var param={#foreach($field in $fields)'${field}':''#if($foreach.hasNext),#end#end}
+	        	var param={#foreach($field in $fields)'${field.get(0)}':''#if($foreach.hasNext),#end#end}
         		var showParamArr=this.$route.query.vue_showparam.split(",");
         		for(var showParam of showParamArr){
 #if($fields)
 #foreach($field in $fields)
-					if("${field}"==showParam){
-		        		param.${field} = this.$route.query.${field};
-					}else if(param.${field} == ""){
-						param.${field} = this.${field};
+					if("${field.get(0)}"==showParam){
+		        		param.${field.get(0)} = this.$route.query.${field.get(0)};
+					}else if(param.${field.get(0)} == ""){
+						param.${field.get(0)} = this.${field.get(0)};
 					}
 #end
 #end
@@ -210,9 +210,8 @@ export default {
         		for(var showParam of showParamArr){
 #if($fields)
 #foreach($field in $fields)
-					if("${field}"==showParam){
-		        		this.addForm.${field} = this.$route.query.${field};
-		        		this.updForm.${field} = this.$route.query.${field};
+					if("${field.get(0)}"==showParam){
+		        		this.addForm.${field.get(0)} = this.$route.query.${field.get(0)};
 					}
 #end
 #end
@@ -294,7 +293,8 @@ export default {
 	        	vue_type:type,
 #if($fields)
 #foreach($field in $fields)
-				${field}:this.viewForm.${field}#if($foreach.hasNext),#end    
+				${field.get(0)}:this.viewForm.${field.get(0)}#if($foreach.hasNext),#end
+    
 #end
 #end	        	      		        	
         	};

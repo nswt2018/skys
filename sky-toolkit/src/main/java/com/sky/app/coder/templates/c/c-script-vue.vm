@@ -256,9 +256,32 @@ export default {
     methods: {
     	getSearch() {
     		let menuCode = Cookies.get('menucode');
+    		let param;
+        	if(this.$route.query.vue_showparam){
+    			param = this.getParam();
+    		}else{
+    			param = {#foreach($input in $inputs)'${input.value}': this.${input.value}#if($foreach.hasNext),#end#end};
+    		}
         	return {'menuCode':menuCode,'pageSize': this.pageSize, 'currentPage': this.currentPage
-        	#if($inputs),'valObj':{#foreach($input in $inputs)'${input.value}': this.${input.value}#if($foreach.hasNext),#end#end}#end
-        	};
+        	,'valObj':param}; 
+        },
+        getParam(){
+	        if(this.$route.query.vue_showparam){
+	        	var param={#foreach($field in $fields)'${field.get(0)}':''#if($foreach.hasNext),#end#end}
+        		var showParamArr=this.$route.query.vue_showparam.split(",");
+        		for(var showParam of showParamArr){
+#if($fields)
+#foreach($field in $fields)
+					if("${field.get(0)}".toLowerCase().indexOf(showParam.toLowerCase())!=-1){
+		        		param.${field.get(0)} = this.$route.query.${field.get(2)};
+					}else if(param.${field.get(0)} == ""){
+						param.${field.get(0)} = this.${field.get(0)};
+					}
+#end
+#end
+        		}       		 
+        	return param;
+        	}
         },
         getMsSearch() {
     		let menuCode = Cookies.get('menucode');
@@ -268,26 +291,27 @@ export default {
         },  
         init () {
        		pagepublictool.setPage(this);
-        	pagepublictool.page(this.getSearch());
-        	//pagepublictool.getButtons();
         	this.${table.columns}=${moducode}Column.getColumns();
         	mspagepublictool.setPage(this);
         	this.${mstable.columns}=ms${moducode}Column.getColumns();
         	//树模型，用于挂树节点
-        	if(this.$route.query.id){
+        	if(this.$route.query.vue_showparam){
+        		var showParamArr=this.$route.query.vue_showparam.split(",");
+        		for(var showParam of showParamArr){
 #if($fields)
 #foreach($field in $fields)
-				if("${field}"==this.$route.query.showparam){
-					this.${field}= this.$route.query.id;   
-	        		this.addForm.${field} = this.$route.query.id;
-	        		this.updForm.${field} = this.$route.query.id;
-				}
+					if("${field.get(0)}".toLowerCase().indexOf(showParam.toLowerCase())!=-1){
+		        		this.addForm.${field.get(0)} = this.$route.query.${field.get(2)};
+					}
 #end
 #end
+        		}
 				pagepublictool.page(this.getSearch());
+        	}else{
+        		pagepublictool.page(this.getSearch());
         	}
-        	if(this.$route.query.type){
-               	this.type = this.$route.query.type;
+        	if(this.$route.query.vue_type){
+               	this.type = this.$route.query.vue_type;
             	if(this.type==='VIEW' || this.type==='view'){
                 	this.buttonInfos = [{
                 		title:'查看',
