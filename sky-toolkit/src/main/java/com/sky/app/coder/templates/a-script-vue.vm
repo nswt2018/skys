@@ -302,7 +302,9 @@ export default {
          		if(!this.$route.query){
          			pagepublictool.view();
          		}else{
-        	     	pagepublictool.view();
+         			if(pagepublictool.check()!='1'){
+         				return;
+         			}
         	        router.push({
         	             name: '${moducode}treemode',
         	             query: query
@@ -321,6 +323,9 @@ export default {
         		if(!this.$route.query){
         			pagepublictool.update();      			
         		}else{
+        			if(pagepublictool.check()!='1'){
+         				return;
+         			}
     		        router.push({
     		            name: '${moducode}treemode',
     		            query: query
@@ -330,6 +335,9 @@ export default {
         		if(!this.$route.query){
         			pagepublictool.delete(this.deleteurl+"?delKeys="+this.deleteKey.join(','));    			
         		}else{
+        			if(pagepublictool.check()!='1'){
+         				return;
+         			}
     		        router.push({
     		        	name:'${moducode}treemode',
 	    		        query: query
