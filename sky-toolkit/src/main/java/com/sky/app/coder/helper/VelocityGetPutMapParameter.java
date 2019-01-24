@@ -11,9 +11,9 @@ public class VelocityGetPutMapParameter {
 		// 先小写，模块代码首字母大写
 		String cModuCode = ConvertString.convertFirstCharUpper(lModuCode);
 		// 替换字符串中‘\’为‘/’
-		vuePathBef = ConvertString.replace(vuePathBef);
-		vuePath = ConvertString.replace(vuePath);
-		javaPath = ConvertString.replace(javaPath);
+		vuePathBef = ConvertString.replace(vuePathBef.replace(" ", ""));
+		vuePath = ConvertString.replace(vuePath.replace(" ", ""));
+		javaPath = ConvertString.replace(javaPath.replace(" ", ""));
 		
 		// 将velocity生成文件后面两个参数放入map (包名+模板名称)->value(文件路径+文件名)
 		Map<String, String> cmap = new HashMap<String, String>();

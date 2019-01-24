@@ -18,11 +18,11 @@ export default {
 #if(${viewformitem.select.selectFields})
 			${viewformitem.select.selectFields.get(0)}ViewSelect:[],
 #end
-#if(${viewformitem.radio.selectFields})
-			${viewformitem.radio.selectFields.get(0)}ViewRadio:[],
+#if(${viewformitem.radio.radioFields})
+			${viewformitem.radio.radioFields.get(0)}ViewRadio:[],
 #end
-#if(${viewformitem.checkbox.selectFields})
-			${viewformitem.checkbox.selectFields.get(0)}ViewCheckbox:[],
+#if(${viewformitem.checkbox.checkboxFields})
+			${viewformitem.checkbox.checkboxFields.get(0)}ViewCheckbox:[],
 #end			
 #end
 #end
@@ -31,11 +31,11 @@ export default {
 #if(${addformitem.select.selectFields})
 			${addformitem.select.selectFields.get(0)}Select:[],
 #end
-#if(${addformitem.radio.selectFields})
-			${addformitem.radio.selectFields.get(0)}Radio:[],
+#if(${addformitem.radio.radioFields})
+			${addformitem.radio.radioFields.get(0)}Radio:[],
 #end
-#if(${addformitem.checkbox.selectFields})
-			${addformitem.checkbox.selectFields.get(0)}Checkbox:[],
+#if(${addformitem.checkbox.checkboxFields})
+			${addformitem.checkbox.checkboxFields.get(0)}Checkbox:[],
 #end			
 #end
 #end
@@ -258,11 +258,11 @@ export default {
 #if(${viewformitem.select.selectFields})
 			this.${viewformitem.select.selectFields.get(0)}ViewSelect=pagepublictool.getSelectList({table:'${tablename}',field:'${viewformitem.select.selectFields.get(1)}'});
 #end
-#if(${viewformitem.radio.selectFields})
-			this.${viewformitem.radio.selectFields.get(0)}ViewRadio=pagepublictool.getSelectList({table:'${tablename}',field:'${viewformitem.radio.selectFields.get(1)}'});
+#if(${viewformitem.radio.radioFields})
+			this.${viewformitem.radio.radioFields.get(0)}ViewRadio=pagepublictool.getSelectList({table:'${tablename}',field:'${viewformitem.radio.radioFields.get(1)}'});
 #end
-#if(${viewformitem.checkbox.selectFields})
-			this.${viewformitem.checkbox.selectFields.get(0)}ViewCheckbox=pagepublictool.getSelectList({table:'${tablename}',field:'${viewformitem.checkbox.selectFields.get(1)}'});
+#if(${viewformitem.checkbox.checkboxFields})
+			this.${viewformitem.checkbox.checkboxFields.get(0)}ViewCheckbox=pagepublictool.getSelectList({table:'${tablename}',field:'${viewformitem.checkbox.checkboxFields.get(1)}'});
 #end			
 #end
 #end
@@ -271,11 +271,11 @@ export default {
 #if(${addformitem.select.selectFields})
 			this.${addformitem.select.selectFields.get(0)}Select=pagepublictool.getSelectList({table:'${tablename}',field:'${addformitem.select.selectFields.get(1)}'});
 #end
-#if(${addformitem.radio.selectFields})
-			this.${addformitem.radio.selectFields.get(0)}Radio=pagepublictool.getSelectList({table:'${tablename}',field:'${addformitem.radio.selectFields.get(1)}'});
+#if(${addformitem.radio.radioFields})
+			this.${addformitem.radio.radioFields.get(0)}Radio=pagepublictool.getSelectList({table:'${tablename}',field:'${addformitem.radio.radioFields.get(1)}'});
 #end
-#if(${addformitem.checkbox.selectFields})
-			this.${addformitem.checkbox.selectFields.get(0)}Checkbox=pagepublictool.getSelectList({table:'${tablename}',field:'${addformitem.checkbox.selectFields.get(1)}'});
+#if(${addformitem.checkbox.checkboxFields})
+			this.${addformitem.checkbox.checkboxFields.get(0)}Checkbox=pagepublictool.getSelectList({table:'${tablename}',field:'${addformitem.checkbox.checkboxFields.get(1)}'});
 #end			
 #end
 #end
@@ -363,12 +363,12 @@ export default {
 				this.updForm.${addformitem.select.selectFields.get(0)}=this.updForm.${addformitem.select.selectFields.get(0)}.join(',');
 			}
 #end
-#if(${addformitem.checkbox.selectFields})
-			if(this.addForm.${addformitem.checkbox.selectFields.get(0)}){
-				this.addForm.${addformitem.checkbox.selectFields.get(0)}=this.addForm.${addformitem.checkbox.selectFields.get(0)}.join(',');
+#if(${addformitem.checkbox.checkboxFields})
+			if(this.addForm.${addformitem.checkbox.checkboxFields.get(0)}){
+				this.addForm.${addformitem.checkbox.checkboxFields.get(0)}=this.addForm.${addformitem.checkbox.checkboxFields.get(0)}.join(',');
 			}
-			if(this.updForm.${addformitem.checkbox.selectFields.get(0)}){
-				this.updForm.${addformitem.checkbox.selectFields.get(0)}=this.updForm.${addformitem.checkbox.selectFields.get(0)}.join(',');
+			if(this.updForm.${addformitem.checkbox.checkboxFields.get(0)}){
+				this.updForm.${addformitem.checkbox.checkboxFields.get(0)}=this.updForm.${addformitem.checkbox.checkboxFields.get(0)}.join(',');
 			}
 #end			
 #end
@@ -389,9 +389,9 @@ export default {
 				this.updForm.${addformitem.select.selectFields.get(0)}=row.${addformitem.select.selectFields.get(0)}.split(',');
 			}
 #end
-#if(${addformitem.checkbox.selectFields})
-			if(this.updForm.${addformitem.checkbox.selectFields.get(0)}){
-				this.updForm.${addformitem.checkbox.selectFields.get(0)}=row.${addformitem.checkbox.selectFields.get(0)}.split(',');
+#if(${addformitem.checkbox.checkboxFields})
+			if(this.updForm.${addformitem.checkbox.checkboxFields.get(0)}){
+				this.updForm.${addformitem.checkbox.checkboxFields.get(0)}=row.${addformitem.checkbox.checkboxFields.get(0)}.split(',');
 			}
 #end			
 #end
@@ -406,8 +406,8 @@ export default {
 #if(${addformitem.select.selectFields} && ${addformitem.select.multiple}=="true")
 				this.updForm.${addformitem.select.selectFields.get(0)}='';
 #end
-#if(${addformitem.checkbox.selectFields})
-				this.updForm.${addformitem.checkbox.selectFields.get(0)}='';
+#if(${addformitem.checkbox.checkboxFields})
+				this.updForm.${addformitem.checkbox.checkboxFields.get(0)}='';
 #end			
 #end
 #end

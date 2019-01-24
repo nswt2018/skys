@@ -19,8 +19,8 @@ public class VelocityGetPutMapMulitParameter {
 		// 将模块代码全部小写
 		String lModuCode = cModuCode.toLowerCase();
 		// 替换字符串中‘\’为‘/’
-		String vuepath = ConvertString.replace(vuePath);
-		String javapath = ConvertString.replace(javaPath);
+		String vuepath = ConvertString.replace(vuePath.replace(" ", ""));
+		String javapath = ConvertString.replace(javaPath.replace(" ", ""));
 
 		// 将velocity生成文件后面两个参数放入map (包名+模板名称)->value(文件路径+文件名)
 		Map<String, String> cmap = new HashMap<String, String>();
