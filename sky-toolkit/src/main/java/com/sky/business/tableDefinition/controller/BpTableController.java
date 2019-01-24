@@ -90,12 +90,12 @@ public class BpTableController extends BaseController {
 				//从库里删除
 				//查询数据库 该表是否存在
 				Map<String, String> map = new HashMap<>();
-				map.put("tabCode", tabCode);
+				/*map.put("tabCode", tabCode);
 				List<BpTable> tList = bpTableService.findForList("com.sky.business.tableDefinition.dao.BpTableDao.findTable", map);
-				//存在则报错返回
+				//存在则删除
 				if(tList != null && tList.size() > 0 && "1".equals(tList.get(0).getIsExist())){
 					bpTableService.dropTab("com.sky.business.tableDefinition.dao.BpTableDao.dropTable", tabCode);
-				}
+				}*/
 				
 				//删除表定义
 				bpTableService.delete(tabCode);
@@ -340,6 +340,7 @@ public class BpTableController extends BaseController {
 				bpTableService.save(bpTable);
 				
 				List<BpField> cList = bpFieldService.findForList("com.sky.business.columnDefinition.dao.BpFieldDao.findColList", bpTable.getTabCode());
+				int i = 1;
 				for (BpField bpField : cList) {
 					String dataType = bpField.getDataType();
 					if(dataType.equals("char") || dataType.equals("decimal") || dataType.equals("varchar")){
@@ -351,6 +352,9 @@ public class BpTableController extends BaseController {
 					}else  bpField.setDataLen("");
 					
 					bpField.setCrtDate(date);
+					bpField.setUiType("A1");
+					bpField.setUiOrder(i);
+					i++;
 					
 					bpFieldService.save(bpField);
 				}
