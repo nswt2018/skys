@@ -185,7 +185,7 @@ public class VelocityGetTemplateData {
 		if (tagInfo == null || "".equals(tagInfo)) {
 			formitem.setLabel(cname);
 			// 如果字段为主键且主键生成策略为0（手动输入），则设为必输，且有验证提示语
-			if (colcode.equals(ename) && pk.equals("0")) {
+			if (colcode.equals(ename)) {
 				formitem.setProp(ename);
 				formitem.setRequired("true");
 			}
@@ -202,11 +202,17 @@ public class VelocityGetTemplateData {
 				in.setPlaceholder(cname);
 				in.setMax(1000000);
 				in.setMin(0);
+				if(colcode.equals(ename)&&"修改信息".equals(comName)){
+					in.setReadonly("true");
+				}
 			} else if ("A1".equals(uiType)) {
 				// 字符串 单行
 				auinput = new Input();
 				auinput.setValue(ename);
 				auinput.setPlaceholder(cname);
+				if(colcode.equals(ename)&&"修改信息".equals(comName)){
+					auinput.setReadonly("true");
+				}
 			} else if ("A2".equals(uiType)) {
 				// 字符串 多行
 				auinput = new Input();

@@ -4,10 +4,10 @@
 
 	              <FormItem label="${formitem.label}:" #if(${formitem.prop})prop="${formitem.prop}"#end #if(${formitem.required})required#end #if(${formitem.labelWidth})label-width="${formitem.labelWidth}"#end style="width:300px">
 #if(${formitem.input})
-	                 <Input v-model="${updform.model}.${formitem.input.value}" #if(${formitem.input.type}=="textarea")type="${formitem.input.type}" :autosize="{minRows: 2,maxRows: 5}"#end placeholder="${formitem.input.placeholder}" />
+	                 <Input v-model="${updform.model}.${formitem.input.value}" #if(${formitem.input.type}=="textarea")type="textarea" :autosize="{minRows: 2,maxRows: 5}"#end placeholder="${formitem.input.placeholder}" #if(${formitem.input.readonly}=="true"):readonly="true"#end/>
 #end
 #if(${formitem.inputNumber})	                 
-	                 <InputNumber #if(${formitem.inputNumber.max}):max="${formitem.inputNumber.max}"#end #if(${formitem.inputNumber.min}):min="${formitem.inputNumber.min}"#end v-model="${updform.model}.${formitem.inputNumber.value}"  #if(${formitem.inputNumber.placeholder})placeholder="${formitem.inputNumber.placeholder}"#end style="width:200px"></InputNumber>
+	                 <InputNumber #if(${formitem.inputNumber.max}):max="${formitem.inputNumber.max}"#end #if(${formitem.inputNumber.min}):min="${formitem.inputNumber.min}"#end v-model="${updform.model}.${formitem.inputNumber.value}"  #if(${formitem.inputNumber.placeholder})placeholder="${formitem.inputNumber.placeholder}"#end #if(${formitem.input.readonly}=="true"):readonly="true"#end style="width:200px"></InputNumber>
 #end
 #if(${formitem.datepicker})	                 
 	                 <DatePicker  type="date" v-model="${updform.model}.${formitem.datepicker.value}" placeholder="${formitem.datepicker.placeholder}"></DatePicker>

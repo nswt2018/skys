@@ -5,6 +5,7 @@
 #set($msmapperselectfield=${models.msmapperSelectField})
 #set($mstablename=${models.mstableName})
 #set($msrelationfield=${models.msrelationField})
+#set($fields=${models.fields})
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sky.app.mapper.Ms${syscode}${model}Mapper">
