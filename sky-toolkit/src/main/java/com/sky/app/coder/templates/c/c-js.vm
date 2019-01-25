@@ -24,13 +24,14 @@ ms${moducode}Column.getColumns = function() {
 			title: '${tablecolumn.label}',
 			key: '${tablecolumn.value}',
 			align: 'center'
-		  }#if($foreach.hasNext),#end
 #if(${tablecolumn.isDate}=="true")
 			,
 			render: (h, params) => {                        
 	            return h('div', datetool.format(params.row.${tablecolumn.value}));
 	        }
 #end
+		  }#if($foreach.hasNext),#end
+
 #end			    
 #end 
 #end
