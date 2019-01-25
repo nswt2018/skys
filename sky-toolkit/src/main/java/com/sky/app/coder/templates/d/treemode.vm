@@ -40,7 +40,7 @@
 			</template>
 		</i-menu>
 		</i-col>
-		<i-col span="18">
+		<i-col span="19">
 			<div class="layout-content-main" >
 				<router-view></router-view>
 			</div>
