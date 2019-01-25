@@ -18,6 +18,7 @@
 #set($updformitems=${models.updformitem})
 #set($viewform=${models.viewform})
 #set($viewformitems=${models.viewformitem})
+#set($tablecolumns=${models.tablecolumns})
 
 #set($fields=${models.fields})
 <style>

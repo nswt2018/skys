@@ -29,6 +29,8 @@
 #set($msviewform=${models.msviewform})
 #set($viewformitems=${models.viewformitem})
 #set($msviewformitems=${models.msviewformitems})
+#set($tablecolumns=${models.tablecolumns})
+#set($mstablecolumns=${models.mstablecolumns})
 
 #set($fields=${models.fields})
 <style>
