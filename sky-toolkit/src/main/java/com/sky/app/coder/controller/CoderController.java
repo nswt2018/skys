@@ -48,7 +48,7 @@ public class CoderController {
 			List<Systems> syslist=CoderService.getSystems("com.sky.app.core.CoderMapper.findBpSystemsList", sysKey.substring(0, 2));
 			for(int i=0;i<syslist.size();i++){
 				//判断是否为末级模块
-				if(syslist.get(i).getModCode()!=null&&syslist.get(i).getModCode()!=""){
+				if(syslist.get(i).getModCode()!=null && !syslist.get(i).getModCode().equals("")){
 					//该模块全部的上级系统编号及本编号
 					List<String> upperSysList=ConvertString.subString(syslist.get(i).getSysKey());
 					List<String> fourlist=CoderService.getSystemsInfo(upperSysList);

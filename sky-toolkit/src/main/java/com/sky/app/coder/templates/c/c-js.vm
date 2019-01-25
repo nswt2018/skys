@@ -25,6 +25,12 @@ ms${moducode}Column.getColumns = function() {
 			key: '${tablecolumn.value}',
 			align: 'center'
 		  }#if($foreach.hasNext),#end
+#if(${tablecolumn.isDate}=="true")
+			,
+			render: (h, params) => {                        
+	            return h('div', datetool.format(params.row.${tablecolumn.value}));
+	        }
+#end
 #end			    
 #end 
 #end

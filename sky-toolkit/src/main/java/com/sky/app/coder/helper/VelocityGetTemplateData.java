@@ -145,6 +145,9 @@ public class VelocityGetTemplateData {
 				tablecolumn.setLabel(cname);
 				// 字段
 				tablecolumn.setValue(ename);
+				if(list.get(i).getUiType().equals("C1")){
+					tablecolumn.setIsDate("true");
+				}
 				tablecolumns.add(tablecolumn);
 			} else if (list.get(i).getComName().equals("新增信息") || list.get(i).getComName().equals("修改信息")) {
 				//如果字段为主键且主键生成策略为自动生成，则页面不显示
