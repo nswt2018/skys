@@ -378,7 +378,7 @@ export default {
 #if($mstablecolumns)
 #foreach($tablecolumn in $mstablecolumns)
 #if(${tablecolumn.isDate}=="true")
-			this.updForm.${tablecolumn.value}=datetool.format(row.${tablecolumn.value});
+			this.msupdForm.${tablecolumn.value}=datetool.format(row.${tablecolumn.value});
 #end			
 #end
 #end
