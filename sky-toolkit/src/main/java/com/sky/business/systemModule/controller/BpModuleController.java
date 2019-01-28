@@ -152,10 +152,8 @@ public class BpModuleController extends BaseController {
 		for (BpUnit bpUnit2 : unitList) {
 			for (String nList : nameList) {
 				BpElement bpElement = new BpElement();
-				String eleEName = nList.split(",")[0];
-				String eleCName = nList.split(",").length == 1 ? eleEName: nList.split(",")[1];
-				bpElement.setEleEName(eleEName);
-				bpElement.setEleCName(eleCName);
+				bpElement.setEleEName(nList.split(",")[0]);
+				bpElement.setEleCName(nList.split(",")[1]);
 				bpElement.setModuCode(bpModule.getModuCode());
 				bpElement.setUnitCode(bpUnit2.getUnitCode());
 				bpElement.setUnitName(bpUnit2.getUnitName());

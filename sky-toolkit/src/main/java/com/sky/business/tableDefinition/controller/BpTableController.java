@@ -337,6 +337,7 @@ public class BpTableController extends BaseController {
 				bpTable.setCrtDate(date);
 				bpTable.setIsExist("1");
 				
+				if(bpTable.getTabName() == null || "".equals(bpTable.getTabName())) bpTable.setTabName(bpTable.getTabCode());
 				bpTableService.save(bpTable);
 				
 				List<BpField> cList = bpFieldService.findForList("com.sky.business.columnDefinition.dao.BpFieldDao.findColList", bpTable.getTabCode());
@@ -351,6 +352,7 @@ public class BpTableController extends BaseController {
 						
 					}else  bpField.setDataLen("");
 					
+					if(bpField.getColName() == null || "".equals(bpField.getColName())) bpField.setColName(bpField.getColCode());
 					bpField.setCrtDate(date);
 					bpField.setUiType("A1");
 					bpField.setUiOrder(i);
