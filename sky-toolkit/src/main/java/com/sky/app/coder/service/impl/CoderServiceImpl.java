@@ -134,11 +134,7 @@ public class CoderServiceImpl implements ICoderService {
 				// metadata.getColumnDisplaySize(i);
 				colnames[i] = ConvertString.convertSomeCharUpper(metadata.getColumnName(i).toLowerCase()); // 获取字段名称
 				System.out.println(colnames[i]);
-				if (colnames[i].equals(convertTablePri)) {
-					colTypes[i] = "String"; // 如果是主键,则类型全为字符串
-				} else {
-					colTypes[i] = sqlType2JavaType(metadata.getColumnTypeName(i)); // 获取字段类型
-				}
+				colTypes[i] = sqlType2JavaType(metadata.getColumnTypeName(i)); // 获取字段类型
 				System.out.println(metadata.getColumnTypeName(i));
 				System.out.println(colTypes[i]);
 			}
@@ -193,11 +189,7 @@ public class CoderServiceImpl implements ICoderService {
 				colnames[i - 1] = metadata.getColumnName(i);
 				tablecolnames[i - 1] = ConvertString
 						.convertSomeCharUpperReplace(tablename + "." + metadata.getColumnName(i));
-				if (colnames[i - 1].equals(tablepri)) {
-					colTypes[i - 1] = "String"; // 如果是主键,则类型全为字符串
-				} else {
-					colTypes[i - 1] = sqlType2JavaType(metadata.getColumnTypeName(i)); // 获取字段类型
-				}
+				colTypes[i - 1] = sqlType2JavaType(metadata.getColumnTypeName(i)); // 获取字段类型
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -253,11 +245,7 @@ public class CoderServiceImpl implements ICoderService {
 				for (int j = 1; j <= len; j++) {
 					tablecolnames[j - 1] = ConvertString
 							.convertSomeCharUpperReplace(tablenames[i] + "." + metadata.getColumnName(j));// 获取加上表名字段名称
-					if (metadata.getColumnName(j).equals(listss.get(i))) {
-						colTypes[j - 1] = "String"; // 如果是主键,则类型全为字符串
-					} else {
-						colTypes[j - 1] = sqlType2JavaType(metadata.getColumnTypeName(j)); // 获取字段类型
-					}
+					colTypes[j - 1] = sqlType2JavaType(metadata.getColumnTypeName(j)); // 获取字段类型
 				}
 				listnamearr.add(colnames);
 				listtablenamearr.add(tablecolnames);
