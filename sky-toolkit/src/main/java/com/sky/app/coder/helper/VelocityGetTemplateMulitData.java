@@ -222,6 +222,9 @@ public class VelocityGetTemplateMulitData {
 					tablecolumn.setLabel(cname);
 					// 字段
 					tablecolumn.setValue(ename);
+					if(list.get(i).getDataType().equals("date") || list.get(i).getDataType().equals("datetime")){
+						tablecolumn.setIsDate("true");
+					}
 					tablecolumns.add(tablecolumn);
 				} else if (list.get(i).getComName().equals("新增信息") || list.get(i).getComName().equals("修改信息")) {
 					// 如果字段为主键且主键生成策略为1（自动生成），则该字段在新增或修改页面都不显示

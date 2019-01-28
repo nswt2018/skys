@@ -238,6 +238,13 @@ export default {
         	this.deleteKey.push(row.${tableprimary});
 #end
 #end
+#if($tablecolumns)
+#foreach($tablecolumn in $tablecolumns)
+#if(${tablecolumn.isDate}=="true")
+			this.updForm.${tablecolumn.value}=datetool.format(row.${tablecolumn.value});
+#end
+#end
+#end
         },
         cancing(selection, row){
         	pagepublictool.cancel(selection, row);

@@ -375,11 +375,25 @@ export default {
         	this.deleteKey.push(row.${tableprimary});
         	this.msRelationshipFields.push(row.${relationfield});
         	this.msaddForm.${msconvertrelationrield}=this.msRelationshipFields[0];
+#if($tablecolumns)
+#foreach($tablecolumn in $tablecolumns)
+#if(${tablecolumn.isDate}=="true")
+			this.updForm.${tablecolumn.value}=datetool.format(row.${tablecolumn.value});
+#end			
+#end
+#end
         	mspagepublictool.page(this.getMsSearch());
         },
         mschoicing(selection, row) {
         	mspagepublictool.choice(selection, row);
         	this.msdeleteKey.push(row.${mstableprimary});
+#if($mstablecolumns)
+#foreach($tablecolumn in $mstablecolumns)
+#if(${tablecolumn.isDate}=="true")
+			this.msupdForm.${tablecolumn.value}=datetool.format(row.${tablecolumn.value});
+#end			
+#end
+#end
         },
         cancing(selection, row){
         	pagepublictool.cancel(selection, row);

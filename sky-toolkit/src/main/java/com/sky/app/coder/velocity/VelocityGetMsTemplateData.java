@@ -218,10 +218,14 @@ public class VelocityGetMsTemplateData {
 					tablecolumn.setLabel(cname);
 					// 字段
 					tablecolumn.setValue(ename);
+					if(list.get(i).getDataType().equals("date") || list.get(i).getDataType().equals("datetime")){
+						tablecolumn.setIsDate("true");
+					}
 					if (enametable.equalsIgnoreCase(tablenamearr[0])) {
 						// 主表列表
 						tablecolumns.add(tablecolumn);
 					} else {
+						
 						// 从表列表
 						mstablecolumns.add(tablecolumn);
 					}
