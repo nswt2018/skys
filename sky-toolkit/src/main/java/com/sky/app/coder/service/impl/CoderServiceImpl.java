@@ -134,11 +134,7 @@ public class CoderServiceImpl implements ICoderService {
 				// metadata.getColumnDisplaySize(i);
 				colnames[i] = ConvertString.convertSomeCharUpper(metadata.getColumnName(i).toLowerCase()); // 获取字段名称
 				System.out.println(colnames[i]);
-				if (colnames[i].equals(convertTablePri)) {
-					colTypes[i] = "String"; // 如果是主键,则类型全为字符串
-				} else {
-					colTypes[i] = sqlType2JavaType(metadata.getColumnTypeName(i)); // 获取字段类型
-				}
+				colTypes[i] = sqlType2JavaType(metadata.getColumnTypeName(i)); // 获取字段类型
 				System.out.println(metadata.getColumnTypeName(i));
 				System.out.println(colTypes[i]);
 			}
@@ -153,8 +149,13 @@ public class CoderServiceImpl implements ICoderService {
 		// 拼接属性
 		for (int index = 1; index < colnames.length; index++) {
 			if (colnames[index].equals(convertTablePri)) {
-				str.append("    @Id\r\n" + "    @GeneratedValue(generator=\"UUID\")\n"
-						+ getAttrbuteString(colnames[index], colTypes[index]));
+				if (colTypes[index].equalsIgnoreCase("int") || colTypes[index].equalsIgnoreCase("decimal")) {
+					str.append("    @Id\r\n" + "    @GeneratedValue(generator=\"UUID\")\n" + "    @NumberFormat\n"
+							+ getAttrbuteString(colnames[index], colTypes[index]));
+				} else {
+					str.append("    @Id\r\n" + "    @GeneratedValue(generator=\"UUID\")\n"
+							+ getAttrbuteString(colnames[index], colTypes[index]));
+				}
 			} else {
 				str.append(getAttrbuteString(colnames[index], colTypes[index]));
 			}
@@ -205,14 +206,13 @@ public class CoderServiceImpl implements ICoderService {
 			return null;
 		// 拼接属性
 		for (int index = 0; index < colnames.length; index++) {
-			if (colnames[index].equals(tablepri)) {
-				str.append("    @Id\r\n" + "    @GeneratedValue(generator=\"UUID\")\n" + "    @Column(name=\""
-						+ colnames[index] + "\")\r\n" + getAttrbuteString(tablecolnames[index], colTypes[index]));
+			if (colTypes[index].equalsIgnoreCase("int") || colTypes[index].equalsIgnoreCase("decimal")) {
+				str.append("    @Id\r\n" + "    @GeneratedValue(generator=\"UUID\")\n" + "    @NumberFormat\n"
+						+ getAttrbuteString(colnames[index], colTypes[index]));
 			} else {
-				str.append("    @Column(name=\"" + colnames[index] + "\")\r\n"
-						+ getAttrbuteString(tablecolnames[index], colTypes[index]));
+				str.append("    @Id\r\n" + "    @GeneratedValue(generator=\"UUID\")\n"
+						+ getAttrbuteString(colnames[index], colTypes[index]));
 			}
-
 		}
 		// 拼接get，Set方法
 		for (int index = 0; index < colnames.length; index++) {
