@@ -12,7 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import org.apache.ibatis.type.Alias;
-import org.springframework.format.annotation.NumberFormat;
 
 @Alias("Ms${syscode}${model}")
 @Table(name="${mstablename}")

@@ -16,7 +16,7 @@ import ${modelpackname}.${syscode}${model}${tablelistname};
 public interface I${syscode}${model}Service extends IBaseService<${syscode}${model}> {
 	int save(#if(${tablelistnames})#foreach(${tablelistname} in ${tablelistnames})${syscode}${model}${tablelistname}  ${tablelistname}#if($foreach.hasNext),#end#end#end);
 	int update(#if(${tablelistnames})#foreach(${tablelistname} in ${tablelistnames})${syscode}${model}${tablelistname}  ${tablelistname}#if($foreach.hasNext),#end#end#end);
-	int delete(String delKey);
+	int delete(String[] delKey,String[] primarytype);
 } 
 
 

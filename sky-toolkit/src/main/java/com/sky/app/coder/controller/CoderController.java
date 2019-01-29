@@ -84,6 +84,8 @@ public class CoderController {
 							List<String> tableprimlist=new ArrayList<String>();
 							//用于放表的主键策略
 							List<String> tableprimpklist=new ArrayList<String>();
+							//用于放表的主键字段类型
+							List<String> tableprimtypelist=new ArrayList<String>();
 							// 将模块的关联表转放入数组中
 							String[] tableArr = element.getRelTable().split(",");
 							//存放转换后的关联表，用于dao、service接口、service实现类、实体类类名的组装
@@ -95,6 +97,7 @@ public class CoderController {
 								primlist.add(muliel.getColCode());
 								//将主键生成策略放入集合
 								tableprimpklist.add(muliel.getPkGen());
+								tableprimtypelist.add(muliel.getDataType());
 								//将表名和主键组合在一起转换后放入集合
 								tableprimlist.add(ConvertString.convertSomeCharUpperReplace(tableArr[j]+"."+muliel.getColCode()));
 								converTableArr[j]=ConvertString.convertStringByCombin(tableArr[j]);
@@ -107,6 +110,8 @@ public class CoderController {
 							model.setSysCode(uppersyscode);
 							//模块关联表(多表)，放入list集合中
 							model.setTableListName(Arrays.asList(converTableArr));
+							//表的主键字段类型
+							model.setTablePrimaryType(tableprimtypelist);
 							//设置mapper映射文件，查询的字段以表加字段作为别名
 							model.setMapperSelectField(CoderService.getMultiMapperSelectField(tableArr));
 							//根据传入的模块关联表、模块数据库表主键，生成实体类中的内容(属性和get/set方法)

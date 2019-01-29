@@ -12,6 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.common.Mapper;
 import javax.annotation.Resource;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import ${modelpackname}.${syscode}${model};
 import ${servicepackname}.I${syscode}${model}Service;
 #if(${tablelistnames})
@@ -53,13 +57,44 @@ public class ${syscode}${model}ServiceImpl extends BaseServiceImpl<${syscode}${m
 	}
 	
 	@Override
-	public int delete(String delKey) {
+	public int delete(String[] delKey,String[] primarytype) {
 		int count=0;
+		// 放每个表的主键数组
+		List<Object[]> listarr = this.divideArrayPutList(delKey,primarytype.length);
 #if(${tablelistnames})
 #foreach(${tablelistname} in ${tablelistnames})
-		count=+${syscode}${model}${tablelistname}Dao.deleteByPrimaryKey(delKey);
+		for (int i = 0; i < listarr.get(${velocityCount}-1).length; i++) {
+			if("decimal".equalsIgnoreCase(primarytype[${velocityCount}-1])||"int".equalsIgnoreCase(primarytype[${velocityCount}-1])){
+				count=+${syscode}${model}${tablelistname}Dao.deleteByPrimaryKey(Integer.valueOf((String) listarr.get(${velocityCount}-1)[i]));
+			}else{
+				count=+${syscode}${model}${tablelistname}Dao.deleteByPrimaryKey((String) listarr.get(${velocityCount}-1)[i]);
+			}
+		}
+		
 #end
 #end
 		return count;
+	}
+	
+	// 将数组按规律分开，并放入集合中
+	public List<Object[]> divideArrayPutList(String[] strarr,int count) {
+		// 放每个表的主键数组
+		List<Object[]> listarr = new ArrayList<Object[]>();
+		// 用于放全部表的主键
+		List<String> allprimlist = Arrays.asList(strarr);
+		// 用于存放每张表的主键
+		List<String> primlist = new ArrayList<String>();
+		for (int j = 0; j < count; j++) {
+			for (int i = 0; i < allprimlist.size(); i++) {
+				if (i == 0) {
+					primlist.add(allprimlist.get(i + j));
+				} else if (i * count < allprimlist.size()) {
+					primlist.add(allprimlist.get(i * count + j));
+				}
+			}
+			listarr.add(primlist.toArray());
+			primlist.clear();
+		}
+		return listarr;
 	}
 }

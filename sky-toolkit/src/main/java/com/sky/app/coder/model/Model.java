@@ -47,6 +47,8 @@ public class Model {
 	
 	//模块数据库表主键字段
 	private String tablePrimary;
+	//多表模型，数据库表主键字段类型
+	private List<String> tablePrimaryType;
 	//模块数据库表主键策略 0为手动录入，1为自动录入
 	private String tablePrimaryValue;
 	//model实体类里面的属性 get/set 方法
@@ -491,5 +493,12 @@ public class Model {
 	public void setCheckbox(Checkbox checkbox) {
 		this.checkbox = checkbox;
 	}
+	public List<String> getTablePrimaryType() {
+		return tablePrimaryType;
+	}
+	public void setTablePrimaryType(List<String> tablePrimaryType) {
+		this.tablePrimaryType = tablePrimaryType;
+	}
+	
 	
 }

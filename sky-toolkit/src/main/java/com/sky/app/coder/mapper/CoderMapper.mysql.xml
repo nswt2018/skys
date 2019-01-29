@@ -31,7 +31,8 @@
   <select id="findBpFieldForOne" parameterType="String" resultType="Element">
 	       SELECT
 				COL_CODE,
-				PK_GEN 
+				PK_GEN,
+				DATA_TYPE
 			FROM
 				BP_FIELD 
 			WHERE
